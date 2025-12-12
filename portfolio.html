@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dhruv Boghani | GenAI & Data Architect</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0e0e0e;
+            --surface-hover: #141414;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #f0f0f0;
+            --text-muted: #888888;
+            --accent: #ccf381; /* GenZ Lime */
+            --accent-dim: rgba(204, 243, 129, 0.1);
+            --secondary: #5e43f3;
+            --font-head: 'Space Grotesk', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+        }
+
+        /* --- Reset & Base --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            width: 100%;
+            overflow: hidden; /* Locked initially for loader */
+        }
+
+        /* --- LOADER STYLES --- */
+        .loader-wrapper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        
+        .loader-text {
+            font-family: monospace;
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+        }
+
+        .progress-bar-container {
+            width: 250px;
+            height: 2px;
+            background: #222;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+            transition: width 0.1s linear;
+        }
+
+        /* --- Custom Cursor --- */
+        .cursor-dot, .cursor-circle {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background: var(--accent); }
+        .cursor-circle {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: width 0.3s, height 0.3s, background-color 0.3s, transform 0.1s;
+        }
+        .cursor-circle.hovered {
+            width: 70px; height: 70px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+            backdrop-filter: blur(2px);
+        }
+
+        /* --- Ambient Background --- */
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.035;
+            pointer-events: none;
+            z-index: 90;
+        }
+
+        .gradient-orb {
+            position: fixed;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.15;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+        .orb-1 { top: -200px; left: -100px; background: var(--secondary); }
+        .orb-2 { bottom: -200px; right: -100px; background: var(--accent); animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50px, 100px) rotate(20deg); }
+        }
+
+        /* --- Layout --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+        section { padding: 200px 0 0 0; margin-bottom: 100px; }
+
+        /* --- Nav --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 30px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(5,5,5,0.9), transparent);
+            backdrop-filter: blur(5px);
+            opacity: 0; /* Hidden initially */
+            animation: fadeIn 1s 2.2s forwards;
+        }
+        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -0.05em; font-family: var(--font-head); }
+        .menu { display: flex; gap: 40px; }
+        .menu a {
+            text-decoration: none;
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            position: relative;
+        }
+        .menu a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px;
+            background: var(--accent); transition: width 0.3s;
+        }
+        .menu a:hover::after { width: 100%; }
+
+        /* --- Hero --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 0;
+            margin-bottom: 0;
+        }
+        
+        .hero-label { color: var(--accent); font-family: monospace; margin-bottom: 20px; display: block; }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 8vw, 8rem);
+            font-weight: 700;
+            margin-left: -5px;
+            background: linear-gradient(to right, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .hero p { max-width: 600px; font-size: 1.25rem; color: var(--text-muted); margin-bottom: 50px; line-height: 1.7; }
+
+        .btn-glow {
+            display: inline-flex;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: #fff;
+            text-decoration: none;
+            font-family: monospace;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-glow:hover {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(204, 243, 129, 0.2);
+        }
+
+        /* --- Section Header --- */
+        .section-header {
+            margin-bottom: 80px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+        .section-header h2 { font-size: 3rem; font-family: var(--font-head); }
+        .section-header span { font-family: monospace; color: var(--accent); }
+
+        /* --- Bento Grid --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 30px;
+        }
+
+        .card-wrapper { grid-column: span 12; perspective: 2000px; }
+        @media(min-width: 1024px) {
+            .span-8 { grid-column: span 8; }
+            .span-4 { grid-column: span 4; }
+            .span-6 { grid-column: span 6; }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 50px;
+            height: 100%;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.4s, background-color 0.4s;
+            transform-style: preserve-3d;
+        }
+        .card:hover { border-color: rgba(255,255,255,0.2); background: var(--surface-hover); }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: var(--mouse-y); left: var(--mouse-x);
+            transform: translate(-50%, -50%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card-content { z-index: 2; transform: translateZ(30px); }
+        .card-meta { font-family: monospace; color: var(--accent); margin-bottom: 20px; display: block; }
+        .card h3 { font-size: 2.2rem; margin-bottom: 15px; color: #fff; font-family: var(--font-head); }
+        .card p { color: #999; margin-bottom: 30px; font-size: 1.05rem; line-height: 1.6; }
+
+        .tech-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tech-pill {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: #ccc;
+            background: rgba(0,0,0,0.3);
+        }
+
+        /* --- Experience --- */
+        .timeline-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+        .timeline-item {
+            border-left: 2px solid var(--border);
+            padding-left: 40px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -6px; top: 0;
+            width: 10px; height: 10px; background: var(--accent);
+            border-radius: 50%; box-shadow: 0 0 15px var(--accent);
+        }
+        .role-title { font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 5px; font-family: var(--font-head); }
+        .company-name { font-size: 1.2rem; color: var(--accent); font-family: monospace; margin-bottom: 20px; display: block; }
+        .job-desc { color: var(--text-muted); font-size: 1rem; max-width: 800px; line-height: 1.7; }
+        .job-desc ul { list-style: none; margin-top: 15px; }
+        .job-desc li { margin-bottom: 10px; position: relative; padding-left: 20px; }
+        .job-desc li::before { content: '>'; color: var(--accent); position: absolute; left: 0; }
+
+        /* --- Skills --- */
+        .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .skill-item {
+            border-top: 1px solid var(--border);
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: padding 0.3s;
+        }
+        .skill-item:hover { padding-left: 20px; border-color: var(--accent); }
+        .skill-name { font-size: 1.2rem; font-weight: 500; }
+        .skill-type { font-family: monospace; font-size: 0.8rem; color: var(--text-muted); }
+
+        /* --- Footer --- */
+        footer { height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; margin-top: 100px; }
+        .footer-cta {
+            font-size: clamp(3rem, 10vw, 8rem); font-weight: 700; color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3); text-decoration: none; transition: all 0.3s;
+            font-family: var(--font-head); padding-bottom: 20px; 
+        }
+        .footer-cta:hover { color: var(--accent); -webkit-text-stroke: 1px var(--accent); text-shadow: 0 0 50px var(--accent-dim); }
+
+        /* --- Animations --- */
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="loader-wrapper">
+        <div class="loader-text">> SYSTEM_INITIALIZING...</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+    <div class="noise"></div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+
+    <nav>
+        <div class="logo hover-target">Dhruv.Boghani</div>
+        <div class="menu">
+            <a href="#work" class="hover-target">Projects</a>
+            <a href="#experience" class="hover-target">Experience</a>
+            <a href="#skills" class="hover-target">Stack</a>
+            <a href="#about" class="hover-target">About</a>
+        </div>
+    </nav>
+
+    <section class="container hero">
+        <span class="hero-label reveal">> SYSTEM_STATUS: ONLINE</span>
+        <h1 class="reveal" >
+            Architecting the <br>
+            Future of AI.
+        </h1>
+        <p class="reveal" >
+            Senior Full Stack & Data Platform Engineer. I build intelligent systems that 
+            scale to millions of users, from <span style="color:white">Real-Time Lakehouses</span> to <span style="color:white">Generative AI Agents</span>.
+        </p>
+        <div class="reveal">
+            <a href="mailto:ramboghani726@gmail.com" class="btn-glow hover-target">Initialize_Collab()</a>
+        </div>
+    </section>
+
+    <section id="work" class="container">
+        <div class="section-header reveal">
+            <h2>Selected Works</h2>
+            <span>[ Projects ]</span>
+        </div>
+
+        <div class="bento-grid">
+            
+            <div class="card-wrapper span-8 reveal">
+                <div class="card hover-target">
+                    <div class="card-content">
+                        <span class="card-meta">Data Architecture / Big Data</span>
+                        <h3>Real-Time Data Lakehouse</h3>
+                        <p>
+                            A massive-scale observability pipeline processing <strong>10 million+ events per day</strong>. 
+                            I replaced standard Kafka with Redpanda for throughput and implemented Apache Iceberg 
+                            on MinIO to enable ACID transactions and "Time Travel" debugging queries.
+                        </p>
+                        <div class="tech-list">
+                            <span class="tech-pill">Redpanda</span>
+                            <span class="tech-pill">Apache Flink</span>
+                            <span class="tech-pill">Apache Iceberg</span>
+                            <span class="tech-pill">Trino (SQL)</span>
+                            <span class="tech-pill">Project Nessie</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-wrapper span-4 reveal">
+                <div class="card hover-target" style="background: linear-gradient(145deg, #151515, #0a0a0a);">
+                    <div class="card-content">
+                        <span class="card-meta">GenAI / RAG</span>
+                        <h3>Invoice Intelligence</h3>
+                        <p>
+                            Automated financial audits using a Hybrid Search approach. The system extracts data from PDF invoices using OCR, embeds them into a Vector DB, and uses GPT-4 to detect pricing anomalies against Purchase Orders.
+                        </p>
+                        <div class="tech-list">
+                            <span class="tech-pill">React.js</span>
+                            <span class="tech-pill">Django</span>
+                            <span class="tech-pill">OpenAI</span>
+                            <span class="tech-pill">Vector DB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-wrapper span-6 reveal">
+                <div class="card hover-target">
+                    <div class="card-content">
+                        <span class="card-meta">Conversational AI</span>
+                        <h3>Voice AI Agent</h3>
+                        <p>
+                            Built a voice bot that feels human. Integrated <strong>Pipecat</strong> and <strong>Twilio</strong> to handle low-latency audio streams. The AI handles interruptions gracefully and updates the CRM in real-time based on sentiment analysis.
+                        </p>
+                        <div class="tech-list">
+                            <span class="tech-pill">Python</span>
+                            <span class="tech-pill">Azure OpenAI</span>
+                            <span class="tech-pill">Pipecat</span>
+                            <span class="tech-pill">WebSockets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-wrapper span-6 reveal">
+                <div class="card hover-target">
+                    <div class="card-content">
+                        <span class="card-meta">Full Stack SaaS</span>
+                        <h3>DataGen AI CRM</h3>
+                        <p>
+                            A high-performance CRM tailored for sales teams. I led the Full Stack development, ensuring the <strong>Angular</strong> frontend remained buttery smooth while <strong>FastAPI</strong> microservices handled heavy AI document summarization tasks.
+                        </p>
+                        <div class="tech-list">
+                            <span class="tech-pill">Angular</span>
+                            <span class="tech-pill">FastAPI</span>
+                            <span class="tech-pill">Redis</span>
+                            <span class="tech-pill">PostgreSQL</span>
+                            <span class="tech-pill">AWS S3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="experience" class="container" style="margin-top: 100px;">
+        <div class="section-header reveal">
+            <h2>Career History</h2>
+            <span>[ 2020 - Present ]</span>
+        </div>
+
+        <div class="timeline-grid">
+            <div class="timeline-item reveal">
+                <h3 class="role-title">Senior Full Stack, AI & Data Platform Engineer</h3>
+                <span class="company-name">GenAI Novuscode Softtech Pvt. Ltd. | Feb 2021 - Present</span>
+                <div class="job-desc">
+                    <p>Leading the development of enterprise SaaS solutions, AI integration, and large-scale data infrastructure.</p>
+                    <ul>
+                        <li>Architected a <strong>Real-Time Data Lakehouse</strong> using Redpanda, Flink, and Iceberg, processing millions of spans daily.</li>
+                        <li>Built an <strong>AI Invoice Intelligence Platform</strong> using Django & RAG to automate complex financial audits.</li>
+                        <li>Developed a natural-conversation <strong>Voice AI Bot</strong> using Pipecat & Twilio that handles interruptions and sentiment.</li>
+                        <li>Led the full-stack delivery of 25+ applications across Telemedicine, CRM, and ERP domains.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal">
+                <h3 class="role-title">Web Developer</h3>
+                <span class="company-name">Techspin Solutions | 2020 - 2021</span>
+                <div class="job-desc">
+                    <p>Focused on building responsive frontend applications and efficient backend modules.</p>
+                    <ul>
+                        <li>Developed core modules for "Envivo Clinic", supporting appointment scheduling and video consultations.</li>
+                        <li>Designed mobile-first <strong>Angular</strong> applications with reusable UI components.</li>
+                        <li>Implemented secure authentication and role-based access control (RBAC) systems.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="container" style="margin-top: 100px;">
+        <div class="section-header reveal">
+            <h2>The Arsenal</h2>
+            <span>[ Tech Stack ]</span>
+        </div>
+        <div class="skill-grid reveal">
+            <div class="skill-item hover-target">
+                <span class="skill-name">Python (Django / FastAPI)</span>
+                <span class="skill-type">Backend Core</span>
+            </div>
+            <div class="skill-item hover-target">
+                <span class="skill-name">Angular, Vue.js, React.js</span>
+                <span class="skill-type">Frontend</span>
+            </div>
+            <div class="skill-item hover-target">
+                <span class="skill-name">Apache Flink & Spark</span>
+                <span class="skill-type">Data Streaming</span>
+            </div>
+            <div class="skill-item hover-target">
+                <span class="skill-name">OpenAI & LangChain</span>
+                <span class="skill-type">Generative AI</span>
+            </div>
+            <div class="skill-item hover-target">
+                <span class="skill-name">Redpanda (Kafka)</span>
+                <span class="skill-type">Event Bus</span>
+            </div>
+            <div class="skill-item hover-target">
+                <span class="skill-name">Docker & Kubernetes</span>
+                <span class="skill-type">DevOps</span>
+            </div>
+            <div class="skill-item hover-target">
+                <span class="skill-name">PostgreSQL & Redis</span>
+                <span class="skill-type">Storage</span>
+            </div>
+            <div class="skill-item hover-target">
+                <span class="skill-name">AWS & Azure</span>
+                <span class="skill-type">Cloud</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="container" style="margin-top: 100px;">
+        <div class="section-header reveal">
+            <h2>About Me</h2>
+            <span>[ Profile ]</span>
+        </div>
+        <div class="bento-grid">
+            <div class="card-wrapper span-8 reveal">
+                <h3 style="font-size: 2.5rem; margin-bottom: 30px; line-height: 1.3;">
+                    With 5 years of experience, I don't just write code—I build <span style="color:var(--accent)">Ecosystems.</span>
+                </h3>
+                <p style="font-size: 1.1rem; color: #bbb;">
+                    My journey started with standard web development, but my curiosity for scale pushed me into the deep end of <strong>Data Engineering</strong>. 
+                    <br><br>
+                    Currently, I serve as a <strong>Senior Engineer at GenAI Novuscode</strong>. I am comfortable wearing multiple hats: one day I might be optimizing an Angular directive for mobile performance, and the next I'm debugging a distributed Flink job processing millions of spans.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="container">
+        <p class="reveal" style="font-family: monospace; color: var(--accent); margin-bottom: 20px;">Ready to scale?</p>
+        <a href="mailto:ramboghani726@gmail.com" class="footer-cta hover-target reveal">Let's Talk.</a>
+        <div class="reveal" style="margin-top: 50px; color: #555; font-size: 0.9rem;">
+            Designed & Engineered by Dhruv Boghani © 2025
+            <br>
+            Ahmedabad, Gujarat, India
+        </div>
+    </footer>
+
+    <script>
+        /* --- LOADER LOGIC --- */
+        window.addEventListener('load', () => {
+            const loader = document.querySelector('.loader-wrapper');
+            const progress = document.querySelector('.progress-bar');
+            
+            // 1. Animate Progress Bar
+            setTimeout(() => { progress.style.width = '100%'; }, 100);
+
+            // 2. Hide Loader after duration
+            setTimeout(() => {
+                loader.style.transform = 'translateY(-100%)'; // Slide up
+                document.body.style.overflow = 'auto'; // Re-enable scroll
+            }, 2000);
+        });
+
+        /* --- CUSTOM CURSOR --- */
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+            cursorCircle.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        /* --- HOVER INTERACTIONS --- */
+        document.querySelectorAll('.hover-target, a').forEach(el => {
+            el.addEventListener('mouseenter', () => cursorCircle.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('hovered'));
+        });
+
+        /* --- 3D TILT EFFECT --- */
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -2;
+                const rotateY = ((x - centerX) / centerX) * 2;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        });
+
+        /* --- SCROLL REVEAL --- */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    </script>
+</body>
+</html>
