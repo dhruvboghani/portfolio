@@ -1,369 +1,835 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dhruv Boghani | GenAI & Data Architect</title>
+    <title>Dhruv Boghani | Senior Software Engineer</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 style=%22background-color:%23f4f3ef%22><text x=%2250%22 y=%2260%22 font-family=%22'Playfair Display', serif%22 font-weight=%22bold%22 font-size=%2255%22 text-anchor=%22middle%22 fill=%22%23111%22>DB<tspan fill=%22%23d13a26%22>.</tspan></text></svg>">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
 
     <style>
         /* --- VARIABLES --- */
         :root {
-            --bg: #050505;
-            --surface: #0e0e0e;
-            --surface-hover: #141414;
-            --border: rgba(255, 255, 255, 0.08);
-            --text-main: #f0f0f0;
-            --text-muted: #888888;
-            --accent: #ccf381;
-            --accent-dim: rgba(204, 243, 129, 0.1);
-            --secondary: #5e43f3;
-            --font-head: 'Space Grotesk', sans-serif;
-            --font-body: 'Outfit', sans-serif;
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text-main: #111111;
+            --text-muted: #5c5c5c;
+            --accent: #d13a26; /* International Orange */
             
-            --nav-padding-y: 30px;
-            --nav-padding-x: 60px;
-            --section-gap: 200px;
+            --border: rgba(0,0,0,0.06);
+
+            /* CURVE & SHADOW VARIABLES */
+            --radius-card: 24px;
+            --radius-btn: 50px;
+            --radius-sm: 12px;
+            
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+
+            --font-head: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            --container-width: 1200px;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         /* --- RESET --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Custom cursor everywhere */
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
         body {
             background-color: var(--bg);
             color: var(--text-main);
             font-family: var(--font-body);
+            line-height: 1.6;
             overflow-x: hidden;
-            width: 100%;
-            overflow-y: hidden;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
 
-        /* Cursor Logic */
-        @media (pointer: coarse) {
-            * { cursor: auto !important; }
-            .cursor-dot, .cursor-circle { display: none !important; }
+        /* --- CUSTOM EMOJI CURSOR --- */
+        .emoji-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, font-size 0.2s ease;
+            will-change: transform, left, top;
         }
-        @media (pointer: fine) {
-            body { cursor: none; }
-            a, button, input { cursor: none; }
+
+        /* --- UTILS --- */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 100px 0;
+            border-bottom: 1px solid transparent; 
         }
 
         /* --- LOADER --- */
-        .loader-wrapper {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s var(--ease);
         }
-        .loader-text { font-family: monospace; color: var(--accent); margin-bottom: 20px; font-size: 1.2rem; letter-spacing: 0.1em; }
-        .progress-bar-container { width: 250px; height: 2px; background: #222; position: relative; overflow: hidden; }
-        .progress-bar { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--accent); box-shadow: 0 0 20px var(--accent); transition: width 0.1s linear; }
 
-        /* --- CUSTOM CURSOR --- */
-        .cursor-dot, .cursor-circle { 
-            position: fixed; top: 0; left: 0; 
-            transform: translate(-50%, -50%); 
-            border-radius: 50%; 
-            z-index: 10000000; 
-            pointer-events: none; 
+        .loader-text {
+            font-family: var(--font-head);
+            font-size: 2rem;
+            overflow: hidden;
         }
-        .cursor-dot { width: 8px; height: 8px; background: var(--accent); }
-        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.2); transition: width 0.3s, height 0.3s, background-color 0.3s, transform 0.1s; }
-        .cursor-circle.hovered { width: 70px; height: 70px; background-color: rgba(255, 255, 255, 0.05); border-color: var(--accent); backdrop-filter: blur(2px); }
 
-        /* --- BACKGROUND --- */
-        .noise { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); opacity: 0.035; pointer-events: none; z-index: 90; }
-        .gradient-orb { position: fixed; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.15; animation: float 20s infinite alternate ease-in-out; }
-        .orb-1 { top: -200px; left: -100px; background: var(--secondary); }
-        .orb-2 { bottom: -200px; right: -100px; background: var(--accent); animation-delay: -10s; }
-        @keyframes float { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(50px, 100px) rotate(20deg); } }
+        .loader-text span {
+            display: inline-block;
+            animation: revealUp 1s var(--ease) forwards;
+            transform: translateY(100%);
+        }
 
-        /* --- LAYOUT UTILS --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
-        section { padding: var(--section-gap) 0 0 0; margin-bottom: 100px; }
-        @media (max-width: 768px) { :root { --nav-padding-y: 20px; --nav-padding-x: 20px; --section-gap: 120px; } .container { padding: 0 20px; } section { margin-bottom: 60px; } }
+        @keyframes revealUp {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(0); }
+        }
 
         /* --- NAVIGATION --- */
-        nav { position: fixed; top: 0; left: 0; width: 100%; padding: var(--nav-padding-y) var(--nav-padding-x); display: flex; justify-content: space-between; align-items: center; z-index: 100; background: linear-gradient(to bottom, rgba(5,5,5,0.95), transparent); backdrop-filter: blur(10px); opacity: 0; animation: fadeIn 1s 2.2s forwards; }
-        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: -0.05em; font-family: var(--font-head); }
-        .menu { display: flex; gap: 40px; }
-        .menu a { text-decoration: none; color: #fff; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; position: relative; }
-        .menu a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.3s; }
-        .menu a:hover::after { width: 100%; }
-        @media (max-width: 768px) { nav { flex-direction: column; align-items: flex-start; background: rgba(5,5,5,0.98); padding-bottom: 25px; } .logo { margin-bottom: 15px; } .menu { width: 100%; justify-content: flex-start; gap: 20px; flex-wrap: wrap; } .menu a { font-size: 0.75rem; color: var(--text-muted); } }
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1200px;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-btn); /* Curved everywhere */
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.3s;
+        }
 
-        /* --- HERO --- */
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 0; margin-bottom: 0; }
-        .hero-label { color: var(--accent); font-family: monospace; margin-bottom: 20px; display: block; }
-        .hero h1 { font-size: clamp(3rem, 9vw, 8rem); font-weight: 700; margin-left: -5px; background: linear-gradient(to right, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; padding-bottom: 10px; line-height: 1.1; }
-        .hero p { max-width: 600px; font-size: clamp(1rem, 4vw, 1.25rem); color: var(--text-muted); margin-bottom: 50px; line-height: 1.7; }
-        .btn-glow { display: inline-flex; align-items: center; padding: 20px 40px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 100px; color: #fff; text-decoration: none; font-family: monospace; transition: all 0.3s; position: relative; overflow: hidden; }
-        .btn-glow:hover { border-color: var(--accent); background: var(--accent-dim); transform: scale(1.02); box-shadow: 0 0 30px rgba(204, 243, 129, 0.2); }
+        .logo {
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+            z-index: 102;
+        }
 
-        /* --- SECTIONS --- */
-        .section-header { margin-bottom: 80px; border-bottom: 1px solid var(--border); padding-bottom: 20px; display: flex; justify-content: space-between; align-items: end; }
-        .section-header h2 { font-size: clamp(2rem, 5vw, 3rem); font-family: var(--font-head); }
-        .section-header span { font-family: monospace; color: var(--accent); }
-        @media (max-width: 768px) { .section-header { flex-direction: column; align-items: flex-start; gap: 10px; } .section-header h2 { margin-bottom: 5px; } .section-header span { font-size: 0.9rem; opacity: 0.8; } }
+        .menu {
+            display: flex;
+            gap: 30px;
+        }
 
-        /* --- BENTO GRID --- */
-        .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 30px; }
-        .span-8 { grid-column: span 8; } .span-4 { grid-column: span 4; } .span-6 { grid-column: span 6; }
-        @media (max-width: 900px) { .span-8, .span-4, .span-6 { grid-column: span 12; } .bento-grid { gap: 20px; } }
-        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 40px; height: 100%; min-height: 350px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.4s, background-color 0.4s; transform-style: preserve-3d; }
-        .card:hover, .card:active { border-color: rgba(255,255,255,0.2); background: var(--surface-hover); }
-        .card::before { content: ''; position: absolute; top: var(--mouse-y); left: var(--mouse-x); transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 60%); opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 1; }
-        .card:hover::before, .card:active::before { opacity: 1; }
-        .card-content { z-index: 2; transform: translateZ(30px); }
-        .card-meta { font-family: monospace; color: var(--accent); margin-bottom: 20px; display: block; }
-        .card h3 { font-size: 2.2rem; margin-bottom: 15px; color: #fff; font-family: var(--font-head); }
-        .card p { color: #999; margin-bottom: 30px; font-size: 1.05rem; line-height: 1.6; }
-        .tech-list { display: flex; flex-wrap: wrap; gap: 10px; }
-        .tech-pill { padding: 8px 16px; border: 1px solid var(--border); border-radius: 50px; font-size: 0.85rem; color: #ccc; background: rgba(0,0,0,0.3); }
+        .menu a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            transform: translateX(-50%) scale(0);
+            transition: transform 0.3s var(--ease);
+        }
+
+        .menu a:hover::after {
+            transform: translateX(-50%) scale(1);
+        }
+
+        .hamburger {
+            display: none;
+            z-index: 102;
+            cursor: pointer; /* Ensure pointer event works */
+            font-size: 1.5rem;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg);
+            z-index: 101;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transform: translateY(-100%);
+            transition: transform 0.6s var(--ease);
+        }
+
+        .mobile-nav.active {
+            transform: translateY(0);
+        }
+
+        .mobile-nav a {
+            font-family: var(--font-head);
+            font-size: 2.5rem;
+            color: var(--text-main);
+        }
+
+        /* Responsive Updates */
+        @media (max-width: 768px) {
+            nav {
+                /* Floating Curve on Mobile too */
+                width: 90%; 
+                top: 15px;
+                border-radius: 50px;
+                padding: 12px 25px;
+            }
+            .menu {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 100px;
+        }
+
+        .hero-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeUp 0.8s 1s forwards;
+        }
+
+        .hero h1 {
+            font-family: var(--font-head);
+            font-size: clamp(3rem, 9vw, 6.5rem);
+            line-height: 1.4;
+            margin-bottom: 30px;
+            color: var(--text-main);
+        }
+
+        .hero h1 .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero h1 .line span {
+            display: block;
+            transform: translateY(100%);
+            animation: titleReveal 1s var(--ease) forwards;
+        }
+
+        .hero h1 .line:nth-child(2) span {
+            animation-delay: 0.1s;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            max-width: 650px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeUp 0.8s 1.2s forwards;
+        }
+
+        .btn-main {
+            display: inline-block;
+            padding: 18px 40px;
+            background: var(--text-main);
+            color: #fff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: var(--radius-btn);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s var(--ease);
+            opacity: 0;
+            animation: fadeUp 0.8s 1.3s forwards;
+        }
+
+        .btn-main:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes titleReveal {
+            from { transform: translateY(110%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MARQUEE --- */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            padding: 20px 0;
+            background: var(--text-main);
+            color: #fff;
+            transform: skewY(-1deg);
+            margin: 40px 0;
+        }
+
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            gap: 50px;
+            animation: scrollLeft 35s linear infinite;
+        }
+
+        .marquee-item {
+            font-family: var(--font-head);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        @keyframes scrollLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- PROJECTS GRID --- */
+        .section-header h2 {
+            font-family: var(--font-head);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 10px;
+        }
+
+        .section-header span {
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .project-card {
+            background: var(--surface);
+            padding: 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card); 
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s var(--ease);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 400px;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: transparent;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-cat {
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .project-card h3 {
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .project-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 6px 16px;
+            background: #f4f4f5;
+            border: none;
+            border-radius: 50px;
+            color: #555;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        
+        .project-card:hover .tag {
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
 
         /* --- TIMELINE --- */
-        .timeline-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
-        .timeline-item { border-left: 2px solid var(--border); padding-left: 40px; position: relative; }
-        .timeline-item::before { content: ''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 15px var(--accent); }
-        .role-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 700; color: #fff; margin-bottom: 5px; font-family: var(--font-head); }
-        .company-name { font-size: 1rem; color: var(--accent); font-family: monospace; margin-bottom: 20px; display: block; }
-        .job-desc { color: var(--text-muted); font-size: 1rem; max-width: 800px; line-height: 1.7; }
-        .job-desc ul { list-style: none; margin-top: 15px; }
-        .job-desc li { margin-bottom: 10px; position: relative; padding-left: 20px; }
-        .job-desc li::before { content: '>'; color: var(--accent); position: absolute; left: 0; }
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid #eaeaea;
+            margin-top: 50px;
+        }
 
-        /* --- SKILLS --- */
-        .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        @media (max-width: 600px) { .skill-grid { grid-template-columns: 1fr; } }
-        .skill-item { border-top: 1px solid var(--border); padding: 20px 0; display: flex; align-items: center; justify-content: space-between; transition: padding 0.3s; }
-        .skill-item:hover, .skill-item:active { padding-left: 20px; border-color: var(--accent); }
-        .skill-name { font-size: 1.2rem; font-weight: 500; }
-        .skill-type { font-family: monospace; font-size: 0.8rem; color: var(--text-muted); }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 60px;
+            padding-left: 40px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            background: var(--bg);
+            border: 4px solid var(--accent);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 4px white;
+        }
+
+        .timeline-item:hover::before {
+            background: var(--accent);
+            transform: scale(1.2);
+            box-shadow: 0 0 0 6px rgba(209, 58, 38, 0.2);
+        }
+
+        .role {
+            font-family: var(--font-head);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .company {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .desc li {
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            list-style-type: none;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .desc li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* --- SKILLS GRID --- */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .tech-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px 15px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.3s var(--ease);
+            cursor: pointer; /* Ensures touch events work smoothly */
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            border-color: transparent;
+            color: var(--text-main);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* --- ABOUT --- */
+        #about p {
+            font-size: 1.15rem;
+            color: #444;
+            font-weight: 300;
+            max-width: 900px;
+            line-height: 1.9;
+        }
 
         /* --- FOOTER --- */
-        footer { height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; margin-top: 100px; }
-        .footer-cta { font-size: clamp(2rem, 10vw, 8rem); font-weight: 700; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.3); text-decoration: none; transition: all 0.3s; font-family: var(--font-head); padding-bottom: 20px; }
-        .footer-cta:hover { color: var(--accent); -webkit-text-stroke: 1px var(--accent); text-shadow: 0 0 50px var(--accent-dim); }
+        footer {
+            padding: 100px 0;
+            text-align: center;
+            background: #fff;
+            margin-top: 50px;
+            border-top-left-radius: 50px;
+            border-top-right-radius: 50px;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.03);
+        }
+
+        .footer-cta {
+            font-family: var(--font-head);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            color: var(--text-main);
+            font-weight: 700;
+            line-height: 1.1;
+            transition: color 0.3s;
+        }
+
+        .footer-cta:hover {
+            color: var(--accent);
+        }
+
+        .copy {
+            margin-top: 50px;
+            color: #999;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
         /* --- ANIMATIONS --- */
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        @keyframes fadeIn { to { opacity: 1; } }
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s var(--ease);
+        }
 
-        /* --- FLOATING ACTION BUTTONS --- */
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- FLOATING ACTIONS --- */
         .floating-actions {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            z-index: 9999;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            z-index: 99;
         }
 
-        .action-btn {
-            width: 55px; height: 55px;
+        .fab {
+            width: 55px;
+            height: 55px;
+            background: #fff;
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            text-decoration: none;
-            font-size: 1.5rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            cursor: pointer !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            font-size: 1.2rem;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
-        .action-btn:hover { transform: scale(1.1) translateY(-5px); }
-
-        .action-btn.whatsapp {
-            background: rgba(37, 211, 102, 0.1);
-            border-color: #25D366;
-            color: #25D366;
+        .fab:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: var(--shadow-lg);
+            background: var(--text-main);
+            border-color: var(--text-main);
         }
-        .action-btn.whatsapp:hover {
-            background: #25D366;
-            color: white;
-            box-shadow: 0 0 30px rgba(37, 211, 102, 0.4);
-        }
-
-        .action-btn.call {
-            background: rgba(0, 123, 255, 0.1);
-            border-color: #007bff;
-            color: #007bff;
-        }
-        .action-btn.call:hover {
-            background: #007bff;
-            color: white;
-            box-shadow: 0 0 30px rgba(0, 123, 255, 0.4);
-        }
-
-        @media (max-width: 768px) {
-            .floating-actions { bottom: 20px; right: 20px; flex-direction: row; }
-            .action-btn { width: 50px; height: 50px; font-size: 1.3rem; }
-        }
-
     </style>
 </head>
+
 <body>
 
-    <div class="loader-wrapper">
-        <div class="loader-text">> SYSTEM_INITIALIZING...</div>
-        <div class="progress-bar-container">
-            <div class="progress-bar"></div>
+    <div class="emoji-cursor">✦</div>
+
+    <div class="loader">
+        <div class="loader-text">
+            <span>Synthesizing Intelligence...</span>
         </div>
     </div>
 
-    <div class="cursor-dot"></div>
-    <div class="cursor-circle"></div>
-    <div class="noise"></div>
-    <div class="gradient-orb orb-1"></div>
-    <div class="gradient-orb orb-2"></div>
+    <div class="mobile-nav">
+        <a href="#work" class="nav-link hover-trigger" data-cursor="📂">Projects</a>
+        <a href="#experience" class="nav-link hover-trigger" data-cursor="💼">Experience</a>
+        <a href="#skills" class="nav-link hover-trigger" data-cursor="🛠️">Stack</a>
+        <a href="#about" class="nav-link hover-trigger" data-cursor="👤">About</a>
+    </div>
 
     <nav>
-        <div class="logo hover-target">Dhruv.Boghani</div>
+        <a href="#" class="logo hover-trigger" data-cursor="🏠">Dhruv.Boghani</a>
         <div class="menu">
-            <a href="#work" class="hover-target">Projects</a>
-            <a href="#experience" class="hover-target">Experience</a>
-            <a href="#skills" class="hover-target">Stack</a>
-            <a href="#about" class="hover-target">About</a>
+            <a href="#work" class="hover-trigger" data-cursor="📂">Projects</a>
+            <a href="#experience" class="hover-trigger" data-cursor="💼">Experience</a>
+            <a href="#skills" class="hover-trigger" data-cursor="🛠️">Stack</a>
+            <a href="#about" class="hover-trigger" data-cursor="👤">About</a>
         </div>
+        <div class="hamburger hover-trigger" data-cursor="🍔">☰</div>
     </nav>
 
     <section class="container hero">
-        <span class="hero-label reveal">> SYSTEM_STATUS: ONLINE</span>
-        <h1 class="reveal" >
-            Architecting the <br>
-            Future of AI.
+        <span class="hero-label">System Online</span>
+        <h1>
+            <span class="line"><span>Architecting the</span></span>
+            <span class="line"><span><i style="font-family: serif; color: var(--accent);">Future</i> of
+                    Intelligence.</span></span>
         </h1>
-        <p class="reveal" >
-            Senior Full Stack & Data Platform Engineer. I build intelligent systems that 
-            scale to millions of users, from <span style="color:white">Real-Time Lakehouses</span> to <span style="color:white">Generative AI Agents</span>.
+        <p>
+            Senior Full Stack, AI & Data Platform Engineer with 5 years of experience. I build intelligent systems that
+            scale to millions, from Real-Time Lakehouses to Generative AI Voice Agents.
         </p>
-        <div class="reveal">
-            <a href="mailto:ramboghani726@gmail.com" class="btn-glow hover-target">Initialize_Collab()</a>
+        <div>
+            <a href="mailto:ramboghani726@gmail.com" class="btn-main hover-trigger" data-cursor="✉️">Initialize
+                Collaboration</a>
         </div>
     </section>
 
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span class="marquee-item">Django</span> ✦
+            <span class="marquee-item">React.js</span> ✦
+            <span class="marquee-item">Vector DB</span> ✦
+            <span class="marquee-item">RAG Architecture</span> ✦
+            <span class="marquee-item">Apache Flink</span> ✦
+            <span class="marquee-item">Twilio Voice AI</span> ✦
+            <span class="marquee-item">Data Lakehouse</span> ✦
+            <span class="marquee-item">Vue.js</span> ✦
+            <span class="marquee-item">WebRTC</span> ✦
+            <span class="marquee-item">MongoDB</span> ✦
+            <span class="marquee-item">SaaS Architecture</span> ✦
+        </div>
+    </div>
+
     <section id="work" class="container">
-        <div class="section-header reveal">
-            <h2>Selected Works</h2>
-            <span>[ Projects ]</span>
+        <div class="section-header reveal" style="margin-top: 100px;">
+            <span>Selected Works</span>
+            <h2>Engineered Solutions</h2>
         </div>
 
-        <div class="bento-grid">
-            <div class="card-wrapper span-8 reveal">
-                <div class="card hover-target">
-                    <div class="card-content">
-                        <span class="card-meta">Data Architecture / Big Data</span>
-                        <h3>Real-Time Data Lakehouse</h3>
-                        <p>
-                            A massive-scale observability pipeline processing <strong>10 million+ events per day</strong>. 
-                            I replaced standard Kafka with Redpanda for throughput and implemented Apache Iceberg 
-                            on MinIO to enable ACID transactions and "Time Travel" debugging queries.
-                        </p>
-                        <div class="tech-list">
-                            <span class="tech-pill">Redpanda</span>
-                            <span class="tech-pill">Apache Flink</span>
-                            <span class="tech-pill">Apache Iceberg</span>
-                            <span class="tech-pill">Trino (SQL)</span>
-                            <span class="tech-pill">Project Nessie</span>
-                        </div>
-                    </div>
+        <div class="project-grid">
+            <div class="project-card reveal hover-trigger" data-cursor="🧾">
+                <div>
+                    <span class="project-cat">GenAI / RAG</span>
+                    <h3>Invoice Compare AI</h3>
+                    <p>Advanced invoice intelligence using LLM extraction. Implemented multi-layer logic for tax
+                        variance, HSN detection, and vector search for anomaly detection.</p>
+                </div>
+                <div class="tags">
+                    <span class="tag">Django</span>
+                    <span class="tag">OpenAI</span>
+                    <span class="tag">Vector DB</span>
+                    <span class="tag">React</span>
                 </div>
             </div>
 
-            <div class="card-wrapper span-4 reveal">
-                <div class="card hover-target" style="background: linear-gradient(145deg, #151515, #0a0a0a);">
-                    <div class="card-content">
-                        <span class="card-meta">GenAI / RAG</span>
-                        <h3>Invoice Intelligence</h3>
-                        <p>
-                            Automated financial audits using a Hybrid Search approach. The system extracts data from PDF invoices using OCR, embeds them into a Vector DB, and uses GPT-4 to detect pricing anomalies against Purchase Orders.
-                        </p>
-                        <div class="tech-list">
-                            <span class="tech-pill">React.js</span>
-                            <span class="tech-pill">Django</span>
-                            <span class="tech-pill">OpenAI</span>
-                            <span class="tech-pill">Vector DB</span>
-                        </div>
-                    </div>
+            <div class="project-card reveal hover-trigger" data-cursor="🎙️">
+                <div>
+                    <span class="project-cat">Voice Automation</span>
+                    <h3>AI Calling Bot & CRM</h3>
+                    <p>Natural-conversation bot using Pipecat and Twilio. Features conversation memory, sentiment
+                        detection, and automated CRM pipeline updates.</p>
+                </div>
+                <div class="tags">
+                    <span class="tag">Django</span>
+                    <span class="tag">Twilio</span>
+                    <span class="tag">Pipecat</span>
+                    <span class="tag">Azure LLM</span>
                 </div>
             </div>
 
-            <div class="card-wrapper span-6 reveal">
-                <div class="card hover-target">
-                    <div class="card-content">
-                        <span class="card-meta">Conversational AI</span>
-                        <h3>Voice AI Agent</h3>
-                        <p>
-                            Built a voice bot that feels human. Integrated <strong>Pipecat</strong> and <strong>Twilio</strong> to handle low-latency audio streams. The AI handles interruptions gracefully and updates the CRM in real-time based on sentiment analysis.
-                        </p>
-                        <div class="tech-list">
-                            <span class="tech-pill">Python</span>
-                            <span class="tech-pill">Azure OpenAI</span>
-                            <span class="tech-pill">Pipecat</span>
-                            <span class="tech-pill">WebSockets</span>
-                        </div>
-                    </div>
+            <div class="project-card reveal hover-trigger" data-cursor="👁️">
+                <div>
+                    <span class="project-cat">Data Architecture</span>
+                    <h3>Real-Time Data Lakehouse</h3>
+                    <p>Processing 10M+ events/day. Ingests via Redpanda, transforms with Flink, and writes to Apache
+                        Iceberg on MinIO with Nessie versioning.</p>
+                </div>
+                <div class="tags">
+                    <span class="tag">Redpanda</span>
+                    <span class="tag">Flink</span>
+                    <span class="tag">Iceberg</span>
+                    <span class="tag">Trino</span>
                 </div>
             </div>
 
-            <div class="card-wrapper span-6 reveal">
-                <div class="card hover-target">
-                    <div class="card-content">
-                        <span class="card-meta">Full Stack SaaS</span>
-                        <h3>DataGen AI CRM</h3>
-                        <p>
-                            A high-performance CRM tailored for sales teams. I led the Full Stack development, ensuring the <strong>Angular</strong> frontend remained buttery smooth while <strong>FastAPI</strong> microservices handled heavy AI document summarization tasks.
-                        </p>
-                        <div class="tech-list">
-                            <span class="tech-pill">Angular</span>
-                            <span class="tech-pill">FastAPI</span>
-                            <span class="tech-pill">Redis</span>
-                            <span class="tech-pill">PostgreSQL</span>
-                            <span class="tech-pill">AWS S3</span>
-                        </div>
-                    </div>
+            <div class="project-card reveal hover-trigger" data-cursor="🚀">
+                <div>
+                    <span class="project-cat">SaaS Architecture</span>
+                    <h3>AI Enterprise CRM</h3>
+                    <p>Modular CRM with AI copilots for document summarization, automated email drafting, and
+                        embedding-based file search for teams.</p>
+                </div>
+                <div class="tags">
+                    <span class="tag">Angular</span>
+                    <span class="tag">FastAPI</span>
+                    <span class="tag">PostgreSQL</span>
+                    <span class="tag">Redis</span>
                 </div>
             </div>
+
+            <div class="project-card reveal hover-trigger" data-cursor="🏠">
+                <div>
+                    <span class="project-cat">PropTech ERP</span>
+                    <h3>Rent Property System</h3>
+                    <p>Complete renting ecosystem handling tenant onboarding, lease generation, and inspection
+                        workflows. Includes owner dashboards for occupancy and revenue analytics.</p>
+                </div>
+                <div class="tags">
+                    <span class="tag">Vue.js</span>
+                    <span class="tag">Laravel</span>
+                    <span class="tag">MySQL</span>
+                </div>
+            </div>
+
+            <div class="project-card reveal hover-trigger" data-cursor="🩺">
+                <div>
+                    <span class="project-cat">HealthTech</span>
+                    <h3>Telemedicine CRM</h3>
+                    <p>Full telemedicine suite featuring secure WebRTC video calls, digital prescriptions, and
+                        appointment management. Integrated with payment gateways for seamless consults.</p>
+                </div>
+                <div class="tags">
+                    <span class="tag">Angular</span>
+                    <span class="tag">Node.js</span>
+                    <span class="tag">WebRTC</span>
+                </div>
+            </div>
+
+            <div class="project-card reveal hover-trigger" data-cursor="🖨️">
+                <div>
+                    <span class="project-cat">Industrial ERP</span>
+                    <h3>Offset Printing CRM</h3>
+                    <p>End-to-end ERP for printing operations. Features a dynamic quote builder, inventory tracking, job
+                        card generation, and automated PDF invoicing.</p>
+                </div>
+                <div class="tags">
+                    <span class="tag">Angular</span>
+                    <span class="tag">Node.js</span>
+                    <span class="tag">MongoDB</span>
+                </div>
+            </div>
+
         </div>
     </section>
 
     <section id="experience" class="container">
         <div class="section-header reveal" style="margin-top: 100px;">
-            <h2>Career History</h2>
-            <span>[ 2020 - Present ]</span>
+            <span>Career History</span>
+            <h2>Professional Path</h2>
         </div>
 
-        <div class="timeline-grid">
-            <div class="timeline-item reveal">
-                <h3 class="role-title">Senior Full Stack, AI & Data Platform Engineer</h3>
-                <span class="company-name">GenAI Novuscode Softtech Pvt. Ltd. | Feb 2021 - Present</span>
-                <div class="job-desc">
-                    <p>Leading the development of enterprise SaaS solutions, AI integration, and large-scale data infrastructure.</p>
+        <div class="timeline">
+            <div class="timeline-item reveal hover-trigger" data-cursor="🏢">
+                <h3 class="role">Senior Software Engineer</h3>
+                <span class="company">GenAi - Novuscode Softtech Pvt. Ltd. | Feb 2021 - Present</span>
+                <div class="desc">
                     <ul>
-                        <li>Architected a <strong>Real-Time Data Lakehouse</strong> using Redpanda, Flink, and Iceberg, processing millions of spans daily.</li>
-                        <li>Built an <strong>AI Invoice Intelligence Platform</strong> using Django & RAG to automate complex financial audits.</li>
-                        <li>Developed a natural-conversation <strong>Voice AI Bot</strong> using Pipecat & Twilio that handles interruptions and sentiment.</li>
-                        <li>Led the full-stack delivery of 25+ applications across Telemedicine, CRM, and ERP domains.</li>
+                        <li>Led full-stack delivery of Al-integrated SaaS solutions and high-performance microservices.
+                        </li>
+                        <li>Built <strong>Invoice Compare AI</strong> and <strong>Voice Calling Bots</strong> using
+                            OpenAI, Twilio, and Pipecat.</li>
+                        <li>Architected a Real-Time Data Lakehouse using Redpanda, Flink, Iceberg, and Trino.</li>
+                        <li>Implemented end-to-end data engineering systems and complex frontends in React/Angular.</li>
                     </ul>
                 </div>
             </div>
 
-            <div class="timeline-item reveal">
-                <h3 class="role-title">Web Developer</h3>
-                <span class="company-name">Techspin Solutions | 2020 - 2021</span>
-                <div class="job-desc">
-                    <p>Focused on building responsive frontend applications and efficient backend modules.</p>
+            <div class="timeline-item reveal hover-trigger" data-cursor="💻">
+                <h3 class="role">Junior Web Developer</h3>
+                <span class="company">Techspin Solutions | Sep 2020 - Jan 2021</span>
+                <div class="desc">
                     <ul>
-                        <li>Developed core modules for "Envivo Clinic", supporting appointment scheduling and video consultations.</li>
-                        <li>Designed mobile-first <strong>Angular</strong> applications with reusable UI components.</li>
-                        <li>Implemented secure authentication and role-based access control (RBAC) systems.</li>
+                        <li>Created Angular applications for clinic management with mobile-first design.</li>
+                        <li>Delivered reusable UI components and optimized routes for the Envivo Clinic platform.</li>
+                        <li>Collaborated on production-grade modules for patient history and video consultations.</li>
                     </ul>
                 </div>
             </div>
@@ -372,144 +838,159 @@
 
     <section id="skills" class="container">
         <div class="section-header reveal" style="margin-top: 100px;">
-            <h2>The Arsenal</h2>
-            <span>[ Tech Stack ]</span>
+            <span>The Arsenal</span>
+            <h2>Technical Stack</h2>
         </div>
-        <div class="skill-grid reveal">
-            <div class="skill-item hover-target">
-                <span class="skill-name">Python (Django / FastAPI)</span>
-                <span class="skill-type">Backend Core</span>
-            </div>
-            <div class="skill-item hover-target">
-                <span class="skill-name">Angular, Vue.js, React.js</span>
-                <span class="skill-type">Frontend</span>
-            </div>
-            <div class="skill-item hover-target">
-                <span class="skill-name">Apache Flink & Spark</span>
-                <span class="skill-type">Data Streaming</span>
-            </div>
-            <div class="skill-item hover-target">
-                <span class="skill-name">OpenAI & LangChain</span>
-                <span class="skill-type">Generative AI</span>
-            </div>
-            <div class="skill-item hover-target">
-                <span class="skill-name">Redpanda (Kafka)</span>
-                <span class="skill-type">Event Bus</span>
-            </div>
-            <div class="skill-item hover-target">
-                <span class="skill-name">Docker & Kubernetes</span>
-                <span class="skill-type">DevOps</span>
-            </div>
-            <div class="skill-item hover-target">
-                <span class="skill-name">PostgreSQL & Redis</span>
-                <span class="skill-type">Storage</span>
-            </div>
-            <div class="skill-item hover-target">
-                <span class="skill-name">AWS & Azure</span>
-                <span class="skill-type">Cloud</span>
-            </div>
+
+        <div class="tech-grid reveal">
+            <div class="tech-card hover-trigger" data-cursor="🤖">OpenAI</div>
+            <div class="tech-card hover-trigger" data-cursor="🦙">Llama</div>
+            <div class="tech-card hover-trigger" data-cursor="🦜">LangChain</div>
+            <div class="tech-card hover-trigger" data-cursor="🧠">Vector DB</div>
+            <div class="tech-card hover-trigger" data-cursor="🔍">RAG Architecture</div>
+
+            <div class="tech-card hover-trigger" data-cursor="📞">Twilio</div>
+            <div class="tech-card hover-trigger" data-cursor="🎙️">Pipecat</div>
+
+            <div class="tech-card hover-trigger" data-cursor="🐍">Django</div>
+            <div class="tech-card hover-trigger" data-cursor="⚡">FastAPI</div>
+            <div class="tech-card hover-trigger" data-cursor="🟩">Node.js</div>
+
+            <div class="tech-card hover-trigger" data-cursor="🅰️">Angular</div>
+            <div class="tech-card hover-trigger" data-cursor="⚛️">React</div>
+            <div class="tech-card hover-trigger" data-cursor="💚">Vue.js</div>
+
+            <div class="tech-card hover-trigger" data-cursor="🐿️">Apache Flink</div>
+            <div class="tech-card hover-trigger" data-cursor="✨">Apache Spark</div>
+            <div class="tech-card hover-trigger" data-cursor="🧊">Apache Iceberg</div>
+            <div class="tech-card hover-trigger" data-cursor="🐼">Redpanda</div>
+
+            <div class="tech-card hover-trigger" data-cursor="🐘">PostgreSQL</div>
+            <div class="tech-card hover-trigger" data-cursor="🗄️">MinIO (S3)</div>
+            <div class="tech-card hover-trigger" data-cursor="⚡">Redis</div>
+            <div class="tech-card hover-trigger" data-cursor="🐳">Docker</div>
+            <div class="tech-card hover-trigger" data-cursor="🔄">GitHub Actions</div>
         </div>
     </section>
 
     <section id="about" class="container">
         <div class="section-header reveal" style="margin-top: 100px;">
+            <span>Profile</span>
             <h2>About Me</h2>
-            <span>[ Profile ]</span>
         </div>
-        <div class="bento-grid">
-            <div class="card-wrapper span-8 reveal">
-                <h3 style="font-size: 2.5rem; margin-bottom: 30px; line-height: 1.3;">
-                    With 5 years of experience, I don't just write code—I build <span style="color:var(--accent)">Ecosystems.</span>
-                </h3>
-                <p style="font-size: 1.1rem; color: #bbb;">
-                    My journey started with standard web development, but my curiosity for scale pushed me into the deep end of <strong>Data Engineering</strong>. 
-                    <br><br>
-                    Currently, I serve as a <strong>Senior Engineer at GenAI Novuscode</strong>. I am comfortable wearing multiple hats: one day I might be optimizing an Angular directive for mobile performance, and the next I'm debugging a distributed Flink job processing millions of spans.
-                </p>
-            </div>
+        <div class="reveal" style="font-size: 1.1rem; color: #444; font-weight: 300; max-width: 900px; line-height: 1.8;">
+            <p style="margin-bottom: 25px;">
+                I am a <strong>Senior AI & Data Platform Engineer</strong> with over 5 years of experience architecting high-performance, scalable systems. My expertise lies at the unique intersection of <strong>Generative AI</strong> and <strong>Data Engineering</strong>, where I build solutions that don't just process data but understand it.
+            </p>
+            
+            <p style="margin-bottom: 25px;">
+                My journey began in full-stack web development, delivering robust clinical and ERP solutions using <strong>Angular</strong> and <strong>Laravel</strong>. However, my passion for scale drove me toward distributed systems. At <strong>Novuscode</strong>, I evolved into a specialized role, designing a Real-Time Data Lakehouse capable of ingesting <strong>10M+ events daily</strong> using Apache Flink, Redpanda, and Iceberg.
+            </p>
+
+            <p style="margin-bottom: 25px;">
+                Today, I focus on "Intelligent Ecosystems." Whether I am building <strong>Voice AI Bots</strong> that handle natural conversations via Twilio & Pipecat, or optimizing <strong>RAG architectures</strong> for complex invoice intelligence, I thrive on the technical challenge of connecting disparate technologies.
+            </p>
+            
+            <p>
+                I am comfortable wearing multiple hats—from debugging a React hook to optimizing a distributed streaming pipeline. I build software that is not only functional but resilient, scalable, and future-ready.
+            </p>
         </div>
     </section>
 
-    <footer class="container">
-        <p class="reveal" style="font-family: monospace; color: var(--accent); margin-bottom: 20px;">Ready to scale?</p>
-        <a href="mailto:ramboghani726@gmail.com" class="footer-cta hover-target reveal">Let's Talk.</a>
-        <div class="reveal" style="margin-top: 50px; color: #555; font-size: 0.9rem;">
-            Designed & Engineered by Dhruv Boghani © 2025
-            <br>
-            Ahmedabad, Gujarat, India
+    <footer>
+        <div class="container reveal">
+            <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 20px;">Ready to
+                scale?</p>
+            <a href="mailto:ramboghani726@gmail.com" class="footer-cta hover-trigger" data-cursor="👋">Let's Talk.</a>
+            <div class="copy">
+                Designed & Engineered by Dhruv Boghani © 2025<br>
+                Ahmedabad, Gujarat, India
+            </div>
         </div>
     </footer>
 
     <div class="floating-actions">
-        <a href="tel:+918490981272" class="action-btn call hover-target" title="Call Me">📞</a>
-        <a href="https://wa.me/918490981272" target="_blank" class="action-btn whatsapp hover-target" title="WhatsApp Me">💬</a>
+        <a href="tel:+918490981272" class="fab call hover-trigger" data-cursor="📞" title="Call Me">📞</a>
+        <a href="https://wa.me/918490981272" target="_blank" class="fab whatsapp hover-trigger" data-cursor="💬"
+            title="WhatsApp Me">💬</a>
     </div>
 
     <script>
-        /* --- LOADER LOGIC --- */
+        // --- 1. LOADER ---
         window.addEventListener('load', () => {
-            const loader = document.querySelector('.loader-wrapper');
-            const progress = document.querySelector('.progress-bar');
-            setTimeout(() => { progress.style.width = '100%'; }, 100);
-            setTimeout(() => { loader.style.transform = 'translateY(-100%)'; document.body.style.overflow = 'auto'; }, 2000);
+            setTimeout(() => {
+                document.querySelector('.loader').style.transform = 'translateY(-100%)';
+            }, 1500);
         });
 
-        /* --- CUSTOM CURSOR LOGIC --- */
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorCircle = document.querySelector('.cursor-circle');
-        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        // --- 2. EMOJI CURSOR LOGIC ---
+        const cursor = document.querySelector('.emoji-cursor');
+        const triggers = document.querySelectorAll('.hover-trigger');
 
-        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-        document.addEventListener('touchmove', (e) => { 
-            mouseX = e.touches[0].clientX; 
-            mouseY = e.touches[0].clientY; 
+        // Mouse Movement
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Touch Movement (Responsive Cursor)
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            cursor.style.left = touch.clientX + 'px';
+            cursor.style.top = touch.clientY + 'px';
         }, { passive: true });
 
-        function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.15;
-            cursorY += (mouseY - cursorY) * 0.15;
-            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-            cursorCircle.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
+        document.addEventListener('touchstart', (e) => {
+             const touch = e.touches[0];
+            cursor.style.left = touch.clientX + 'px';
+            cursor.style.top = touch.clientY + 'px';
+        }, { passive: true });
 
-        /* --- HOVER INTERACTIONS --- */
-        document.querySelectorAll('.hover-target, a, button').forEach(el => {
-            el.addEventListener('mouseenter', () => cursorCircle.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('hovered'));
+
+        // Change Emoji on Hover
+        triggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => {
+                const emoji = trigger.getAttribute('data-cursor');
+                cursor.innerText = emoji || '👆'; 
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            });
+
+            trigger.addEventListener('mouseleave', () => {
+                cursor.innerText = '✦'; 
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
         });
 
-        /* --- 3D TILT EFFECT --- */
-        document.querySelectorAll('.card').forEach(card => {
-            const handleMove = (x, y) => {
-                const rect = card.getBoundingClientRect();
-                const cardX = x - rect.left;
-                const cardY = y - rect.top;
-                card.style.setProperty('--mouse-x', `${cardX}px`);
-                card.style.setProperty('--mouse-y', `${cardY}px`);
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((cardY - centerY) / centerY) * -2;
-                const rotateY = ((cardX - centerX) / centerX) * 2;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            };
-
-            card.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
-            card.addEventListener('touchmove', (e) => {
-                handleMove(e.touches[0].clientX, e.touches[0].clientY);
-            }, { passive: true });
-
-            const reset = () => { card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)'; };
-            card.addEventListener('mouseleave', reset); card.addEventListener('touchend', reset);
-        });
-
-        /* --- SCROLL REVEAL --- */
+        // --- 3. SCROLL REVEAL ANIMATION ---
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+        // --- 4. MOBILE MENU TOGGLE ---
+        const hamburger = document.querySelector('.hamburger');
+        const mobileNav = document.querySelector('.mobile-nav');
+        const navLinks = document.querySelectorAll('.mobile-nav a');
+
+        hamburger.addEventListener('click', () => {
+            mobileNav.classList.toggle('active');
+            hamburger.innerText = mobileNav.classList.contains('active') ? '✕' : '☰';
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNav.classList.remove('active');
+                hamburger.innerText = '☰';
+            });
+        });
     </script>
 </body>
+
 </html>
