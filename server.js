@@ -65,9 +65,15 @@ app.get('/get-inquiries', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`------------------------------------------------`);
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
-    console.log(`📂 Saving data to: ${DATA_FILE}`);
-    console.log(`------------------------------------------------`);
-});
+// Export the app for Vercel Serverless
+module.exports = app;
+
+// Only listen if running locally
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`------------------------------------------------`);
+        console.log(`🚀 Server running at http://localhost:${PORT}`);
+        console.log(`📂 Saving data to: ${DATA_FILE}`);
+        console.log(`------------------------------------------------`);
+    });
+}

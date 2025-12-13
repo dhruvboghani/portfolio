@@ -643,18 +643,22 @@
 
         function saveInquiryToSystem() {
             // 1. Try to send to the Node.js Server (if running)
-            fetch('http://localhost:3000/save-inquiry', {
+            // Use relative path so it works on both localhost and deployed domain
+            fetch('/save-inquiry', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error("Server error");
+                return res.json();
+            })
             .then(data => {
                 console.log("Saved to Server:", data);
             })
             .catch(err => {
-                // 2. Fallback to Browser Storage if Server is offline
-                console.log("Server offline, saving locally.");
+                // 2. Fallback to Browser Storage if Server is offline or fails
+                console.log("Server failed (" + err.message + "), saving locally.");
                 let existingData = JSON.parse(localStorage.getItem('inquiry_data') || '[]');
                 userData.saved_at = new Date().toLocaleString();
                 existingData.push(userData);
