@@ -32,10 +32,8 @@
         /* --- Reset & Base --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Hide default cursor only on devices that have a fine pointer (Mouse) */
-        @media (pointer: fine) {
-            * { cursor: none; }
-        }
+        /* Default: Hide standard cursor (we use custom) */
+        * { cursor: none; }
 
         html { scroll-behavior: smooth; }
 
@@ -87,7 +85,7 @@
             transition: width 0.1s linear;
         }
 
-        /* --- Custom Cursor --- */
+        /* --- Custom Cursor (Visible on All Devices) --- */
         .cursor-dot, .cursor-circle {
             position: fixed;
             top: 0; left: 0;
@@ -107,12 +105,6 @@
             background-color: rgba(255, 255, 255, 0.05);
             border-color: var(--accent);
             backdrop-filter: blur(2px);
-        }
-        
-        /* HIDE Custom Cursor on Mobile/Touch Devices */
-        @media (hover: none) and (pointer: coarse) {
-            .cursor-dot, .cursor-circle { display: none !important; }
-            * { cursor: auto !important; }
         }
 
         /* --- Ambient Background --- */
@@ -208,8 +200,8 @@
             nav {
                 flex-direction: column; /* Stack vertically */
                 align-items: flex-start; /* Align left */
-                background: rgba(5,5,5,0.95); /* Solid dark background for readability */
-                padding-bottom: 20px;
+                background: rgba(5,5,5,0.98); /* Solid dark background */
+                padding-bottom: 25px;
             }
 
             .logo {
@@ -218,9 +210,9 @@
 
             .menu {
                 width: 100%;
-                justify-content: flex-start; /* Align links to start */
-                gap: 20px; /* Space between links */
-                flex-wrap: wrap; /* Allow wrapping if needed */
+                justify-content: flex-start;
+                gap: 20px;
+                flex-wrap: wrap;
             }
             
             .menu a { 
@@ -299,19 +291,14 @@
         @media (max-width: 768px) {
             .section-header {
                 flex-direction: column; /* Stack vertically */
-                align-items: flex-start; /* Align left */
-                gap: 10px; /* Space between Title and Subtitle */
+                align-items: flex-start; 
+                gap: 10px; 
             }
-            .section-header h2 {
-                margin-bottom: 5px;
-            }
-            .section-header span {
-                font-size: 0.9rem; /* Slightly smaller for mobile */
-                opacity: 0.8;
-            }
+            .section-header h2 { margin-bottom: 5px; }
+            .section-header span { font-size: 0.9rem; opacity: 0.8; }
         }
 
-        /* --- Bento Grid (Responsive) --- */
+        /* --- Bento Grid --- */
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
@@ -342,7 +329,10 @@
             transition: border-color 0.4s, background-color 0.4s;
             transform-style: preserve-3d;
         }
-        .card:hover { border-color: rgba(255,255,255,0.2); background: var(--surface-hover); }
+        .card:hover, .card:active { /* Active state for mobile tap */
+            border-color: rgba(255,255,255,0.2); 
+            background: var(--surface-hover); 
+        }
         
         .card::before {
             content: '';
@@ -356,7 +346,8 @@
             pointer-events: none;
             z-index: 1;
         }
-        .card:hover::before { opacity: 1; }
+        /* Opacity 1 on hover OR active (touch) */
+        .card:hover::before, .card:active::before { opacity: 1; }
 
         .card-content { z-index: 2; transform: translateZ(30px); }
         .card-meta { font-family: monospace; color: var(--accent); margin-bottom: 20px; display: block; }
@@ -410,7 +401,7 @@
             justify-content: space-between;
             transition: padding 0.3s;
         }
-        .skill-item:hover { padding-left: 20px; border-color: var(--accent); }
+        .skill-item:hover, .skill-item:active { padding-left: 20px; border-color: var(--accent); }
         .skill-name { font-size: 1.2rem; font-weight: 500; }
         .skill-type { font-family: monospace; font-size: 0.8rem; color: var(--text-muted); }
 
@@ -680,16 +671,23 @@
             }, 2000);
         });
 
-        /* --- CUSTOM CURSOR --- */
+        /* --- CUSTOM CURSOR LOGIC --- */
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorCircle = document.querySelector('.cursor-circle');
         let mouseX = 0, mouseY = 0;
         let cursorX = 0, cursorY = 0;
 
+        // Mouse Move
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
         });
+
+        // Touch Move (Enable cursor follow on mobile)
+        document.addEventListener('touchmove', (e) => {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        }, { passive: true });
 
         function animateCursor() {
             cursorX += (mouseX - cursorX) * 0.15;
@@ -706,29 +704,40 @@
             el.addEventListener('mouseleave', () => cursorCircle.classList.remove('hovered'));
         });
 
-        /* --- 3D TILT EFFECT --- */
-        // Only on desktop/hover capable devices
-        if (window.matchMedia("(hover: hover)").matches) {
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
-                    
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -2;
-                    const rotateY = ((x - centerX) / centerX) * 2;
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-                });
-            });
-        }
+        /* --- 3D TILT EFFECT (Works on Mouse & Touch) --- */
+        document.querySelectorAll('.card').forEach(card => {
+            const handleMove = (x, y) => {
+                const rect = card.getBoundingClientRect();
+                const cardX = x - rect.left;
+                const cardY = y - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${cardX}px`);
+                card.style.setProperty('--mouse-y', `${cardY}px`);
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((cardY - centerY) / centerY) * -2;
+                const rotateY = ((cardX - centerX) / centerX) * 2;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            };
+
+            // Mouse event
+            card.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+
+            // Touch event (for mobile tilt)
+            card.addEventListener('touchmove', (e) => {
+                // Prevent scrolling when actively tilting a card? 
+                // Usually better to let user scroll, so we passive listen.
+                handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+
+            const reset = () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            };
+
+            card.addEventListener('mouseleave', reset);
+            card.addEventListener('touchend', reset);
+        });
 
         /* --- SCROLL REVEAL --- */
         const observer = new IntersectionObserver((entries) => {
