@@ -642,8 +642,14 @@
         }
 
         function saveInquiryToSystem() {
-            // 1. Try to send to the Node.js Server (if running)
-            // Use relative path so it works on both localhost and deployed domain
+            // 1. ALWAYS Save to LocalStorage first (Backup)
+            let existingData = JSON.parse(localStorage.getItem('inquiry_data') || '[]');
+            userData.saved_at = new Date().toLocaleString();
+            existingData.push(userData);
+            localStorage.setItem('inquiry_data', JSON.stringify(existingData));
+            console.log("Saved locally.");
+
+            // 2. Try to send to the Node.js Server
             fetch('/save-inquiry', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -655,14 +661,12 @@
             })
             .then(data => {
                 console.log("Saved to Server:", data);
+                if (data.vercel) {
+                    console.log("Note: Running on Vercel (Read-Only). Data logged to server console.");
+                }
             })
             .catch(err => {
-                // 2. Fallback to Browser Storage if Server is offline or fails
-                console.log("Server failed (" + err.message + "), saving locally.");
-                let existingData = JSON.parse(localStorage.getItem('inquiry_data') || '[]');
-                userData.saved_at = new Date().toLocaleString();
-                existingData.push(userData);
-                localStorage.setItem('inquiry_data', JSON.stringify(existingData));
+                console.warn("Server sync failed (likely offline), but data is saved locally.");
             });
         }
 

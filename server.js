@@ -17,14 +17,25 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Initialize JSON file if it doesn't exist
-if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify([]));
+// Initialize JSON file if it doesn't exist (Only locally)
+if (!process.env.VERCEL && !fs.existsSync(DATA_FILE)) {
+    try {
+        fs.writeFileSync(DATA_FILE, JSON.stringify([]));
+    } catch (e) {
+        console.error("Could not create data file:", e);
+    }
 }
 
 // --- API: Save Inquiry ---
 app.post('/save-inquiry', (req, res) => {
     const newData = req.body;
+    newData.saved_at = new Date().toLocaleString();
+
+    // If running on Vercel (Read-Only System), just log and return success
+    if (process.env.VERCEL) {
+        console.log(`[VERCEL LOG] New Lead: ${JSON.stringify(newData)}`);
+        return res.json({ status: 'success', message: 'Logged to Vercel System', vercel: true });
+    }
     
     // 1. Read existing file
     fs.readFile(DATA_FILE, 'utf8', (err, fileData) => {
