@@ -10,6 +10,12 @@ const DATA_FILE = path.join(__dirname, 'inquiry.json');
 // Middleware
 app.use(cors()); // Allows index.html to talk to this server
 app.use(express.json());
+app.use(express.static(__dirname)); // Serve static files (css, js, images)
+
+// --- Serve HTML File ---
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Initialize JSON file if it doesn't exist
 if (!fs.existsSync(DATA_FILE)) {
