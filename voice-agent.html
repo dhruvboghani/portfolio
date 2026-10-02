@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Voice agent | Dhruv Boghani</title>
+<meta name="description" content="AI calling bot with memory and sentiment detection that updates the CRM automatically.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="index.html">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="index.html"><span>Home</span><span>01</span></a><a href="pipeline.html"><span>Pipeline</span><span>02</span></a><a href="invoice-ai.html"><span>Invoice AI</span><span>03</span></a><a href="voice-agent.html" class="on" aria-current="page"><span>Voice agent</span><span>04</span></a><a href="work.html"><span>Work & stack</span><span>05</span></a><a href="experience.html"><span>Experience</span><span>06</span></a><a href="contact.html"><span>Contact</span><span>07</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section id="voice" class="rv"><div class="ttl"><h1>Voice <span>agent</span></h1></div><p class="sub">The AI Calling Bot and CRM holds natural conversations with memory and sentiment detection, then updates the pipeline by itself. Scripted replay.</p>
+<div class="pn"><div class="ph m u"><span>twilio / pipecat / llm</span><button class="bt" id="bp" style="padding:4px 10px">Replay call</button></div><div class="pb"><div class="chain m u" style="margin-bottom:14px"><span>Twilio</span>&rarr;<span>Pipecat</span>&rarr;<span>LLM</span>&rarr;<span>CRM</span></div>
+<div class="g2"><div class="chat" id="ch"></div><div class="crm m"><span class="u">CRM record</span><div class="f" id="c1"><span>Status</span><b>New lead</b></div><div class="f" id="c2"><span>Objection</span><b>none</b></div><div class="f" id="c3"><span>Offer</span><b>none</b></div><div class="f" id="c4"><span>Follow-up</span><b>unset</b></div><span class="u" style="margin-top:6px">Sentiment</span><div class="mt"><i id="se"></i></div></div></div></div></div>
+<div class="tg m" style="margin:18px 0 50px"><span>Django</span><span>Twilio</span><span>Pipecat</span><span>Azure LLM</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h4>Call</h4><p>Twilio connects the call and streams audio.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h4>Orchestrate</h4><p>Pipecat runs speech, the LLM and replies in real time.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h4>Understand</h4><p>The LLM keeps memory and detects sentiment.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h4>Update</h4><p>Status, objection, offer and follow-up land in the CRM.</p></div></div></section><section class="rv"><div class="ttl"><h2>Beyond <span>the demo</span></h2></div><div class="fx" style="margin-bottom:50px"><div><h4>Call scoring</h4><p>Scores each call and classifies the follow-up stage.</p></div><div><h4>Agent handoff</h4><p>Passes the call to a human when needed.</p></div><div><h4>Missed-call retry</h4><p>Retries calls automatically when nobody picks up.</p></div><div><h4>Analytics</h4><p>Dashboards and audio-to-text transcripts for every call.</p></div></div></section><a class="nx pn" href="work.html"><span class="m u">Next</span><b>Work &amp; stack &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="assets/common.js"></script>
+<script src="assets/voice.js"></script>
+</body></html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Invoice AI | Dhruv Boghani</title>
+<meta name="description" content="Invoice Compare AI: LLM extraction, HSN detection, tax variance checks and vector search.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="index.html">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="index.html"><span>Home</span><span>01</span></a><a href="pipeline.html"><span>Pipeline</span><span>02</span></a><a href="invoice-ai.html" class="on" aria-current="page"><span>Invoice AI</span><span>03</span></a><a href="voice-agent.html"><span>Voice agent</span><span>04</span></a><a href="work.html"><span>Work & stack</span><span>05</span></a><a href="experience.html"><span>Experience</span><span>06</span></a><a href="contact.html"><span>Contact</span><span>07</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section id="rag" class="rv"><div class="ttl"><h1>Invoice <span>AI</span></h1></div><p class="sub">Invoice Compare AI uses LLM extraction, HSN detection, tax variance checks and vector search to catch mismatches. Sample data, simulated run.</p>
+<div class="pn"><div class="ph m u"><span>rag / invoice compare</span><span>sample data</span></div><div class="pb"><div class="g2">
+<div class="iv"><h4>Vendor invoice INV-2041</h4><div id="iA"></div></div><div class="iv"><h4>Purchase order PO-1187</h4><div id="iB"></div></div></div>
+<div class="sp m u" id="sp2"></div><button class="bt d" id="br">Run Invoice Compare AI</button><div class="fd m" id="fd" style="margin-top:18px"></div></div></div>
+<div class="tg m" style="margin:18px 0 50px"><span>Django</span><span>OpenAI</span><span>Vector DB</span><span>React</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h4>Extract</h4><p>An LLM pulls fields from the invoice and the purchase order.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h4>Detect</h4><p>HSN codes are identified and compared.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h4>Check</h4><p>Tax rates and amounts are tested for variance.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h4>Search</h4><p>Vector search finds similar past invoices that were flagged.</p></div></div></section><section class="rv"><div class="ttl"><h2>Beyond <span>the demo</span></h2></div><div class="fx" style="margin-bottom:50px"><div><h4>Supplier patterns</h4><p>Learns how each supplier formats and prices invoices.</p></div><div><h4>Price trends</h4><p>Tracks historical prices and benchmarks across invoices.</p></div><div><h4>Line checks</h4><p>Finds duplicate lines and discount mismatches.</p></div><div><h4>Recommendations</h4><p>Anomaly detection ends in a suggested next action.</p></div></div></section><a class="nx pn" href="voice-agent.html"><span class="m u">Next</span><b>Voice agent &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="assets/common.js"></script>
+<script src="assets/invoice.js"></script>
+</body></html>

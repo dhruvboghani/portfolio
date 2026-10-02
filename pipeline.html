@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data pipeline | Dhruv Boghani</title>
+<meta name="description" content="Interactive simulation of a real-time data lakehouse: Redpanda, Flink, Iceberg, Trino.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="index.html">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="index.html"><span>Home</span><span>01</span></a><a href="pipeline.html" class="on" aria-current="page"><span>Pipeline</span><span>02</span></a><a href="invoice-ai.html"><span>Invoice AI</span><span>03</span></a><a href="voice-agent.html"><span>Voice agent</span><span>04</span></a><a href="work.html"><span>Work & stack</span><span>05</span></a><a href="experience.html"><span>Experience</span><span>06</span></a><a href="contact.html"><span>Contact</span><span>07</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section id="pipeline" class="rv"><div class="ttl"><h1>Data <span>pipeline</span></h1></div><p class="sub">Real-Time Data Lakehouse. 10M+ events a day flow from Redpanda through Flink into versioned Iceberg tables, queried with Trino. Simulated live below.</p>
+<div class="kp" style="margin:0 0 28px"><div><span class="m u">Events / sec</span><b id="k1">115</b><canvas id="sp" width="160" height="30" style="width:100%;height:30px"></canvas></div><div><span class="m u">Events ingested</span><b id="k2">0</b></div><div><span class="m u">Snapshots</span><b id="k3">0</b></div><div><span class="m u">Quarantined</span><b id="k4">0</b></div></div>
+<div class="pn"><div class="ph m u"><span><i class="dot"></i>lakehouse / simulated</span><span>healthy</span></div><div class="pb">
+<div class="ctl m"><label>rate <input type="range" id="rt" min="20" max="400" value="115"> <b id="rtv">115</b>/s</label><button class="bt" id="bu">Burst</button><button class="bt" id="bd">Bad event</button></div>
+<canvas id="pl"></canvas><div class="dt m" id="dt">Click any stage to see what it does.</div>
+<div class="ctl m" style="margin-top:14px"><span class="u">Time travel</span><select id="sn"><option>no snapshots yet</option></select><button class="bt d" id="bq">Run Trino query</button></div><div class="out m" id="qo">trino> run a query to read the lake at any snapshot.</div></div></div>
+<div class="tg m" style="margin:18px 0 50px"><span>Redpanda</span><span>Apache Flink</span><span>Apache Iceberg</span><span>Trino</span><span>MinIO</span><span>Nessie</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h4>Ingest</h4><p>Redpanda takes in 10M+ events a day with Kafka-compatible streaming.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h4>Transform</h4><p>Flink processes events in flight and quarantines bad ones in a dead-letter queue.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h4>Store</h4><p>Iceberg tables on MinIO, versioned by Nessie, commit a snapshot as data lands.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h4>Query</h4><p>Trino reads the lake with SQL, including any past snapshot.</p></div></div></section><a class="nx pn" href="invoice-ai.html"><span class="m u">Next</span><b>Invoice AI &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="assets/common.js"></script>
+<script src="assets/pipeline.js"></script>
+</body></html>
