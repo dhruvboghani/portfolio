@@ -5,7 +5,7 @@
 <meta name="description" content="Interactive simulation of a real-time data lakehouse: Redpanda, Flink, Iceberg, Trino.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=6">
 </head><body>
 <div id="bar"></div>
 <div class="app">
@@ -20,6 +20,6 @@
 <div class="tg m" style="margin:18px 0 50px"><span>Redpanda</span><span>Apache Flink</span><span>Apache Iceberg</span><span>Trino</span><span>MinIO</span><span>Nessie</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h4>Ingest</h4><p>Redpanda takes in 10M+ events a day with Kafka-compatible streaming.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h4>Transform</h4><p>Flink processes events in flight and quarantines bad ones in a dead-letter queue.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h4>Store</h4><p>Iceberg tables on MinIO, versioned by Nessie, commit a snapshot as data lands.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h4>Query</h4><p>Trino reads the lake with SQL, including any past snapshot.</p></div></div></section><a class="nx pn" href="invoice-ai.html"><span class="m u">Next</span><b>Invoice AI &rarr;</b></a>
 <footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
 </main></div>
-<script src="assets/common.js"></script>
+<script src="assets/common.js?v=6"></script>
 <script src="assets/pipeline.js"></script>
 </body></html>

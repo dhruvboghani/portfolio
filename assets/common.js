@@ -1,7 +1,13 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],RM=matchMedia('(prefers-reduced-motion:reduce)').matches,fmt=n=>Math.floor(n).toLocaleString();
 
-// keep the active nav item visible on mobile (horizontal menu)
-(function(){const a=$('#nav a.on');if(a&&matchMedia('(max-width:900px)').matches){const nav=$('.sb');nav.scrollLeft=a.offsetLeft-nav.clientWidth/2+a.clientWidth/2}})();
+// mobile / tablet menu (hamburger)
+(function(){const sb=$('.sb'),nav=$('#nav');if(!sb||!nav)return;
+ const b=document.createElement('button');b.className='hb';b.type='button';b.setAttribute('aria-controls','nav');b.setAttribute('aria-expanded','false');b.setAttribute('aria-label','Open menu');b.innerHTML='<i></i><i></i><i></i>';sb.appendChild(b);
+ const set=o=>{document.body.classList.toggle('mo',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Close menu':'Open menu')};
+ b.onclick=()=>set(!document.body.classList.contains('mo'));
+ $$('#nav a').forEach(a=>a.addEventListener('click',()=>set(false)));
+ addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});
+ matchMedia('(min-width:901px)').addEventListener('change',e=>{if(e.matches)set(false)})})();
 
 // uptime counter that keeps running across pages
 let T0=Date.now();
