@@ -1,0 +1,52 @@
+# Generates one blog post per day, builds HTML, commits, and pushes (Vercel deploys from push).
+# Schedule is UTC. Default: 03:30 UTC = 09:00 IST (India).
+# Change the cron line to pick another time (GitHub cron is always UTC).
+name: Daily blog
+
+on:
+  schedule:
+    - cron: '30 3 * * *'   # 09:00 IST every day
+  workflow_dispatch:        # allow manual "Run workflow" from GitHub Actions
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate today's post
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_MODEL: ${{ vars.HF_MODEL }}
+          HF_BASE_URL: ${{ vars.HF_BASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+          AUTO_DRAFT: ${{ vars.AUTO_DRAFT }}
+        run: python3 auto_post.py
+
+      - name: Build blog HTML
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: python3 build_blog.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/posts/ content/topics.txt content/topics_done.txt \
+            blog/ blog.html index.html faq.html sitemap.xml rss.xml robots.txt
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(blog): daily post $(date -u +%Y-%m-%d)"
+          git push
