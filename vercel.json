@@ -8,10 +8,14 @@
       "config": {
         "includeFiles": [
           "assets/**",
+          "blog/**",
           "*.html",
           "style.css",
           "favicon.ico",
-          "inquiry.json"
+          "inquiry.json",
+          "robots.txt",
+          "sitemap.xml",
+          "rss.xml"
         ]
       }
     }
