@@ -1,7 +1,7 @@
 ---
 title: Apache Iceberg time travel: query your data as it was
 description: How Iceberg snapshots let you query past versions of a table with Trino, debug bad loads and roll back safely.
-date: 2026-10-05
+date: 2026-10-04
 tags: Data Engineering, Iceberg, Trino
 ---
 Every write to an Apache Iceberg table creates a **snapshot**. Because old snapshots are kept, you can query the table exactly as it looked at an earlier point in time.
