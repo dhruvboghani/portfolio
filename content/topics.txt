@@ -1,0 +1,21 @@
+# One topic per line. The next line is used each day. Add more any time.
+LLM hallucinations: 5 ways to reduce them
+Vector database comparison: pgvector vs Pinecone
+Kafka vs Redpanda for real-time pipelines
+Apache Flink stateful stream processing basics
+Prompt engineering for structured JSON output
+Chunking strategies for RAG
+Lakehouse vs data warehouse
+LLM function calling explained
+Speech-to-text latency in voice bots
+Multi-tenant SaaS architecture patterns
+RAG evaluation: how to measure answer quality
+Embedding models: how to choose one
+Change data capture (CDC) explained
+Schema evolution in Apache Iceberg
+Data quality checks in streaming pipelines
+AI agents vs chatbots: what is the difference
+Guardrails for LLM applications
+Semantic caching to cut LLM costs
+Real-time dashboards with Trino and Iceberg
+Building an AI copilot inside a CRM

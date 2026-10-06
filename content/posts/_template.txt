@@ -1,0 +1,16 @@
+---
+title: Your post title (include the main keyword)
+description: One sentence, 120 to 155 characters, that makes people click.
+date: 2026-10-07
+tags: AI, LLM
+---
+Intro: the problem in two sentences.
+
+## Section heading
+- point one
+- point two
+
+## Takeaway
+One clear conclusion.
+
+(Rename to YYYY-MM-DD-your-slug.md. Future dates stay hidden until that day.)

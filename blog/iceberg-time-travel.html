@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apache Iceberg time travel: query your data as it was | Dhruv Boghani</title>
+<meta name="description" content="How Iceberg snapshots let you query past versions of a table with Trino, debug bad loads and roll back safely.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=7">
+<!--seo-->
+<link rel="canonical" href="https://www.example.com/blog/iceberg-time-travel.html">
+<meta property="og:title" content="Apache Iceberg time travel: query your data as it was">
+<meta property="og:description" content="How Iceberg snapshots let you query past versions of a table with Trino, debug bad loads and roll back safely.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.example.com/blog/iceberg-time-travel.html">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Apache Iceberg time travel: query your data as it was", "description": "How Iceberg snapshots let you query past versions of a table with Trino, debug bad loads and roll back safely.", "datePublished": "2026-10-05", "dateModified": "2026-10-05", "author": {"@type": "Person", "name": "Dhruv Boghani"}, "mainEntityOfPage": "https://www.example.com/blog/iceberg-time-travel.html", "keywords": "Data Engineering, Iceberg, Trino"}</script>
+<!--/seo-->
+</head><body>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="../index.html">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="../index.html"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Apache Iceberg time travel: query your data as it was</h1><p class="m u meta">2026-10-05 / 1 min read / Data Engineering, Iceberg, Trino</p><article class="post"><p>Every write to an Apache Iceberg table creates a <strong>snapshot</strong>. Because old snapshots are kept, you can query the table exactly as it looked at an earlier point in time.</p>
+<h2>Query a past version</h2>
+<p>In Trino you can read a table at a snapshot or at a timestamp:</p>
+<pre><code>SELECT count(*) FROM events FOR VERSION AS OF 8954597067493422955;
+SELECT count(*) FROM events FOR TIMESTAMP AS OF TIMESTAMP '2026-10-01 00:00:00 UTC';</code></pre>
+<h2>Why it matters</h2>
+<ul>
+<li><strong>Debugging</strong>: compare today's table with yesterday's to find a bad load.</li>
+<li><strong>Audit</strong>: reproduce a report exactly as it was produced.</li>
+<li><strong>Rollback</strong>: return to a known-good snapshot after a faulty job.</li>
+</ul>
+<h2>Keep storage under control</h2>
+<p>Old snapshots take space. Expire them on a schedule, and keep the window long enough for your audit needs. Catalogs such as Nessie add Git-like branches on top, so you can test changes safely before publishing them.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=6"></script></body></html>

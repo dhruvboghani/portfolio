@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""Daily workflow: add a .md file to content/posts/, then run:  python3 build_blog.py
+Builds blog pages, blog index, FAQ, home 'latest posts', SEO tags, sitemap.xml, rss.xml, robots.txt."""
+import re, os, json, html, datetime, glob
+ROOT = os.path.dirname(os.path.abspath(__file__))
+SITE_URL = os.environ.get('SITE_URL') or 'https://www.example.com'   # <-- set your real domain here, or as the SITE_URL variable in GitHub
+AUTHOR = 'Dhruv Boghani'
+TODAY = datetime.date.today().isoformat()
+rd = lambda p: open(os.path.join(ROOT, p), encoding='utf-8').read()
+def wr(p, t):
+    p = os.path.join(ROOT, p); os.makedirs(os.path.dirname(p), exist_ok=True)
+    open(p, 'w', encoding='utf-8').write(t)
+E = lambda s: html.escape(s, quote=True)
+SEO = re.compile(r'<!--seo-->.*?<!--/seo-->\n?', re.S)
+
+def inline(s):
+    s = html.escape(s, quote=False)
+    s = re.sub(r'`([^`]+)`', r'<code>\1</code>', s)
+    s = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', s)
+    return re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', s)
+
+def md(t):
+    o, p, st = [], [], {'ul': False, 'code': None}
+    def fp():
+        if p: o.append('<p>' + inline(' '.join(p)) + '</p>'); p.clear()
+    def fl():
+        if st['ul']: o.append('</ul>'); st['ul'] = False
+    for ln in t.split('\n'):
+        if ln.startswith('```'):
+            if st['code'] is None: fp(); fl(); st['code'] = []
+            else: o.append('<pre><code>' + html.escape('\n'.join(st['code']), quote=False) + '</code></pre>'); st['code'] = None
+            continue
+        if st['code'] is not None: st['code'].append(ln); continue
+        m = re.match(r'(#{2,3}) (.+)', ln)
+        if m: fp(); fl(); n = len(m.group(1)); o.append('<h%d>%s</h%d>' % (n, inline(m.group(2)), n)); continue
+        if ln.startswith('- '):
+            fp()
+            if not st['ul']: o.append('<ul>'); st['ul'] = True
+            o.append('<li>' + inline(ln[2:]) + '</li>'); continue
+        if not ln.strip(): fp(); fl(); continue
+        fl(); p.append(ln.strip())
+    fp(); fl(); return '\n'.join(o)
+
+def load_posts():
+    out = []
+    for path in glob.glob(os.path.join(ROOT, 'content/posts/*.md')):
+        t = open(path, encoding='utf-8').read()
+        m = re.match(r'---\n(.*?)\n---\n(.*)', t, re.S)
+        if not m: continue
+        fm = {}
+        for l in m.group(1).split('\n'):
+            if ':' in l: k, v = l.split(':', 1); fm[k.strip()] = v.strip()
+        if fm.get('draft', '').lower() == 'true' or fm['date'] > TODAY: continue   # drafts and future dates stay hidden
+        slug = re.sub(r'^\d{4}-\d\d-\d\d-', '', os.path.splitext(os.path.basename(path))[0])
+        out.append(dict(title=fm['title'], desc=fm['description'], date=fm['date'], slug=slug,
+                        tags=[x.strip() for x in fm.get('tags', '').split(',') if x.strip()],
+                        html=md(m.group(2)), mins=max(1, round(len(m.group(2).split()) / 200))))
+    return sorted(out, key=lambda x: x['date'], reverse=True)
+
+TPL = SEO.sub('', rd('index.html'))
+def shell(title, desc, body, cur, depth=0):
+    h = TPL
+    if depth: h = re.sub(r'(href|src)="(?!https?:|mailto:|tel:|#|data:)', lambda m: m.group(1) + '="../', h)
+    h = re.sub(r'<title>.*?</title>', lambda m: '<title>%s</title>' % E(title), h, 1)
+    h = re.sub(r'(<meta name="description" content=").*?(">)', lambda m: m.group(1) + E(desc) + m.group(2), h, 1)
+    h = re.sub(r'(<main>\n).*?(\n<footer)', lambda m: m.group(1) + body + m.group(2), h, 1, flags=re.S)
+    h = re.sub(r'(<script src="[^"]*common\.js[^"]*"></script>).*?(</body>)', lambda m: m.group(1) + m.group(2), h, 1, flags=re.S)
+    h = h.replace(' class="on" aria-current="page"', '')
+    return h.replace('<a href="%s%s">' % ('../' if depth else '', cur), '<a href="%s%s" class="on" aria-current="page">' % ('../' if depth else '', cur), 1)
+
+def seo_block(url, title, desc, typ, ld):
+    og = lambda a, b: '<meta property="%s" content="%s">' % (a, E(b))
+    return ('<!--seo-->\n<link rel="canonical" href="%s">\n%s\n%s\n%s\n%s\n<meta name="twitter:card" content="summary">\n'
+            '<script type="application/ld+json">%s</script>\n<!--/seo-->\n') % (
+            url, og('og:title', title), og('og:description', desc), og('og:type', typ), og('og:url', url), json.dumps(ld, ensure_ascii=False))
+add_seo = lambda h, b: SEO.sub('', h).replace('</head>', b + '</head>', 1)
+head = lambda a, b, s: '<div class="ttl"><h1>%s <span>%s</span></h1></div><p class="sub">%s</p>' % (a, b, s)
+tagsh = lambda l: '<p class="m tg">' + ''.join('<span>%s</span>' % E(x) for x in l) + '</p>'
+nxl = lambda href, label: '<a class="nx pn" href="%s"><span class="m u">More</span><b>%s &rarr;</b></a>' % (href, label)
+
+posts = load_posts()
+LD = {}
+# ---- posts
+for p in posts:
+    url = '%s/blog/%s.html' % (SITE_URL, p['slug'])
+    body = ('<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">%s</h1>'
+            '<p class="m u meta">%s / %d min read / %s</p><article class="post">%s</article>'
+            '<p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section>%s') % (
+            E(p['title']), p['date'], p['mins'], E(', '.join(p['tags'])), p['html'], nxl('../blog.html', 'All posts'))
+    h = shell(p['title'] + ' | ' + AUTHOR, p['desc'], body, 'blog.html', 1)
+    ld = {'@context': 'https://schema.org', '@type': 'BlogPosting', 'headline': p['title'], 'description': p['desc'],
+          'datePublished': p['date'], 'dateModified': p['date'], 'author': {'@type': 'Person', 'name': AUTHOR},
+          'mainEntityOfPage': url, 'keywords': ', '.join(p['tags'])}
+    wr('blog/%s.html' % p['slug'], add_seo(h, seo_block(url, p['title'], p['desc'], 'article', ld)))
+# ---- blog index
+rows = ''.join('<a class="pr" href="blog/%s.html"><span class="m u">%s / %d min read</span><h3>%s</h3><p>%s</p>%s</a>' % (
+    p['slug'], p['date'], p['mins'], E(p['title']), E(p['desc']), tagsh(p['tags'])) for p in posts) or '<p class="pb">First post coming soon.</p>'
+wr('blog.html', shell('Blog: AI, LLM and Data Engineering | ' + AUTHOR, 'Practical posts on AI, LLMs, RAG, voice agents and data engineering.',
+    '<section class="rv">' + head('Engineering', 'blog', 'Practical notes on AI, LLMs and data engineering. <a href="rss.xml"><b>RSS</b></a>') + '<div class="pn">' + rows + '</div><div style="height:50px"></div></section>', 'blog.html'))
+# ---- FAQ
+faq = json.load(open(os.path.join(ROOT, 'content/faq.json'), encoding='utf-8'))
+items = ''.join('<details class="fq"><summary>%s</summary><p>%s</p></details>' % (E(q), E(a)) for q, a in faq)
+LD['faq.html'] = {'@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': [
+    {'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in faq]}
+wr('faq.html', shell('FAQ | ' + AUTHOR, 'Answers about AI, LLM, voice agent, 3D avatar and data engineering projects.',
+    '<section class="rv">' + head('Frequently asked', 'questions', 'Quick answers about how I work and what I build.') + '<div class="pn pb">' + items + '</div><div style="height:50px"></div></section>' + nxl('contact.html', 'Contact'), 'faq.html'))
+# ---- home: latest posts
+if posts:
+    n = min(3, len(posts))
+    cards = ''.join('<a href="blog/%s.html"><span class="m u" style="color:var(--mute)">%s</span><h4>%s</h4><p>%s</p><span class="m u go">Read &rarr;</span></a>' % (
+        p['slug'], p['date'], E(p['title']), E(p['desc'])) for p in posts[:n])
+    sec = '<section id="latest" class="rv"><div class="ttl"><h2>Latest <span>posts</span></h2></div><div class="pn"><div class="also" style="--c:%d">%s</div></div></section>' % (n, cards)
+    h = rd('index.html'); h = re.sub(r'<section id="latest".*?</section>', lambda m: sec, h, 1, flags=re.S); wr('index.html', h)
+# ---- SEO on every root page
+PERSON = {'@context': 'https://schema.org', '@type': 'Person', 'name': AUTHOR, 'url': SITE_URL + '/',
+          'jobTitle': 'Senior Full Stack, AI & Data Platform Engineer',
+          'address': {'@type': 'PostalAddress', 'addressLocality': 'Ahmedabad', 'addressRegion': 'Gujarat', 'addressCountry': 'IN'},
+          'knowsAbout': ['Generative AI', 'LLM', 'RAG', 'Voice AI agents', 'Data engineering', 'Apache Iceberg', 'Apache Flink', 'Full-stack development']}
+urls = []
+for f in sorted(os.listdir(ROOT)):
+    if not f.endswith('.html'): continue
+    h = rd(f); url = SITE_URL + ('/' if f == 'index.html' else '/' + f)
+    t = re.search(r'<title>(.*?)</title>', h, re.S).group(1); d = re.search(r'<meta name="description" content="(.*?)">', h).group(1)
+    ld = PERSON if f == 'index.html' else LD.get(f, {'@context': 'https://schema.org', '@type': 'WebPage', 'name': t, 'description': d, 'url': url})
+    wr(f, add_seo(h, seo_block(url, html.unescape(t), html.unescape(d), 'website', ld)))
+    urls.append((url, datetime.date.fromtimestamp(os.path.getmtime(os.path.join(ROOT, f))).isoformat()))
+urls += [('%s/blog/%s.html' % (SITE_URL, p['slug']), p['date']) for p in posts]
+wr('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+   ''.join('<url><loc>%s</loc><lastmod>%s</lastmod></url>\n' % u for u in urls) + '</urlset>\n')
+wr('robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE_URL)
+wr('rss.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>%s Blog</title><link>%s/blog.html</link><description>AI, LLM and data engineering</description>\n' % (AUTHOR, SITE_URL) +
+   ''.join('<item><title>%s</title><link>%s/blog/%s.html</link><guid>%s/blog/%s.html</guid><pubDate>%s</pubDate><description>%s</description></item>\n' % (
+       E(p['title']), SITE_URL, p['slug'], SITE_URL, p['slug'], datetime.datetime.strptime(p['date'], '%Y-%m-%d').strftime('%a, %d %b %Y 00:00:00 +0000'), E(p['desc'])) for p in posts) + '</channel></rss>\n')
+print('Built %d posts, %d URLs in sitemap. SITE_URL = %s' % (len(posts), len(urls), SITE_URL))

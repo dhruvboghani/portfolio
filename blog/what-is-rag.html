@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What is RAG? A practical guide for developers | Dhruv Boghani</title>
+<meta name="description" content="Retrieval-Augmented Generation explained: how it works, when to use it, and the mistakes that make RAG systems give bad answers.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=7">
+<!--seo-->
+<link rel="canonical" href="https://www.example.com/blog/what-is-rag.html">
+<meta property="og:title" content="What is RAG? A practical guide for developers">
+<meta property="og:description" content="Retrieval-Augmented Generation explained: how it works, when to use it, and the mistakes that make RAG systems give bad answers.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.example.com/blog/what-is-rag.html">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "What is RAG? A practical guide for developers", "description": "Retrieval-Augmented Generation explained: how it works, when to use it, and the mistakes that make RAG systems give bad answers.", "datePublished": "2026-10-04", "dateModified": "2026-10-04", "author": {"@type": "Person", "name": "Dhruv Boghani"}, "mainEntityOfPage": "https://www.example.com/blog/what-is-rag.html", "keywords": "AI, LLM, RAG"}</script>
+<!--/seo-->
+</head><body>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="../index.html">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="../index.html"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">What is RAG? A practical guide for developers</h1><p class="m u meta">2026-10-04 / 1 min read / AI, LLM, RAG</p><article class="post"><p>Large language models know a lot, but they do not know <strong>your</strong> documents. Retrieval-Augmented Generation (RAG) fixes that by fetching the right information at question time and handing it to the model.</p>
+<h2>How RAG works</h2>
+<ul>
+<li><strong>Chunk</strong> your documents into small passages.</li>
+<li><strong>Embed</strong> each chunk into a vector and store it in a vector database such as pgvector or Pinecone.</li>
+<li><strong>Retrieve</strong> the chunks closest to the user's question.</li>
+<li><strong>Generate</strong> an answer from the question plus those chunks.</li>
+</ul>
+<h2>When to use it</h2>
+<p>Use RAG when answers must come from private or frequently changing content: product docs, contracts, invoices, support tickets. It avoids retraining a model every time the data changes.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li>Chunks that are too large or split mid-sentence.</li>
+<li>No evaluation set, so quality is never measured.</li>
+<li>Not showing sources, which makes wrong answers hard to catch.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Good RAG is mostly good retrieval. Spend your time on chunking, search quality and evaluation before changing the model.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=6"></script></body></html>
