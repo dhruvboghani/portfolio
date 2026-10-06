@@ -19,7 +19,9 @@ DRAFT = os.environ.get('AUTO_DRAFT', 'false').lower() == 'true'
 TOPICS, DONE = os.path.join(ROOT, 'content/topics.txt'), os.path.join(ROOT, 'content/topics_done.txt')
 POSTS = os.path.join(ROOT, 'content/posts')
 today = datetime.date.today().isoformat()
-if any(f.startswith(today) for f in os.listdir(POSTS)): sys.exit('A post for %s already exists. Nothing to do.' % today)
+if any(f.startswith(today) for f in os.listdir(POSTS)):
+    print('A post for %s already exists. Nothing to do.' % today)
+    sys.exit(0)
 lines = open(TOPICS, encoding='utf-8').read().split('\n')
 topic = next((l.strip() for l in lines if l.strip() and not l.startswith('#')), None)
 if not topic: sys.exit('No topics left. Add more lines to content/topics.txt')
