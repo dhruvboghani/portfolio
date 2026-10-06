@@ -1,1 +1,2 @@
 LLM hallucinations: 5 ways to reduce them
+Vector database comparison: pgvector vs Pinecone
