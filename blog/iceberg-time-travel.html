@@ -7,20 +7,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css?v=7">
 <!--seo-->
-<link rel="canonical" href="https://dhruv-boghani.vercel.app//blog/iceberg-time-travel.html">
+<link rel="canonical" href="https://www.example.com/blog/iceberg-time-travel.html">
 <meta property="og:title" content="Apache Iceberg time travel: query your data as it was">
 <meta property="og:description" content="How Iceberg snapshots let you query past versions of a table with Trino, debug bad loads and roll back safely.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://dhruv-boghani.vercel.app//blog/iceberg-time-travel.html">
+<meta property="og:url" content="https://www.example.com/blog/iceberg-time-travel.html">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Apache Iceberg time travel: query your data as it was", "description": "How Iceberg snapshots let you query past versions of a table with Trino, debug bad loads and roll back safely.", "datePublished": "2026-10-05", "dateModified": "2026-10-05", "author": {"@type": "Person", "name": "Dhruv Boghani"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app//blog/iceberg-time-travel.html", "keywords": "Data Engineering, Iceberg, Trino"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Apache Iceberg time travel: query your data as it was", "description": "How Iceberg snapshots let you query past versions of a table with Trino, debug bad loads and roll back safely.", "datePublished": "2026-10-04", "dateModified": "2026-10-04", "author": {"@type": "Person", "name": "Dhruv Boghani"}, "mainEntityOfPage": "https://www.example.com/blog/iceberg-time-travel.html", "keywords": "Data Engineering, Iceberg, Trino"}</script>
 <!--/seo-->
 </head><body>
 <div id="bar"></div>
 <div class="app">
 <aside class="sb"><b><a href="../index.html">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="../index.html"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
 <main>
-<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Apache Iceberg time travel: query your data as it was</h1><p class="m u meta">2026-10-05 / 1 min read / Data Engineering, Iceberg, Trino</p><article class="post"><p>Every write to an Apache Iceberg table creates a <strong>snapshot</strong>. Because old snapshots are kept, you can query the table exactly as it looked at an earlier point in time.</p>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Apache Iceberg time travel: query your data as it was</h1><p class="m u meta">2026-10-04 / 1 min read / Data Engineering, Iceberg, Trino</p><article class="post"><p>Every write to an Apache Iceberg table creates a <strong>snapshot</strong>. Because old snapshots are kept, you can query the table exactly as it looked at an earlier point in time.</p>
 <h2>Query a past version</h2>
 <p>In Trino you can read a table at a snapshot or at a timestamp:</p>
 <pre><code>SELECT count(*) FROM events FOR VERSION AS OF 8954597067493422955;

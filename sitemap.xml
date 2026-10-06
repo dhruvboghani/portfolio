@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://dhruv-boghani.vercel.app//admin-assistant.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//blog.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//contact.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//experience.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//faq.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//invoice-ai.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//pipeline.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//voice-agent.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//voice-avatar.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//work.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//blog/how-voice-ai-agents-work.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//blog/vector-database-comparison-pgvector-vs-pinecone.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//blog/iceberg-time-travel.html</loc><lastmod>2026-10-05</lastmod></url>
-<url><loc>https://dhruv-boghani.vercel.app//blog/what-is-rag.html</loc><lastmod>2026-10-03</lastmod></url>
+<url><loc>https://www.example.com/admin-assistant.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/blog.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/contact.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/experience.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/faq.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/invoice-ai.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/pipeline.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/voice-agent.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/voice-avatar.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/work.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/blog/vector-database-comparison-pgvector-vs-pinecone.html</loc><lastmod>2026-10-06</lastmod></url>
+<url><loc>https://www.example.com/blog/how-voice-ai-agents-work.html</loc><lastmod>2026-10-05</lastmod></url>
+<url><loc>https://www.example.com/blog/iceberg-time-travel.html</loc><lastmod>2026-10-04</lastmod></url>
+<url><loc>https://www.example.com/blog/what-is-rag.html</loc><lastmod>2026-10-03</lastmod></url>
 </urlset>
