@@ -25,7 +25,7 @@ TOPICS, DONE = os.path.join(ROOT, 'content/topics.txt'), os.path.join(ROOT, 'con
 POSTS = os.path.join(ROOT, 'content/posts')
 # GitHub runners use UTC. A delayed cron can finish after midnight in India
 # while UTC is still the previous day, which skipped a new post.
-today = datetime.datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
+today = env('POST_DATE') or datetime.datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
 if any(f.startswith(today) for f in os.listdir(POSTS)):
     print('A post for %s already exists. Nothing to do.' % today)
     sys.exit(0)

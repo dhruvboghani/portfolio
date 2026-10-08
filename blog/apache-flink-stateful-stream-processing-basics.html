@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apache Flink stateful stream processing basics | Dhruv Boghani</title>
+<meta name="description" content="How Flink keeps state in a streaming job, including keyed state, checkpoints, watermarks, and what fails in production.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=7">
+
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/apache-flink-stateful-stream-processing-basics.html">
+<meta property="og:title" content="Apache Flink stateful stream processing basics">
+<meta property="og:description" content="How Flink keeps state in a streaming job, including keyed state, checkpoints, watermarks, and what fails in production.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/apache-flink-stateful-stream-processing-basics.html">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Apache Flink stateful stream processing basics", "description": "How Flink keeps state in a streaming job, including keyed state, checkpoints, watermarks, and what fails in production.", "datePublished": "2026-10-08", "dateModified": "2026-10-08", "author": {"@type": "Person", "name": "Dhruv Boghani"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/apache-flink-stateful-stream-processing-basics.html", "keywords": "data-engineering, flink, streaming"}</script>
+<!--/seo-->
+</head><body>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="../index.html">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="../index.html"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Apache Flink stateful stream processing basics</h1><p class="m u meta">2026-10-08 / 3 min read / data-engineering, flink, streaming</p><article class="post"><p>Apache Flink is a stream processor that can remember data between events. A stateless map is easy to reason about. Counts, sessions, joins, and deduplication are not, because the answer depends on events that already passed. That memory is Flink state, and checkpoints are how a job gets it back after a failure.</p>
+<h2>A job is a graph with state</h2>
+<p>A Flink job is a directed graph of operators. Source operators read from Kafka or another log. Downstream operators transform records. When an operator is keyed, Flink partitions the stream by key and keeps a state store for each key on the task that owns it.</p>
+<ul>
+<li><strong>Keyed state</strong> belongs to one key, such as a user id or an account id. Use it for counts, last-seen timestamps, and small aggregates.</li>
+<li><strong>Operator state</strong> belongs to a parallel task instance, not to a key. Sources often use it to remember offsets or split positions.</li>
+<li>State lives in memory with a disk-backed state backend for larger jobs. RocksDB is the common choice when key cardinality is high.</li>
+</ul>
+<pre><code>Kafka source -&gt; keyBy(accountId) -&gt; process(count, lastEvent) -&gt; sink
+                      |
+                 state per key
+                      |
+                 checkpoint to durable storage</code></pre>
+<p>If you do not call <code>keyBy</code>, every record on a task shares one state bucket. That is rarely what you want for per-entity logic.</p>
+<h2>Checkpoints and recovery</h2>
+<p>A checkpoint is a consistent snapshot of operator state plus the source positions. Flink injects barriers into the stream. When an operator has received the barrier from all inputs, it snapshots its state and forwards the barrier.</p>
+<ul>
+<li>On failure, the job restarts from the last completed checkpoint and replays source records from those offsets.</li>
+<li>This is at-least-once unless the sink participates in the same snapshot. A transactional sink, such as the Kafka sink with exactly-once settings, commits output only when the checkpoint completes.</li>
+<li>If the sink is a plain database write, you still need idempotent upserts. Replay will send some records again.</li>
+</ul>
+<p>Set a checkpoint interval you can afford. A one-minute interval means you may reprocess about a minute of data. Very frequent checkpoints add load on the state backend and on remote storage.</p>
+<p>Keep checkpoints on durable storage the job can reach after a restart, such as S3 or a shared filesystem. A checkpoint that only sits on a dead task manager is not a recovery point.</p>
+<h2>Time, watermarks, and windows</h2>
+<p>Event time is the timestamp inside the record. Processing time is the clock on the machine. For late data, event time is the one that matches the business.</p>
+<p>Flink uses watermarks to estimate how complete the stream is. A window closes when the watermark passes the end of the window, plus any allowed lateness.</p>
+<ul>
+<li>Idle partitions stall watermarks. One quiet Kafka partition can hold windows open. Configure an idleness timeout when some partitions go quiet.</li>
+<li>Late events after the window has closed are dropped unless you send them to a side output and handle them.</li>
+<li>Session windows depend on state. A long gap defines the session end. High key cardinality plus long sessions makes a large state store.</li>
+</ul>
+<h2>What usually breaks</h2>
+<ul>
+<li><strong>Unbounded state.</strong> A counter per user is fine. Storing every raw event in a list per user is not. Set state TTL when keys stop appearing.</li>
+<li><strong>Hot keys.</strong> One account that produces most of the traffic lands on one task. Split the key or pre-aggregate.</li>
+<li><strong>Large records in state.</strong> State should be aggregates and identifiers, not full payloads you could re-read from the log.</li>
+<li><strong>Sink commits that ignore replay.</strong> If a restart duplicates rows, the sink key is wrong or the write is not an upsert.</li>
+<li><strong>Checkpoint timeouts.</strong> The state backend or remote storage cannot keep up. Slow checkpoints are a capacity problem, not a retry problem.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Treat Flink as a stateful service, not as a function that happens to run forever. Key the stream, keep state small, checkpoint to durable storage, and make the sink safe to replay. Watermarks decide when a window is done. If those four pieces are explicit in the job, recovery and late data stop being surprises.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=6"></script></body></html>
