@@ -1,11 +1,11 @@
 # Generates one blog post per day, builds HTML, commits, and pushes (Vercel deploys from push).
-# Schedule is UTC. Testing: 14:37 UTC = 20:07 IST (India).
+# Schedule is UTC. 03:30 UTC = 09:00 IST (India).
 # Change the cron line to pick another time (GitHub cron is always UTC).
 name: Daily blog
 
 on:
   schedule:
-    - cron: '37 14 * * *'  # 20:07 IST (testing)
+    - cron: '30 3 * * *'  # 09:00 IST
   workflow_dispatch:        # allow manual "Run workflow" from GitHub Actions
 
 permissions:
@@ -14,6 +14,8 @@ permissions:
 jobs:
   post:
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Kolkata
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,5 +50,5 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "chore(blog): daily post $(date -u +%Y-%m-%d)"
+          git commit -m "chore(blog): daily post $(date +%Y-%m-%d)"
           git push

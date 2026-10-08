@@ -3,6 +3,7 @@
 Uses Hugging Face (HF_TOKEN, HF_MODEL, HF_BASE_URL) if HF_TOKEN is set, otherwise Claude (ANTHROPIC_API_KEY).
 Optional: AUTO_DRAFT=true saves the post as a draft for review."""
 import os, re, sys, json, datetime, urllib.request, urllib.error
+from zoneinfo import ZoneInfo
 ROOT = os.path.dirname(os.path.abspath(__file__))
 try:  # local runs: read KEY=VALUE lines from .env (never commit this file)
     for _l in open(os.path.join(ROOT, '.env'), encoding='utf-8'):
@@ -22,7 +23,9 @@ MODEL = env('CLAUDE_MODEL', 'claude-sonnet-5-5')
 DRAFT = (env('AUTO_DRAFT') or 'false').lower() == 'true'
 TOPICS, DONE = os.path.join(ROOT, 'content/topics.txt'), os.path.join(ROOT, 'content/topics_done.txt')
 POSTS = os.path.join(ROOT, 'content/posts')
-today = datetime.date.today().isoformat()
+# GitHub runners use UTC. A delayed cron can finish after midnight in India
+# while UTC is still the previous day, which skipped a new post.
+today = datetime.datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
 if any(f.startswith(today) for f in os.listdir(POSTS)):
     print('A post for %s already exists. Nothing to do.' % today)
     sys.exit(0)

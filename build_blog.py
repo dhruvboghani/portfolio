@@ -2,10 +2,11 @@
 """Daily workflow: add a .md file to content/posts/, then run:  python3 build_blog.py
 Builds blog pages, blog index, FAQ, home 'latest posts', SEO tags, sitemap.xml, rss.xml, robots.txt."""
 import re, os, json, html, datetime, glob
+from zoneinfo import ZoneInfo
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE_URL = os.environ.get('SITE_URL') or 'https://www.example.com'   # <-- set your real domain here, or as the SITE_URL variable in GitHub
 AUTHOR = 'Dhruv Boghani'
-TODAY = datetime.date.today().isoformat()
+TODAY = datetime.datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
 rd = lambda p: open(os.path.join(ROOT, p), encoding='utf-8').read()
 def wr(p, t):
     p = os.path.join(ROOT, p); os.makedirs(os.path.dirname(p), exist_ok=True)
