@@ -2,3 +2,4 @@ LLM hallucinations: 5 ways to reduce them
 Vector database comparison: pgvector vs Pinecone
 Kafka vs Redpanda for real-time pipelines
 Apache Flink stateful stream processing basics
+Prompt engineering for structured JSON output

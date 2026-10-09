@@ -135,6 +135,18 @@ footer{border-top:var(--ln);padding:20px;text-align:center;margin:0 calc(-1*clam
 .post h2{font:800 28px/1.1 Archivo;font-stretch:80%;text-transform:uppercase;margin:34px 0 12px}
 .post h3{font:800 20px Archivo;margin:24px 0 8px}
 .post ul{margin:0 0 14px 22px}
+html:not(.booted):not(.seen){overflow:hidden}
+html.seen #boot{display:none}
+html:not(.booted) #nm .c{animation-play-state:paused}
+#boot{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:18px;background:var(--bg);color:var(--ink);transition:transform .7s cubic-bezier(.76,0,.24,1)}
+#boot.off{transform:translateY(-100%)}
+.boot-card{width:min(520px,100%);border:var(--ln);box-shadow:8px 8px 0 var(--ink);padding:26px 22px 20px;background:var(--bg)}
+.boot-nm{font:800 clamp(42px,12vw,96px)/.82 Archivo;font-stretch:70%;letter-spacing:-.04em;text-transform:uppercase;margin:12px 0 22px}
+.boot-nm span{display:block}
+.boot-track{height:10px;border:var(--ln)}
+.boot-track i{display:block;height:100%;width:0;background:var(--acc)}
+.boot-stat{display:flex;justify-content:space-between;margin-top:12px}
+@media(prefers-reduced-motion:reduce){#boot{transition:none}}
 .post a{text-decoration:underline;text-decoration-color:var(--acc);text-underline-offset:3px}
 .post pre{background:var(--ink);color:#fff;padding:14px;overflow-x:auto;border:var(--ln);box-shadow:5px 5px 0 var(--acc);margin:0 0 18px;font-size:13px}
 .post code{font-family:'IBM Plex Mono',monospace;font-size:.92em}

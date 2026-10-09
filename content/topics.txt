@@ -1,5 +1,4 @@
 # One topic per line. The next line is used each day. Add more any time.
-Prompt engineering for structured JSON output
 Chunking strategies for RAG
 Lakehouse vs data warehouse
 LLM function calling explained
