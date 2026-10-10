@@ -2,18 +2,23 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AI Voice Calling Agent with CRM Demo | Dhruv Boghani</title>
-<meta name="description" content="AI calling bot with memory and sentiment detection that updates the CRM automatically.">
+<meta name="description" content="Live demo: an AI voice calling agent built with Twilio and Pipecat that talks to leads, detects sentiment and updates the CRM pipeline by itself.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=8">
+<link rel="stylesheet" href="assets/style.css?v=9">
 <script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
 <!--seo-->
 <link rel="canonical" href="https://dhruv-boghani.vercel.app/voice-agent.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
 <meta property="og:site_name" content="Dhruv Boghani">
 <meta property="og:locale" content="en_IN">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AI Voice Calling Agent with CRM Demo | Dhruv Boghani">
-<meta property="og:description" content="AI calling bot with memory and sentiment detection that updates the CRM automatically.">
+<meta property="og:description" content="Live demo: an AI voice calling agent built with Twilio and Pipecat that talks to leads, detects sentiment and updates the CRM pipeline by itself.">
 <meta property="og:url" content="https://dhruv-boghani.vercel.app/voice-agent.html">
 <meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -21,9 +26,9 @@
 <meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI Voice Calling Agent with CRM Demo | Dhruv Boghani">
-<meta name="twitter:description" content="AI calling bot with memory and sentiment detection that updates the CRM automatically.">
+<meta name="twitter:description" content="Live demo: an AI voice calling agent built with Twilio and Pipecat that talks to leads, detects sentiment and updates the CRM pipeline by itself.">
 <meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "AI Voice Calling Agent with CRM Demo | Dhruv Boghani", "description": "AI calling bot with memory and sentiment detection that updates the CRM automatically.", "url": "https://dhruv-boghani.vercel.app/voice-agent.html", "isPartOf": {"@id": "https://dhruv-boghani.vercel.app/#website"}, "about": {"@id": "https://dhruv-boghani.vercel.app/#person"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "AI Voice Calling Agent with CRM Demo", "item": "https://dhruv-boghani.vercel.app/voice-agent.html"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "AI Voice Calling Agent with CRM Demo | Dhruv Boghani", "description": "Live demo: an AI voice calling agent built with Twilio and Pipecat that talks to leads, detects sentiment and updates the CRM pipeline by itself.", "url": "https://dhruv-boghani.vercel.app/voice-agent.html", "isPartOf": {"@id": "https://dhruv-boghani.vercel.app/#website"}, "about": {"@id": "https://dhruv-boghani.vercel.app/#person"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "AI Voice Calling Agent with CRM Demo", "item": "https://dhruv-boghani.vercel.app/voice-agent.html"}]}]}</script>
 <!--/seo-->
 </head><body>
 <div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span><span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
@@ -34,7 +39,7 @@
 <section id="voice" class="rv"><div class="ttl"><h1>Voice <span>agent</span></h1></div><p class="sub">The AI Calling Bot and CRM holds natural conversations with memory and sentiment detection, then updates the pipeline by itself. Scripted replay.</p>
 <div class="pn"><div class="ph m u"><span>twilio / pipecat / llm</span><button class="bt" id="bp" style="padding:4px 10px">Replay call</button></div><div class="pb"><div class="chain m u" style="margin-bottom:14px"><span>Twilio</span>&rarr;<span>Pipecat</span>&rarr;<span>LLM</span>&rarr;<span>CRM</span></div>
 <div class="g2"><div class="chat" id="ch"></div><div class="crm m"><span class="u">CRM record</span><div class="f" id="c1"><span>Status</span><b>New lead</b></div><div class="f" id="c2"><span>Objection</span><b>none</b></div><div class="f" id="c3"><span>Offer</span><b>none</b></div><div class="f" id="c4"><span>Follow-up</span><b>unset</b></div><span class="u" style="margin-top:6px">Sentiment</span><div class="mt"><i id="se"></i></div></div></div></div></div>
-<div class="tg m" style="margin:18px 0 50px"><span>Django</span><span>Twilio</span><span>Pipecat</span><span>Azure LLM</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h4>Call</h4><p>Twilio connects the call and streams audio.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h4>Orchestrate</h4><p>Pipecat runs speech, the LLM and replies in real time.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h4>Understand</h4><p>The LLM keeps memory and detects sentiment.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h4>Update</h4><p>Status, objection, offer and follow-up land in the CRM.</p></div></div></section><section class="rv"><div class="ttl"><h2>Beyond <span>the demo</span></h2></div><div class="fx" style="margin-bottom:50px"><div><h4>Call scoring</h4><p>Scores each call and classifies the follow-up stage.</p></div><div><h4>Agent handoff</h4><p>Passes the call to a human when needed.</p></div><div><h4>Missed-call retry</h4><p>Retries calls automatically when nobody picks up.</p></div><div><h4>Analytics</h4><p>Dashboards and audio-to-text transcripts for every call.</p></div></div></section><a class="nx pn" href="work.html"><span class="m u">Next</span><b>Work &amp; stack &rarr;</b></a>
+<div class="tg m" style="margin:18px 0 50px"><span>Django</span><span>Twilio</span><span>Pipecat</span><span>Azure LLM</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h3>Call</h3><p>Twilio connects the call and streams audio.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h3>Orchestrate</h3><p>Pipecat runs speech, the LLM and replies in real time.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h3>Understand</h3><p>The LLM keeps memory and detects sentiment.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h3>Update</h3><p>Status, objection, offer and follow-up land in the CRM.</p></div></div></section><section class="rv"><div class="ttl"><h2>Beyond <span>the demo</span></h2></div><div class="fx" style="margin-bottom:50px"><div><h3>Call scoring</h3><p>Scores each call and classifies the follow-up stage.</p></div><div><h3>Agent handoff</h3><p>Passes the call to a human when needed.</p></div><div><h3>Missed-call retry</h3><p>Retries calls automatically when nobody picks up.</p></div><div><h3>Analytics</h3><p>Dashboards and audio-to-text transcripts for every call.</p></div></div></section><a class="nx pn" href="work.html"><span class="m u">Next</span><b>Work &amp; stack &rarr;</b></a>
 <footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
 </main></div>
 <script src="assets/common.js?v=7"></script>

@@ -81,6 +81,11 @@ def seo_block(url, title, desc, typ, ld):
     tw = lambda a, b: '<meta name="%s" content="%s">' % (a, E(b))
     tags = [
         '<link rel="canonical" href="%s">' % E(url),
+        '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">',
+        '<link rel="icon" href="/favicon.ico" sizes="48x48">',
+        '<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">',
+        '<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">',
+        '<meta name="theme-color" content="#ECEBE6">',
         og('og:site_name', SITE_NAME), og('og:locale', 'en_IN'), og('og:type', typ),
         og('og:title', title), og('og:description', desc), og('og:url', url),
         og('og:image', OG_IMAGE), og('og:image:width', '1200'), og('og:image:height', '630'),
@@ -90,6 +95,16 @@ def seo_block(url, title, desc, typ, ld):
         '<script type="application/ld+json">%s</script>' % json.dumps(ld, ensure_ascii=False).replace('</', '<\\/'),
     ]
     return '<!--seo-->\n' + '\n'.join(tags) + '\n<!--/seo-->\n'
+def serp_title(t):
+    # Google cuts titles at ~600px. Add the name only when it still fits; Google shows the site name separately anyway.
+    full = t + ' | ' + AUTHOR
+    return full if px(full) <= 580 else t
+def px(s, size=20):
+    try:
+        from PIL import ImageFont
+        return ImageFont.truetype('LiberationSans-Regular.ttf', size).getlength(s)   # Arial metrics, like Google
+    except Exception:
+        return len(s) * size * 0.5
 crumbs = lambda *items: {'@type': 'BreadcrumbList', 'itemListElement': [
     {'@type': 'ListItem', 'position': i + 1, 'name': n, 'item': u} for i, (n, u) in enumerate(items)]}
 AUTHOR_REF = {'@type': 'Person', '@id': SITE_URL + '/#person', 'name': AUTHOR, 'url': SITE_URL + '/'}
@@ -107,7 +122,7 @@ for p in posts:
             '<p class="m u meta">%s / %d min read / %s</p><article class="post">%s</article>'
             '<p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section>%s') % (
             E(p['title']), p['date'], p['mins'], E(', '.join(p['tags'])), p['html'], nxl('../blog.html', 'All posts'))
-    h = shell(p['title'] + ' | ' + AUTHOR, p['desc'], body, 'blog.html', 1)
+    h = shell(serp_title(p['title']), p['desc'], body, 'blog.html', 1)
     ld = {'@context': 'https://schema.org', '@graph': [
           {'@type': 'BlogPosting', 'headline': p['title'], 'description': p['desc'], 'image': OG_IMAGE,
            'datePublished': p['date'], 'dateModified': p['updated'], 'author': AUTHOR_REF, 'publisher': AUTHOR_REF,
@@ -115,21 +130,21 @@ for p in posts:
           crumbs(('Home', SITE_URL + '/'), ('Blog', SITE_URL + '/blog.html'), (p['title'], url))]}
     wr('blog/%s.html' % p['slug'], add_seo(h, seo_block(url, p['title'], p['desc'], 'article', ld)))
 # ---- blog index
-rows = ''.join('<a class="pr" href="blog/%s.html"><span class="m u">%s / %d min read</span><h3>%s</h3><p>%s</p>%s</a>' % (
+rows = ''.join('<a class="pr" href="blog/%s.html"><span class="m u">%s / %d min read</span><h2>%s</h2><p>%s</p>%s</a>' % (
     p['slug'], p['date'], p['mins'], E(p['title']), E(p['desc']), tagsh(p['tags'])) for p in posts) or '<p class="pb">First post coming soon.</p>'
-wr('blog.html', shell('Blog: AI, LLM and Data Engineering | ' + AUTHOR, 'Practical posts on AI, LLMs, RAG, voice agents and data engineering.',
+wr('blog.html', shell('AI, LLM & Data Engineering Blog | ' + AUTHOR, 'Practical guides on LLMs, RAG, voice AI agents, vector databases and real-time data pipelines (Kafka, Flink, Iceberg), from production work.',
     '<section class="rv">' + head('Engineering', 'blog', 'Practical notes on AI, LLMs and data engineering. <a href="rss.xml"><b>RSS</b></a>') + '<div class="pn">' + rows + '</div><div style="height:50px"></div></section>', 'blog.html'))
 # ---- FAQ
 faq = json.load(open(os.path.join(ROOT, 'content/faq.json'), encoding='utf-8'))
 items = ''.join('<details class="fq"><summary>%s</summary><p>%s</p></details>' % (E(q), E(a)) for q, a in faq)
 LD['faq.html'] = {'@type': 'FAQPage', 'mainEntity': [
     {'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in faq]}
-wr('faq.html', shell('FAQ | ' + AUTHOR, 'Answers about AI, LLM, voice agent, 3D avatar and data engineering projects.',
+wr('faq.html', shell('FAQ: Hiring an AI & Data Engineer | ' + AUTHOR, 'Answers on hiring Dhruv Boghani for AI, LLM, RAG, voice agent, 3D avatar and data engineering projects: stack, process, timelines and remote work.',
     '<section class="rv">' + head('Frequently asked', 'questions', 'Quick answers about how I work and what I build.') + '<div class="pn pb">' + items + '</div><div style="height:50px"></div></section>' + nxl('contact.html', 'Contact'), 'faq.html'))
 # ---- home: latest posts
 if posts:
     n = min(3, len(posts))
-    cards = ''.join('<a href="blog/%s.html"><span class="m u" style="color:var(--mute)">%s</span><h4>%s</h4><p>%s</p><span class="m u go">Read &rarr;</span></a>' % (
+    cards = ''.join('<a href="blog/%s.html"><span class="m u" style="color:var(--mute)">%s</span><h3>%s</h3><p>%s</p><span class="m u go">Read &rarr;</span></a>' % (
         p['slug'], p['date'], E(p['title']), E(p['desc'])) for p in posts[:n])
     sec = '<section id="latest" class="rv"><div class="ttl"><h2>Latest <span>posts</span></h2></div><div class="pn"><div class="also" style="--c:%d">%s</div></div></section>' % (n, cards)
     h = rd('index.html'); h = re.sub(r'<section id="latest".*?</section>', lambda m: sec, h, 1, flags=re.S); wr('index.html', h)
@@ -145,7 +160,7 @@ PERSON = dict(AUTHOR_REF, **{
                          'Django', 'FastAPI', 'Node.js', 'Angular', 'React', 'Full-stack development']})
 WEBSITE = {'@type': 'WebSite', '@id': SITE_URL + '/#website', 'url': SITE_URL + '/', 'name': SITE_NAME,
            'inLanguage': 'en', 'publisher': {'@id': SITE_URL + '/#person'}}
-urls = []
+urls, serp = [], [(SITE_URL + '/blog/%s.html' % p['slug'], serp_title(p['title']), p['desc']) for p in posts]
 for f in sorted(os.listdir(ROOT)):
     if not f.endswith('.html'): continue
     h = rd(f); url = SITE_URL + ('/' if f == 'index.html' else '/' + f)
@@ -159,6 +174,7 @@ for f in sorted(os.listdir(ROOT)):
         graph = [page, crumbs(('Home', SITE_URL + '/'), (name, url))]
     ld = {'@context': 'https://schema.org', '@graph': graph}
     wr(f, add_seo(h, seo_block(url, html.unescape(t), html.unescape(d), 'website', ld)))
+    serp.append((url, html.unescape(t), html.unescape(d)))
     urls.append((url, None))   # no lastmod: file mtimes after a git checkout are not real edit dates
 urls += [('%s/blog/%s.html' % (SITE_URL, p['slug']), p['updated']) for p in posts]
 wr('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
@@ -167,4 +183,7 @@ wr('robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE_U
 wr('rss.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>%s Blog</title><link>%s/blog.html</link><description>AI, LLM and data engineering</description>\n' % (AUTHOR, SITE_URL) +
    ''.join('<item><title>%s</title><link>%s/blog/%s.html</link><guid>%s/blog/%s.html</guid><pubDate>%s</pubDate><description>%s</description></item>\n' % (
        E(p['title']), SITE_URL, p['slug'], SITE_URL, p['slug'], datetime.datetime.strptime(p['date'], '%Y-%m-%d').strftime('%a, %d %b %Y 00:00:00 +0000'), E(p['desc'])) for p in posts) + '</channel></rss>\n')
+for u, t, d in serp:
+    if px(t) > 600: print('WARN title may be cut in Google (%dpx): %s' % (px(t), t))
+    if not 110 <= len(d) <= 160: print('WARN description is %d chars (aim 110-160): %s' % (len(d), u))
 print('Built %d posts, %d URLs in sitemap. SITE_URL = %s' % (len(posts), len(urls), SITE_URL))

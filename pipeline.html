@@ -5,10 +5,15 @@
 <meta name="description" content="Interactive demo of a real-time data lakehouse: stream events through Redpanda, Flink, Apache Iceberg and Trino, then time travel.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=8">
+<link rel="stylesheet" href="assets/style.css?v=9">
 <script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
 <!--seo-->
 <link rel="canonical" href="https://dhruv-boghani.vercel.app/pipeline.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
 <meta property="og:site_name" content="Dhruv Boghani">
 <meta property="og:locale" content="en_IN">
 <meta property="og:type" content="website">
@@ -37,7 +42,7 @@
 <div class="ctl m"><label>rate <input type="range" id="rt" min="20" max="400" value="115"> <b id="rtv">115</b>/s</label><button class="bt" id="bu">Burst</button><button class="bt" id="bd">Bad event</button></div>
 <canvas id="pl"></canvas><div class="dt m" id="dt">Click any stage to see what it does.</div>
 <div class="ctl m" style="margin-top:14px"><span class="u">Time travel</span><select id="sn"><option>no snapshots yet</option></select><button class="bt d" id="bq">Run Trino query</button></div><div class="out m" id="qo">trino> run a query to read the lake at any snapshot.</div></div></div>
-<div class="tg m" style="margin:18px 0 50px"><span>Redpanda</span><span>Apache Flink</span><span>Apache Iceberg</span><span>Trino</span><span>MinIO</span><span>Nessie</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h4>Ingest</h4><p>Redpanda takes in 10M+ events a day with Kafka-compatible streaming.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h4>Transform</h4><p>Flink processes events in flight and quarantines bad ones in a dead-letter queue.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h4>Store</h4><p>Iceberg tables on MinIO, versioned by Nessie, commit a snapshot as data lands.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h4>Query</h4><p>Trino reads the lake with SQL, including any past snapshot.</p></div></div></section><a class="nx pn" href="invoice-ai.html"><span class="m u">Next</span><b>Invoice AI &rarr;</b></a>
+<div class="tg m" style="margin:18px 0 50px"><span>Redpanda</span><span>Apache Flink</span><span>Apache Iceberg</span><span>Trino</span><span>MinIO</span><span>Nessie</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h3>Ingest</h3><p>Redpanda takes in 10M+ events a day with Kafka-compatible streaming.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h3>Transform</h3><p>Flink processes events in flight and quarantines bad ones in a dead-letter queue.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h3>Store</h3><p>Iceberg tables on MinIO, versioned by Nessie, commit a snapshot as data lands.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h3>Query</h3><p>Trino reads the lake with SQL, including any past snapshot.</p></div></div></section><a class="nx pn" href="invoice-ai.html"><span class="m u">Next</span><b>Invoice AI &rarr;</b></a>
 <footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
 </main></div>
 <script src="assets/common.js?v=7"></script>
