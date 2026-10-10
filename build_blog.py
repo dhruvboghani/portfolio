@@ -11,7 +11,7 @@ AUTHOR = 'Dhruv Boghani'
 SITE_NAME = 'Dhruv Boghani'
 OG_IMAGE = SITE_URL + '/assets/og-image.png'   # 1200x630 share preview
 # Profiles that are you. Add LinkedIn, Upwork, X etc. here - Google uses these to tie your name to one person.
-SAME_AS = ['https://github.com/dhruvboghani']
+SAME_AS = ['https://github.com/dhruvboghani', 'https://www.linkedin.com/in/dhruv-boghani-21b8781b1']
 TODAY = datetime.datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
 rd = lambda p: open(os.path.join(ROOT, p), encoding='utf-8').read()
 def wr(p, t):
