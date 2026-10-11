@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chunking strategies for RAG: how to split your documents</title>
+<meta name="description" content="How to chunk documents for RAG: fixed-size, recursive, structure-aware and semantic splitting, chunk size, overlap and metadata that matter.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/chunking-strategies-for-rag.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chunking strategies for RAG: how to split your documents">
+<meta property="og:description" content="How to chunk documents for RAG: fixed-size, recursive, structure-aware and semantic splitting, chunk size, overlap and metadata that matter.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/chunking-strategies-for-rag.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chunking strategies for RAG: how to split your documents">
+<meta name="twitter:description" content="How to chunk documents for RAG: fixed-size, recursive, structure-aware and semantic splitting, chunk size, overlap and metadata that matter.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Chunking strategies for RAG: how to split your documents", "description": "How to chunk documents for RAG: fixed-size, recursive, structure-aware and semantic splitting, chunk size, overlap and metadata that matter.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-10", "dateModified": "2026-10-10", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/chunking-strategies-for-rag.html", "inLanguage": "en", "keywords": "rag, llm, vector-search"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Chunking strategies for RAG: how to split your documents", "item": "https://dhruv-boghani.vercel.app/blog/chunking-strategies-for-rag.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Chunking strategies for RAG: how to split your documents</h1><p class="m u meta">2026-10-10 / 4 min read / rag, llm, vector-search</p><article class="post"><p>Most RAG systems that give vague or wrong answers are not failing at the model. They are failing at retrieval, and retrieval can only return what chunking created.</p>
+<p>Chunking decides what a single searchable unit looks like. Get it right and the model sees the exact paragraph it needs. Get it wrong and it sees half a table, a heading with no body, or three unrelated topics glued together.</p>
+<h2>Why chunking matters</h2>
+<p>An embedding turns a chunk into one vector. That vector is an average of everything inside the chunk, so the chunk boundary directly controls what the vector means.</p>
+<ul>
+<li><strong>Too large:</strong> one chunk covers several ideas, the vector becomes blurry, and a precise question matches it weakly. You also spend context window on text the model does not need.</li>
+<li><strong>Too small:</strong> a chunk loses the context that made it meaningful. "It must be renewed every 12 months" is useless if the chunk does not say what "it" is.</li>
+<li><strong>Badly placed:</strong> a boundary in the middle of a list, a code block or a table splits one answer across two chunks, and retrieval often returns only one of them.</li>
+</ul>
+<p>The goal is a chunk that answers one question well on its own.</p>
+<h2>The main strategies</h2>
+<p><strong>Fixed-size chunking</strong> splits text every N tokens. It is fast, predictable and a reasonable baseline, but it ignores meaning and cuts sentences in half.</p>
+<p><strong>Recursive chunking</strong> tries a list of separators in order: sections, then paragraphs, then sentences, then words. It only falls back to a smaller separator when a piece is still too large. This keeps natural boundaries most of the time and is a strong default for plain text.</p>
+<p><strong>Structure-aware chunking</strong> uses the document's own shape. Markdown headings, HTML sections, PDF layout blocks, code functions and table rows all make better boundaries than a token count. For manuals, policies and documentation, this is usually the biggest single improvement.</p>
+<p><strong>Semantic chunking</strong> embeds sentences and starts a new chunk where the meaning shifts, measured by a drop in similarity between neighbouring sentences. It can produce cleaner topical chunks, but it costs an embedding pass at ingestion time and needs tuning of the threshold.</p>
+<p><strong>Parent-child chunking</strong> indexes small chunks for precise matching, then returns the larger parent section to the model. You get sharp retrieval and enough context to answer.</p>
+<pre><code>def recursive_split(text, max_tokens, seps=("\n## ", "\n\n", ". ", " ")):
+    if count_tokens(text) &lt;= max_tokens or not seps:
+        return [text]
+    parts, out = text.split(seps[0]), []
+    for part in parts:
+        out.extend(recursive_split(part, max_tokens, seps[1:]))
+    return merge_small(out, max_tokens)</code></pre>
+<h2>Size and overlap</h2>
+<p>There is no universal chunk size. It depends on your content and your questions.</p>
+<ul>
+<li>Short factual questions (a price, a date, a setting) favour smaller chunks.</li>
+<li>Questions that need explanation or reasoning favour larger chunks or parent-child retrieval.</li>
+<li>Stay well below your embedding model's input limit. Text beyond the limit is usually truncated without an error.</li>
+</ul>
+<p>Overlap repeats a little text from the end of one chunk at the start of the next, so a sentence near a boundary is not lost. Use it with fixed-size and recursive splitting. With structure-aware splitting, a clean section boundary often makes overlap unnecessary, and too much overlap fills results with near-duplicates.</p>
+<h2>Metadata is part of the chunk</h2>
+<p>A chunk without context is hard to retrieve and hard to trust. Store metadata alongside every chunk and use it.</p>
+<ul>
+<li><strong>Source and location:</strong> document id, page, section heading path. This enables citations.</li>
+<li><strong>Prepended context:</strong> add the document title and heading path to the chunk text before embedding, for example <code>Leave policy &gt; Carry forward &gt; ...</code>. This fixes many "what is it" problems.</li>
+<li><strong>Filters:</strong> tenant, language, product, date or access level. Filtering before vector search improves precision and keeps multi-tenant data separate.</li>
+<li><strong>Version:</strong> when documents change, re-chunk and replace by document id rather than appending duplicates.</li>
+</ul>
+<h2>Special content</h2>
+<ul>
+<li><strong>Tables:</strong> keep a row with its header. A row of numbers without column names cannot be retrieved by meaning.</li>
+<li><strong>Code:</strong> split by function or class, never in the middle of a block.</li>
+<li><strong>Scanned PDFs:</strong> fix extraction first. Headers, footers and page numbers repeated on every page pollute every chunk.</li>
+<li><strong>FAQs:</strong> one question and its answer per chunk is almost always right.</li>
+</ul>
+<h2>How to choose</h2>
+<p>Do not pick a strategy by intuition alone. Build a small evaluation set of real questions with the passages that should answer them, then measure whether the right chunk appears in the top results for each strategy and size. Change one variable at a time, and inspect failures by hand. Most of the time the fix is visible the moment you read the chunk that was returned.</p>
+<h2>Takeaway</h2>
+<p>Start with structure-aware or recursive chunking, add headings and source metadata to every chunk, and use parent-child retrieval when answers need more context. Then let a small retrieval test set, not guesswork, decide your chunk size and overlap.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>
