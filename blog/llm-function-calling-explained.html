@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LLM function calling explained: how tool use works</title>
+<meta name="description" content="How LLM function calling works: tool schemas, the request loop, argument validation, errors and security, with a practical example in Python.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/llm-function-calling-explained.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM function calling explained: how tool use works">
+<meta property="og:description" content="How LLM function calling works: tool schemas, the request loop, argument validation, errors and security, with a practical example in Python.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/llm-function-calling-explained.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LLM function calling explained: how tool use works">
+<meta name="twitter:description" content="How LLM function calling works: tool schemas, the request loop, argument validation, errors and security, with a practical example in Python.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "LLM function calling explained: how tool use works", "description": "How LLM function calling works: tool schemas, the request loop, argument validation, errors and security, with a practical example in Python.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-12", "dateModified": "2026-10-12", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/llm-function-calling-explained.html", "inLanguage": "en", "keywords": "llm, function-calling, ai-agents"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "LLM function calling explained: how tool use works", "item": "https://dhruv-boghani.vercel.app/blog/llm-function-calling-explained.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">LLM function calling explained: how tool use works</h1><p class="m u meta">2026-10-12 / 5 min read / llm, function-calling, ai-agents</p><article class="post"><p>A language model on its own can only produce text. Function calling, also called tool use, is how you let it look up an order, check inventory or book a meeting by asking your code to do the work.</p>
+<p>The model never runs anything itself. It decides which function to call and with which arguments, your application executes it, and the result goes back to the model so it can answer. Understanding that split is the key to building tool-using features that are reliable and safe.</p>
+<h2>How function calling works</h2>
+<p>Every function calling flow follows the same loop, whatever the provider.</p>
+<ul>
+<li><strong>Describe the tools.</strong> You send the model a list of functions, each with a name, a description and a JSON Schema for its parameters.</li>
+<li><strong>The model chooses.</strong> Given the user's message, the model either replies with text or returns a structured tool call: a function name plus arguments as JSON.</li>
+<li><strong>Your code executes.</strong> You validate the arguments, run the real function and capture the result.</li>
+<li><strong>Send the result back.</strong> You add the tool result to the conversation and call the model again.</li>
+<li><strong>Repeat or answer.</strong> The model may call another tool, or produce the final answer using the results.</li>
+</ul>
+<p>The model is a planner that speaks JSON. Your application stays in control of what actually happens.</p>
+<h2>Defining good tools</h2>
+<p>The model only knows what your schema and description tell it, so tool definitions deserve the same care as an API you publish.</p>
+<ul>
+<li><strong>Name tools by action:</strong> <code>get_invoice</code>, <code>search_products</code>, <code>create_appointment</code>. Avoid vague names like <code>run</code> or <code>helper</code>.</li>
+<li><strong>Write descriptions for the model:</strong> say when to use the tool and when not to, for example "Use only for existing orders. Do not use to create orders."</li>
+<li><strong>Constrain parameters:</strong> use types, required fields and enums. A <code>status</code> field with <code>pending | paid | overdue</code> prevents the model from inventing values.</li>
+<li><strong>Keep the list short:</strong> offer only the tools relevant to the current task or user role. Many overlapping tools make the wrong choice more likely.</li>
+<li><strong>Return compact results:</strong> send back the fields the model needs, not a full database row with fifty columns.</li>
+</ul>
+<pre><code>tools = [{
+    "name": "get_invoices",
+    "description": "Fetch invoices for the signed-in company. Use for questions about invoice status, amounts or due dates.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "status": {"type": "string", "enum": ["pending", "paid", "overdue"]},
+            "limit": {"type": "integer", "minimum": 1, "maximum": 50}
+        },
+        "required": ["status"]
+    }
+}]</code></pre>
+<h2>The request loop in code</h2>
+<p>The loop is short, but each step matters. The shape below is provider-neutral; the field names differ slightly between APIs.</p>
+<pre><code>messages = [{"role": "user", "content": "Which invoices are overdue?"}]
+for _ in range(5):                      # hard cap on tool rounds
+    reply = llm.chat(messages=messages, tools=tools)
+    if not reply.tool_calls:
+        print(reply.text); break
+    messages.append(reply.message)
+    for call in reply.tool_calls:
+        try:
+            args = validate(call.name, call.arguments)   # schema check
+            result = TOOLS[call.name](user=current_user, **args)
+        except Exception as e:
+            result = {"error": str(e)}
+        messages.append({"role": "tool", "tool_call_id": call.id,
+                         "content": json.dumps(result)})</code></pre>
+<p>A few details from this loop are easy to miss:</p>
+<ul>
+<li><strong>Cap the iterations.</strong> Without a limit, a confused model can call tools in a loop.</li>
+<li><strong>Handle several calls per turn.</strong> Many models can request more than one tool at once, for example two lookups that do not depend on each other.</li>
+<li><strong>Return errors to the model.</strong> A clear message such as "invoice not found" lets the model recover or ask the user, instead of the whole request failing.</li>
+<li><strong>Match results to calls.</strong> Each result must reference the id of the call it answers.</li>
+</ul>
+<h2>Validation and security</h2>
+<p>Treat tool arguments as untrusted input, exactly like data from a web form. The model can produce wrong values, and a user can try to steer it with crafted messages.</p>
+<ul>
+<li><strong>Validate every argument</strong> against the schema and your business rules before executing anything.</li>
+<li><strong>Enforce permissions in code.</strong> Pass the authenticated user into the function and filter by tenant and role there. Never rely on the prompt to restrict access.</li>
+<li><strong>Separate read and write tools.</strong> Reads are low risk. For actions that change data, send money or message customers, require explicit user confirmation before executing.</li>
+<li><strong>Make writes idempotent</strong> where possible, so a repeated call does not create a duplicate booking or payment.</li>
+<li><strong>Log every call</strong> with its arguments, result and user. This is how you debug wrong answers and audit what the system did.</li>
+</ul>
+<h2>When to use function calling</h2>
+<p>Function calling fits whenever the answer depends on live or private data, or when the user wants something done rather than explained.</p>
+<ul>
+<li>Answering questions from your database or APIs without stuffing everything into the prompt.</li>
+<li>Turning natural language into actions: bookings, CRM updates, report filters.</li>
+<li>Extracting structured data, where a single "tool" acts as the output schema.</li>
+<li>Building agents that plan several steps, where each step is a tool call.</li>
+</ul>
+<p>It is not a fit when the answer is static knowledge the model already has, or when a simple form would be clearer and safer than a conversation.</p>
+<h2>Takeaway</h2>
+<p>Function calling lets an LLM decide what to do while your code decides what is allowed. Write clear tool schemas, run a capped and validated request loop, enforce permissions outside the model and confirm any action that changes data. Done this way, tool use turns a chatbot into an assistant that can safely work with real systems.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

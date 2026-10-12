@@ -1,7 +1,4 @@
 # One topic per line. The next line is used each day. Add more any time.
-Chunking strategies for RAG
-Lakehouse vs data warehouse
-LLM function calling explained
 Speech-to-text latency in voice bots
 Multi-tenant SaaS architecture patterns
 RAG evaluation: how to measure answer quality
