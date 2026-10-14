@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Speech-to-text latency in voice bots: where time goes</title>
+<meta name="description" content="Why voice bots feel slow and how to cut speech-to-text latency with streaming ASR, better endpointing, partial results and a tighter voice pipeline.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/speech-to-text-latency-in-voice-bots.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Speech-to-text latency in voice bots: where time goes">
+<meta property="og:description" content="Why voice bots feel slow and how to cut speech-to-text latency with streaming ASR, better endpointing, partial results and a tighter voice pipeline.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/speech-to-text-latency-in-voice-bots.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Speech-to-text latency in voice bots: where time goes">
+<meta name="twitter:description" content="Why voice bots feel slow and how to cut speech-to-text latency with streaming ASR, better endpointing, partial results and a tighter voice pipeline.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Speech-to-text latency in voice bots: where time goes", "description": "Why voice bots feel slow and how to cut speech-to-text latency with streaming ASR, better endpointing, partial results and a tighter voice pipeline.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-13", "dateModified": "2026-10-13", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/speech-to-text-latency-in-voice-bots.html", "inLanguage": "en", "keywords": "voice-ai, speech-to-text, latency"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Speech-to-text latency in voice bots: where time goes", "item": "https://dhruv-boghani.vercel.app/blog/speech-to-text-latency-in-voice-bots.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Speech-to-text latency in voice bots: where time goes</h1><p class="m u meta">2026-10-13 / 4 min read / voice-ai, speech-to-text, latency</p><article class="post"><p>In a voice conversation, a pause that would go unnoticed in a chat window feels awkward. When a voice bot takes too long to reply, callers start talking again, repeat themselves or hang up.</p>
+<p>Speech-to-text is only one part of the response time, but it is often the part teams understand least. This post breaks down where the delay comes from and the practical ways to reduce it.</p>
+<h2>Where the time goes in a voice turn</h2>
+<p>A single turn in a voice bot is a chain of steps, and the caller waits for all of them.</p>
+<ul>
+<li><strong>Audio transport:</strong> audio travels from the phone network or browser to your server, usually in small frames.</li>
+<li><strong>Endpointing:</strong> the system decides the caller has finished speaking.</li>
+<li><strong>Speech-to-text (ASR):</strong> the audio becomes text. With streaming ASR, most of this happens while the caller is still talking.</li>
+<li><strong>LLM response:</strong> the model reads the transcript and starts generating a reply.</li>
+<li><strong>Text-to-speech (TTS):</strong> the reply becomes audio, ideally starting with the first sentence.</li>
+<li><strong>Playback:</strong> audio travels back and starts playing.</li>
+</ul>
+<p>The number that matters is the gap between the caller stopping and the bot starting to speak. Measure that gap end to end before optimizing any single step, because the slowest step is often not the one you expect.</p>
+<h2>Use streaming recognition</h2>
+<p>Batch transcription waits for the whole utterance, uploads it and then transcribes it. That adds the full length of the utterance to your delay.</p>
+<p>Streaming ASR transcribes as the audio arrives and returns <strong>partial results</strong> that keep updating, followed by a <strong>final result</strong> for each segment. When the caller stops, most of the work is already done.</p>
+<ul>
+<li>Send audio in small frames, typically tens of milliseconds each, over a persistent connection such as a WebSocket.</li>
+<li>Use the provider's streaming API rather than polling a batch endpoint.</li>
+<li>Keep the connection open for the whole call. Opening a new connection for every turn adds handshake time.</li>
+<li>Match the audio format the phone line produces, for example 8 kHz mu-law from a telephony provider, to avoid resampling steps where possible.</li>
+</ul>
+<h2>Endpointing is usually the biggest lever</h2>
+<p>Endpointing decides when the caller is done. Many systems wait for a fixed period of silence before treating a turn as finished. That silence timeout is added directly to every reply.</p>
+<ul>
+<li><strong>Too long:</strong> the bot feels slow and unresponsive.</li>
+<li><strong>Too short:</strong> the bot interrupts people who pause to think, which is worse.</li>
+</ul>
+<p>Better approaches combine signals instead of relying on silence alone.</p>
+<ul>
+<li><strong>Voice activity detection (VAD)</strong> to tell speech from background noise.</li>
+<li><strong>Semantic endpointing:</strong> look at the partial transcript. "My order number is" is clearly unfinished; "Yes, that works" is clearly complete.</li>
+<li><strong>Context-aware timeouts:</strong> allow a longer pause when you asked for a phone number or address, and a shorter one after a yes or no question.</li>
+</ul>
+<p>Tune these values on real recordings from your callers, not on clean test audio.</p>
+<h2>Start the reply before the transcript is final</h2>
+<p>You do not have to wait for every step to finish before starting the next one.</p>
+<ul>
+<li><strong>Speculative processing:</strong> when a stable partial transcript arrives, start the LLM call. If the final transcript differs meaningfully, cancel and restart.</li>
+<li><strong>Stream the LLM output:</strong> send the first sentence to TTS as soon as it is complete, instead of waiting for the whole reply.</li>
+<li><strong>Stream TTS audio:</strong> start playback with the first audio chunk.</li>
+<li><strong>Keep the opening short:</strong> a brief acknowledgement followed by the detail sounds natural and gets audio playing sooner.</li>
+</ul>
+<pre><code>async for event in asr.stream(audio_frames):
+    if event.is_partial and looks_complete(event.text):
+        reply_task = start_llm(event.text)          # speculative start
+    if event.is_final:
+        if reply_task and differs(event.text, reply_task.prompt):
+            reply_task.cancel()
+            reply_task = start_llm(event.text)
+        async for sentence in reply_task.sentences():
+            await tts.speak(sentence)               # stream audio out</code></pre>
+<h2>Accuracy affects latency too</h2>
+<p>A wrong transcript costs more time than a slow one, because the bot answers the wrong question and the caller has to repeat themselves.</p>
+<ul>
+<li><strong>Add domain vocabulary:</strong> product names, brand terms and local place names, using the keyword boosting or custom vocabulary your provider offers.</li>
+<li><strong>Pick the right language and model:</strong> a model tuned for phone audio usually does better on calls than a general one.</li>
+<li><strong>Handle numbers carefully:</strong> confirm phone numbers, order ids and amounts back to the caller.</li>
+</ul>
+<h2>Handle barge-in</h2>
+<p>Callers interrupt. If the bot keeps talking over them, the conversation breaks down.</p>
+<ul>
+<li>Keep listening while the bot speaks.</li>
+<li>When speech is detected, stop TTS playback immediately and cancel any reply still being generated.</li>
+<li>Treat the interruption as the start of a new turn.</li>
+</ul>
+<h2>Measure every stage</h2>
+<p>You cannot improve what you do not measure. Log timestamps per turn: speech end detected, final transcript, first LLM token, first TTS audio and playback start. Look at percentiles across many calls, not averages, because the slow turns are the ones callers remember.</p>
+<h2>Takeaway</h2>
+<p>Voice bots feel fast when the work overlaps. Use streaming ASR, tune endpointing on real audio, start the reply from stable partial transcripts, stream LLM and TTS output, support barge-in, and measure each stage so you fix the delay that actually matters.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

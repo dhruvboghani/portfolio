@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Multi-tenant SaaS architecture patterns explained</title>
+<meta name="description" content="Multi-tenant SaaS patterns compared: shared schema, schema per tenant and database per tenant, plus isolation, security, scaling and noisy neighbours.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/multi-tenant-saas-architecture-patterns.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Multi-tenant SaaS architecture patterns explained">
+<meta property="og:description" content="Multi-tenant SaaS patterns compared: shared schema, schema per tenant and database per tenant, plus isolation, security, scaling and noisy neighbours.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/multi-tenant-saas-architecture-patterns.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Multi-tenant SaaS architecture patterns explained">
+<meta name="twitter:description" content="Multi-tenant SaaS patterns compared: shared schema, schema per tenant and database per tenant, plus isolation, security, scaling and noisy neighbours.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Multi-tenant SaaS architecture patterns explained", "description": "Multi-tenant SaaS patterns compared: shared schema, schema per tenant and database per tenant, plus isolation, security, scaling and noisy neighbours.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-14", "dateModified": "2026-10-14", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/multi-tenant-saas-architecture-patterns.html", "inLanguage": "en", "keywords": "saas, architecture, databases"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Multi-tenant SaaS architecture patterns explained", "item": "https://dhruv-boghani.vercel.app/blog/multi-tenant-saas-architecture-patterns.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Multi-tenant SaaS architecture patterns explained</h1><p class="m u meta">2026-10-14 / 4 min read / saas, architecture, databases</p><article class="post"><p>A multi-tenant SaaS application serves many customers, called tenants, from one product. The architecture decides how their data is separated, how safely they are isolated from each other and how much it costs to run each one.</p>
+<p>There is no single correct pattern. The right choice depends on your customers, compliance needs and team size, and many products end up mixing patterns.</p>
+<h2>The three main data patterns</h2>
+<p><strong>Shared database, shared schema.</strong> All tenants live in the same tables, and every row carries a <code>tenant_id</code>.</p>
+<ul>
+<li>Cheapest to run and simplest to deploy: one schema, one migration.</li>
+<li>Scales to a very large number of small tenants.</li>
+<li>Isolation depends entirely on your code and database rules. One missing filter can expose another tenant's data.</li>
+<li>Per-tenant backup, restore and data export take more effort.</li>
+</ul>
+<p><strong>Shared database, schema per tenant.</strong> Each tenant gets its own schema inside one database.</p>
+<ul>
+<li>Stronger logical separation; a query runs against one tenant's schema.</li>
+<li>Per-tenant restore and export are easier.</li>
+<li>Migrations must run across every schema, which gets slow and risky as tenant count grows.</li>
+<li>Many databases struggle with very large numbers of schemas and tables.</li>
+</ul>
+<p><strong>Database per tenant.</strong> Each tenant has a separate database, sometimes on separate servers.</p>
+<ul>
+<li>Strongest isolation, and the easiest to explain to enterprise and regulated customers.</li>
+<li>Per-tenant scaling, backups, encryption keys and data residency are straightforward.</li>
+<li>Highest cost and operational effort: connections, monitoring and migrations multiply with each tenant.</li>
+</ul>
+<p>A common approach is <strong>hybrid</strong>: small tenants share a pooled database, while large or regulated tenants get dedicated databases. Your application then needs a tenant directory that records where each tenant's data lives.</p>
+<h2>Enforcing isolation in a shared schema</h2>
+<p>If tenants share tables, isolation must be enforced in more than one place.</p>
+<ul>
+<li><strong>Resolve the tenant once</strong>, from the subdomain, a token claim or an API key, at the edge of the request.</li>
+<li><strong>Carry it in request context</strong>, not as a parameter each developer must remember to pass.</li>
+<li><strong>Scope queries automatically</strong> with a repository layer or ORM manager that always adds the tenant filter.</li>
+<li><strong>Add database-level protection.</strong> PostgreSQL row-level security can enforce the tenant filter even if application code forgets it.</li>
+</ul>
+<pre><code>ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON invoices
+  USING (tenant_id = current_setting('app.tenant_id')::uuid);
+
+-- per request, inside a transaction
+SET LOCAL app.tenant_id = '4f1c...';</code></pre>
+<ul>
+<li><strong>Include <code>tenant_id</code> in indexes and unique constraints</strong>, for example a unique invoice number per tenant rather than globally.</li>
+<li><strong>Test for leaks:</strong> write automated tests that sign in as one tenant and try to read another tenant's records.</li>
+</ul>
+<h2>Beyond the database</h2>
+<p>Tenancy touches every layer, not only tables.</p>
+<ul>
+<li><strong>Caches:</strong> prefix every cache key with the tenant id, or one tenant can see another's cached data.</li>
+<li><strong>File storage:</strong> use tenant-specific prefixes or buckets in S3 or MinIO, with access policies that match.</li>
+<li><strong>Background jobs and queues:</strong> every job must carry its tenant id and restore the tenant context before running.</li>
+<li><strong>Search and vector indexes:</strong> filter by tenant on every query. For AI features, never let retrieval mix documents across tenants.</li>
+<li><strong>Logs and metrics:</strong> tag them with tenant id so you can debug one customer without reading everyone's data.</li>
+<li><strong>Configuration:</strong> store feature flags, plans and limits per tenant instead of branching code per customer.</li>
+</ul>
+<h2>Noisy neighbours and scaling</h2>
+<p>In shared infrastructure, one busy tenant can slow down everyone else.</p>
+<ul>
+<li><strong>Rate limit per tenant</strong> at the API gateway, not only globally.</li>
+<li><strong>Set quotas</strong> on storage, jobs and expensive operations such as AI calls.</li>
+<li><strong>Use fair queues</strong> so one tenant's bulk import does not block other tenants' jobs.</li>
+<li><strong>Watch per-tenant usage</strong> and move a tenant that outgrows the pool to dedicated resources.</li>
+</ul>
+<h2>Identity and access</h2>
+<p>Users usually belong to a tenant, and sometimes to several.</p>
+<ul>
+<li>Put the tenant id in the authentication token and verify it on every request.</li>
+<li>Apply role-based access control inside each tenant, for example admin, manager and viewer.</li>
+<li>Support enterprise single sign-on per tenant when larger customers need it.</li>
+<li>Log administrative actions per tenant for audits.</li>
+</ul>
+<h2>How to choose</h2>
+<ul>
+<li>Many small customers and a lean team: start with a <strong>shared schema</strong> and strong automatic tenant scoping.</li>
+<li>Customers who need clear separation, easy restores and moderate tenant counts: consider <strong>schema per tenant</strong>.</li>
+<li>Enterprise or regulated customers, data residency or custom encryption: offer <strong>database per tenant</strong>, often as a premium tier.</li>
+</ul>
+<p>Whichever you start with, keep the tenant lookup in one place, so moving a tenant to a different storage pattern later is a data migration rather than a rewrite.</p>
+<h2>Takeaway</h2>
+<p>Multi-tenancy is a trade-off between cost, isolation and operational effort. Choose a data pattern that fits your customers, enforce the tenant boundary in code and in the database, carry tenant context through caches, files, jobs and AI retrieval, and plan from day one for the large tenant that will eventually need its own resources.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

@@ -96,15 +96,10 @@ def seo_block(url, title, desc, typ, ld):
     ]
     return '<!--seo-->\n' + '\n'.join(tags) + '\n<!--/seo-->\n'
 def serp_title(t):
-    # Google cuts titles at ~600px. Add the name only when it still fits; Google shows the site name separately anyway.
+    # Google cuts titles at about 60 characters. Add the name only when it still fits
+    # (Google shows the site name separately anyway). Character-based so every machine builds the same output.
     full = t + ' | ' + AUTHOR
-    return full if px(full) <= 580 else t
-def px(s, size=20):
-    try:
-        from PIL import ImageFont
-        return ImageFont.truetype('LiberationSans-Regular.ttf', size).getlength(s)   # Arial metrics, like Google
-    except Exception:
-        return len(s) * size * 0.5
+    return full if len(full) <= 62 else t
 crumbs = lambda *items: {'@type': 'BreadcrumbList', 'itemListElement': [
     {'@type': 'ListItem', 'position': i + 1, 'name': n, 'item': u} for i, (n, u) in enumerate(items)]}
 AUTHOR_REF = {'@type': 'Person', '@id': SITE_URL + '/#person', 'name': AUTHOR, 'url': SITE_URL + '/'}
@@ -184,6 +179,6 @@ wr('rss.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><chann
    ''.join('<item><title>%s</title><link>%s/blog/%s.html</link><guid>%s/blog/%s.html</guid><pubDate>%s</pubDate><description>%s</description></item>\n' % (
        E(p['title']), SITE_URL, p['slug'], SITE_URL, p['slug'], datetime.datetime.strptime(p['date'], '%Y-%m-%d').strftime('%a, %d %b %Y 00:00:00 +0000'), E(p['desc'])) for p in posts) + '</channel></rss>\n')
 for u, t, d in serp:
-    if px(t) > 600: print('WARN title may be cut in Google (%dpx): %s' % (px(t), t))
+    if len(t) > 62: print('WARN title may be cut in Google (%d chars): %s' % (len(t), t))
     if not 110 <= len(d) <= 160: print('WARN description is %d chars (aim 110-160): %s' % (len(d), u))
 print('Built %d posts, %d URLs in sitemap. SITE_URL = %s' % (len(posts), len(urls), SITE_URL))

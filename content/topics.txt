@@ -1,6 +1,4 @@
 # One topic per line. The next line is used each day. Add more any time.
-Speech-to-text latency in voice bots
-Multi-tenant SaaS architecture patterns
 RAG evaluation: how to measure answer quality
 Embedding models: how to choose one
 Change data capture (CDC) explained
