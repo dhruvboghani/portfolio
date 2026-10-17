@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Embedding models: how to choose one for search and RAG</title>
+<meta name="description" content="How to choose an embedding model for semantic search and RAG: quality on your data, dimensions, context length, language, cost, latency and hosting.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/embedding-models-how-to-choose-one.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Embedding models: how to choose one for search and RAG">
+<meta property="og:description" content="How to choose an embedding model for semantic search and RAG: quality on your data, dimensions, context length, language, cost, latency and hosting.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/embedding-models-how-to-choose-one.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Embedding models: how to choose one for search and RAG">
+<meta name="twitter:description" content="How to choose an embedding model for semantic search and RAG: quality on your data, dimensions, context length, language, cost, latency and hosting.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Embedding models: how to choose one for search and RAG", "description": "How to choose an embedding model for semantic search and RAG: quality on your data, dimensions, context length, language, cost, latency and hosting.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-16", "dateModified": "2026-10-16", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/embedding-models-how-to-choose-one.html", "inLanguage": "en", "keywords": "embeddings, rag, vector-search"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Embedding models: how to choose one for search and RAG", "item": "https://dhruv-boghani.vercel.app/blog/embedding-models-how-to-choose-one.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Embedding models: how to choose one for search and RAG</h1><p class="m u meta">2026-10-16 / 4 min read / embeddings, rag, vector-search</p><article class="post"><p>The embedding model decides what "similar" means in your search or RAG system. Pick the wrong one and no amount of prompt tuning will fix answers that start from the wrong passages.</p>
+<p>There is no single best model. The right choice depends on your content, your languages, your latency and cost budget, and where you are allowed to run it. This post walks through the factors that matter and a simple way to decide.</p>
+<h2>What an embedding model does</h2>
+<p>An embedding model turns text into a vector, a list of numbers, so that texts with similar meaning end up close together. Search then becomes a nearest-neighbour lookup: embed the question, find the closest stored vectors, return their text.</p>
+<p>Two consequences follow:</p>
+<ul>
+<li><strong>The same model must embed documents and queries.</strong> Vectors from different models are not comparable.</li>
+<li><strong>Changing the model means re-embedding everything.</strong> Choose with care, and keep the raw text so you can re-index later.</li>
+</ul>
+<h2>Quality on your data is what counts</h2>
+<p>Public leaderboards are a useful starting point, not a decision. They average many tasks and domains, and your documents may look nothing like their test sets.</p>
+<ul>
+<li><strong>Shortlist two to four models</strong> that rank well for retrieval in your languages.</li>
+<li><strong>Test them on your own questions.</strong> Use a small evaluation set of real queries with the passages that should answer them, and compare recall@k and MRR for each model.</li>
+<li><strong>Look at the failures.</strong> Some models handle product codes, numbers or abbreviations better than others. That often matters more than a point on a leaderboard.</li>
+</ul>
+<p>A day spent on this comparison saves weeks of tuning later.</p>
+<h2>Practical factors</h2>
+<p><strong>Dimensions.</strong> Vectors with more dimensions can hold more nuance but cost more to store and search. Some models support shorter vectors with a small quality loss, which can cut storage and speed up search a lot. Check what your vector database handles efficiently.</p>
+<p><strong>Context length.</strong> Every model has a maximum input size, and text beyond it is usually cut off without an error. Make sure your chunk size fits comfortably inside the limit.</p>
+<p><strong>Language support.</strong> If users ask in one language and documents are in another, or content mixes languages, choose a multilingual model and test cross-language retrieval explicitly.</p>
+<p><strong>Domain fit.</strong> Code, legal text, medical notes and chat logs behave differently. A general model may be fine, but test it against your domain before assuming so.</p>
+<p><strong>Cost and latency.</strong> Embedding happens at ingestion and on every query. Consider the price per token for hosted APIs, the throughput of self-hosted models, and the extra milliseconds added to each search.</p>
+<p><strong>Hosting and privacy.</strong> Hosted APIs are simple and strong. Open models you run yourself keep data inside your infrastructure and avoid per-call costs, at the price of operating GPUs or CPU inference servers.</p>
+<h2>Hosted API or open model</h2>
+<ul>
+<li><strong>Choose a hosted API</strong> when you want strong quality quickly, have moderate volume and can send the data to the provider.</li>
+<li><strong>Choose an open model</strong> when data must stay in your environment, volume is high enough that per-token costs add up, or you want to fine-tune for your domain.</li>
+<li><strong>Either way, abstract the call</strong> behind one function in your code, so switching models is a configuration change plus a re-index, not a rewrite.</li>
+</ul>
+<pre><code>def embed(texts: list[str]) -&gt; list[list[float]]:
+    # single place to swap providers or models
+    return client.embed(model=EMBED_MODEL, input=texts)
+
+# store the model name with each vector
+record = {"id": doc_id, "vector": embed([chunk])[0], "model": EMBED_MODEL}</code></pre>
+<h2>Things that matter more than the model</h2>
+<p>The model is only one part of retrieval quality. Before switching models, check these:</p>
+<ul>
+<li><strong>Chunking:</strong> passages that each answer one question retrieve better than arbitrary slices.</li>
+<li><strong>Metadata and filters:</strong> filtering by tenant, product or date often improves precision more than a better model.</li>
+<li><strong>Hybrid search:</strong> combining vector search with keyword search helps with names, codes and exact phrases.</li>
+<li><strong>Reranking:</strong> a reranker applied to the top results can lift answer quality noticeably.</li>
+<li><strong>Query and document instructions:</strong> some models expect a prefix such as a query or passage marker. Follow the model's documentation exactly.</li>
+</ul>
+<h2>A simple decision process</h2>
+<p>1. Write down constraints: languages, data residency, budget, latency target. 2. Shortlist a few models that meet them. 3. Embed a representative sample of your documents with each. 4. Measure retrieval on your evaluation set and read the failures. 5. Pick the simplest option that meets your quality bar, and record the model version with every vector.</p>
+<h2>Takeaway</h2>
+<p>Choose an embedding model by testing it on your own questions, not by leaderboard rank alone. Check dimensions, context length, language support, cost and hosting against your constraints, keep the embedding call behind one function, and remember that chunking, filters, hybrid search and reranking often matter as much as the model itself.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

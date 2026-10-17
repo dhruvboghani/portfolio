@@ -9,3 +9,5 @@ LLM function calling explained
 Speech-to-text latency in voice bots
 Multi-tenant SaaS architecture patterns
 RAG evaluation: how to measure answer quality
+Embedding models: how to choose one
+Change data capture (CDC) explained
