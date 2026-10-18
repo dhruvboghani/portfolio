@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Schema evolution in Apache Iceberg: change tables safely</title>
+<meta name="description" content="How Apache Iceberg handles schema evolution with column IDs: adding, renaming, dropping and widening columns without rewriting data or breaking readers.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/schema-evolution-in-apache-iceberg.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Schema evolution in Apache Iceberg: change tables safely">
+<meta property="og:description" content="How Apache Iceberg handles schema evolution with column IDs: adding, renaming, dropping and widening columns without rewriting data or breaking readers.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/schema-evolution-in-apache-iceberg.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Schema evolution in Apache Iceberg: change tables safely">
+<meta name="twitter:description" content="How Apache Iceberg handles schema evolution with column IDs: adding, renaming, dropping and widening columns without rewriting data or breaking readers.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Schema evolution in Apache Iceberg: change tables safely", "description": "How Apache Iceberg handles schema evolution with column IDs: adding, renaming, dropping and widening columns without rewriting data or breaking readers.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-18", "dateModified": "2026-10-18", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/schema-evolution-in-apache-iceberg.html", "inLanguage": "en", "keywords": "iceberg, lakehouse, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Schema evolution in Apache Iceberg: change tables safely", "item": "https://dhruv-boghani.vercel.app/blog/schema-evolution-in-apache-iceberg.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Schema evolution in Apache Iceberg: change tables safely</h1><p class="m u meta">2026-10-18 / 4 min read / iceberg, lakehouse, data-engineering</p><article class="post"><p>Data never keeps the same shape for long. Product teams add fields, rename confusing columns and change types, and the tables downstream have to keep up without breaking every dashboard and job that reads them.</p>
+<p>Apache Iceberg was designed with this in mind. Its schema evolution lets you change a table's structure as a metadata operation, without rewriting existing data files and without silently corrupting results. This post explains how it works and how to use it well.</p>
+<h2>Why schema changes hurt in plain data lakes</h2>
+<p>In a lake of raw Parquet files, the schema is mostly implied by the files themselves and by column names. That causes familiar problems:</p>
+<ul>
+<li><strong>Renames break history.</strong> Old files still use the old name, so queries return nulls for older data.</li>
+<li><strong>Dropped and re-added columns collide.</strong> A new column with an old name can accidentally pick up old values.</li>
+<li><strong>Type changes need rewrites.</strong> Changing a type often means rewriting every file.</li>
+<li><strong>Readers disagree.</strong> Different engines interpret mismatched files differently.</li>
+</ul>
+<h2>How Iceberg tracks columns</h2>
+<p>Iceberg assigns every column a <strong>unique field ID</strong> when it is created and stores that ID in the table metadata and in the data files. Readers match columns by ID, not by name or position.</p>
+<p>That one decision makes the common operations safe:</p>
+<ul>
+<li><strong>Rename:</strong> only the name in metadata changes. Old and new files still map to the same ID, so history stays intact.</li>
+<li><strong>Drop:</strong> the ID is removed from the current schema. Old data is not read for that column anymore.</li>
+<li><strong>Add:</strong> a new column gets a new ID. It never picks up values from a previously dropped column with the same name, and older files simply return nulls for it.</li>
+<li><strong>Reorder:</strong> position does not matter, so reordering is metadata only.</li>
+</ul>
+<p>Every schema change creates a new table snapshot, so you can see when the change happened and query data as it was before.</p>
+<h2>Supported changes</h2>
+<pre><code>-- add a nullable column
+ALTER TABLE lake.orders ADD COLUMN discount_code STRING;
+
+-- rename without rewriting files
+ALTER TABLE lake.orders RENAME COLUMN cust_id TO customer_id;
+
+-- widen a type
+ALTER TABLE lake.orders ALTER COLUMN quantity TYPE BIGINT;
+
+-- drop a column
+ALTER TABLE lake.orders DROP COLUMN legacy_flag;</code></pre>
+<ul>
+<li><strong>Add columns,</strong> including nested fields inside structs.</li>
+<li><strong>Rename columns</strong> and nested fields.</li>
+<li><strong>Drop columns.</strong></li>
+<li><strong>Reorder columns.</strong></li>
+<li><strong>Widen types</strong> safely, such as <code>int</code> to <code>long</code>, <code>float</code> to <code>double</code>, or increasing decimal precision.</li>
+<li><strong>Make required columns optional.</strong> The reverse is not allowed, because older data may contain nulls.</li>
+</ul>
+<p>Changes that could lose information, such as narrowing a type or converting a string to a number, are rejected. For those, add a new column, backfill it and switch readers over.</p>
+<h2>Schema evolution vs partition evolution</h2>
+<p>Iceberg also supports <strong>partition evolution</strong>, which is related but different. You can change how new data is partitioned, for example from daily to hourly, without rewriting old data. Queries use hidden partitioning, so they keep working without users writing partition filters by hand. Plan both together when a table's usage changes.</p>
+<h2>Streaming and CDC pipelines</h2>
+<p>Schema changes often start in a source database and arrive through change data capture.</p>
+<ul>
+<li><strong>Decide who owns the schema.</strong> Either the pipeline applies compatible changes automatically, or a person reviews them first. Automatic is convenient; reviewed is safer for important tables.</li>
+<li><strong>Use a schema registry</strong> for event formats, so producers cannot publish breaking changes unnoticed.</li>
+<li><strong>Let writers handle new fields.</strong> Many writers can merge new nullable columns into the Iceberg schema as they appear.</li>
+<li><strong>Test with each query engine.</strong> Spark, Flink and Trino all read Iceberg, but check their versions support the changes you plan.</li>
+</ul>
+<h2>Good practices</h2>
+<ul>
+<li><strong>Prefer additive changes.</strong> Adding a nullable column is the safest change there is.</li>
+<li><strong>Rename for clarity, not on a whim.</strong> Renames are safe in Iceberg, but downstream SQL, dashboards and APIs still reference names.</li>
+<li><strong>Communicate changes.</strong> Keep a changelog or use table properties and comments so consumers know what changed and why.</li>
+<li><strong>Use branches or a catalog like Nessie</strong> to test schema changes in isolation before merging them into the main table.</li>
+<li><strong>Keep old snapshots long enough</strong> to compare results before and after a change, then expire them to control storage.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Iceberg makes schema evolution safe by tracking columns with stable IDs instead of names or positions. Add, rename, drop, reorder and widen columns as metadata operations, avoid lossy type changes, and pair it with partition evolution, schema registries and catalog branches. Your tables can then change as fast as the business does without breaking the people who rely on them.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data quality checks in streaming pipelines | Dhruv Boghani</title>
+<meta name="description" content="How to add data quality checks to streaming pipelines: schema, validity, freshness, volume and duplicates, plus dead-letter queues and alerts that matter.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/data-quality-checks-in-streaming-pipelines.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Data quality checks in streaming pipelines">
+<meta property="og:description" content="How to add data quality checks to streaming pipelines: schema, validity, freshness, volume and duplicates, plus dead-letter queues and alerts that matter.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/data-quality-checks-in-streaming-pipelines.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Data quality checks in streaming pipelines">
+<meta name="twitter:description" content="How to add data quality checks to streaming pipelines: schema, validity, freshness, volume and duplicates, plus dead-letter queues and alerts that matter.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Data quality checks in streaming pipelines", "description": "How to add data quality checks to streaming pipelines: schema, validity, freshness, volume and duplicates, plus dead-letter queues and alerts that matter.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/data-quality-checks-in-streaming-pipelines.html", "inLanguage": "en", "keywords": "data-quality, streaming, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Data quality checks in streaming pipelines", "item": "https://dhruv-boghani.vercel.app/blog/data-quality-checks-in-streaming-pipelines.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Data quality checks in streaming pipelines</h1><p class="m u meta">2026-10-19 / 4 min read / data-quality, streaming, data-engineering</p><article class="post"><p>In a batch pipeline, bad data waits until the next run, and someone usually notices. In a streaming pipeline, bad data flows straight into dashboards, alerts, search indexes and AI features within seconds.</p>
+<p>Data quality checks in streaming have to work continuously, cheaply and without stopping the whole flow for one bad record. This post covers what to check, where to check it and what to do when a check fails.</p>
+<h2>What can go wrong</h2>
+<p>Streaming data fails in predictable ways:</p>
+<ul>
+<li><strong>Schema drift:</strong> a producer adds, removes or renames a field, or changes a type.</li>
+<li><strong>Invalid values:</strong> negative quantities, impossible dates, unknown status codes, empty IDs.</li>
+<li><strong>Duplicates:</strong> at-least-once delivery and retries produce the same event more than once.</li>
+<li><strong>Late and out-of-order events:</strong> mobile clients and network delays deliver old events after newer ones.</li>
+<li><strong>Missing data:</strong> a producer stops sending, so volume drops quietly.</li>
+<li><strong>Broken references:</strong> an event points to a customer or product that does not exist.</li>
+</ul>
+<h2>Check at the right layer</h2>
+<p><strong>At the producer.</strong> Validate before publishing. The cheapest bad event is the one never sent. Use typed models and a schema registry so incompatible changes are rejected at publish time.</p>
+<p><strong>At ingestion.</strong> Validate every event against the schema and basic rules as it enters the pipeline. Route failures aside instead of crashing the job.</p>
+<p><strong>In stream processing.</strong> Apply checks that need state or context: duplicates, ordering, rates and joins against reference data.</p>
+<p><strong>At the sink.</strong> Check aggregate properties of what lands in the lakehouse or warehouse: row counts, null rates and freshness per table.</p>
+<h2>Record-level checks</h2>
+<p>These run on every event and should be fast.</p>
+<ul>
+<li><strong>Schema validation:</strong> required fields present, types correct, no unexpected nulls.</li>
+<li><strong>Validity rules:</strong> ranges, allowed values, formats for emails, phone numbers or currency codes.</li>
+<li><strong>Consistency rules:</strong> totals equal the sum of line items, end time after start time.</li>
+<li><strong>Reference checks:</strong> IDs exist in a cached lookup of known customers or products.</li>
+</ul>
+<pre><code>def validate(e: dict) -&gt; list[str]:
+    errors = []
+    if not e.get("order_id"):
+        errors.append("missing order_id")
+    if e.get("quantity", 0) &lt;= 0:
+        errors.append("quantity must be positive")
+    if e.get("currency") not in {"INR", "USD", "EUR"}:
+        errors.append("unknown currency")
+    return errors</code></pre>
+<h2>Stream-level checks</h2>
+<p>Some problems only show up across many events.</p>
+<ul>
+<li><strong>Freshness:</strong> time since the last event per source or partition. A silent producer is often worse than a noisy one.</li>
+<li><strong>Volume:</strong> events per minute compared with the usual pattern for that time of day. Sudden drops and spikes both deserve attention.</li>
+<li><strong>Duplicate rate:</strong> track how often the same event ID appears within a time window. Deduplicate with keyed state, and watch the rate itself as a signal.</li>
+<li><strong>Lateness:</strong> how far behind event time is from processing time, and how many events arrive after the watermark.</li>
+<li><strong>Null and error rates:</strong> the share of events failing each rule. A slow climb often points to an upstream change.</li>
+</ul>
+<p>Stream processors like Apache Flink are well suited to these checks because they keep state per key and work in event-time windows.</p>
+<h2>Handle failures without stopping the flow</h2>
+<p>Decide in advance what happens when a check fails.</p>
+<ul>
+<li><strong>Dead-letter queue:</strong> send invalid events, together with the reason and the original payload, to a separate topic. The main flow continues, and nothing is lost.</li>
+<li><strong>Quarantine tables:</strong> land failed records in a table people can query and fix, then replay them.</li>
+<li><strong>Flag, don't drop:</strong> for minor problems, add a quality flag and let downstream consumers decide.</li>
+<li><strong>Stop the line only for critical failures,</strong> such as a schema change that would corrupt a core table.</li>
+<li><strong>Make replays easy.</strong> Fixed records should flow back through the same pipeline, so the logic stays in one place.</li>
+</ul>
+<h2>Alerts people trust</h2>
+<p>Too many alerts get ignored. Keep them focused.</p>
+<ul>
+<li><strong>Alert on impact,</strong> such as stale data on an important table or a sharp rise in failed records, not on every single bad event.</li>
+<li><strong>Use baselines per source and time of day</strong> instead of fixed thresholds.</li>
+<li><strong>Include context in the alert:</strong> which source, which rule, a sample of failing records and a link to the dead-letter topic.</li>
+<li><strong>Assign an owner</strong> for each source, so alerts reach someone who can fix the producer.</li>
+</ul>
+<h2>Measure quality over time</h2>
+<p>Record quality metrics as data too. Daily failure rates, freshness and duplicate rates per source show whether things are getting better, and they make conversations with producer teams concrete. They also matter for AI features, because retrieval and models are only as reliable as the data they read.</p>
+<h2>Takeaway</h2>
+<p>Check quality at every layer of a streaming pipeline: validate records on the way in, watch freshness, volume, duplicates and lateness across the stream, and route failures to dead-letter queues instead of stopping the flow. Alert on impact, assign owners and track quality metrics over time, and your real-time data stays something people can rely on.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

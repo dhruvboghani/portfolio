@@ -1,6 +1,4 @@
 # One topic per line. The next line is used each day. Add more any time.
-Schema evolution in Apache Iceberg
-Data quality checks in streaming pipelines
 AI agents vs chatbots: what is the difference
 Guardrails for LLM applications
 Semantic caching to cut LLM costs

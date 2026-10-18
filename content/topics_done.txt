@@ -11,3 +11,5 @@ Multi-tenant SaaS architecture patterns
 RAG evaluation: how to measure answer quality
 Embedding models: how to choose one
 Change data capture (CDC) explained
+Schema evolution in Apache Iceberg
+Data quality checks in streaming pipelines
