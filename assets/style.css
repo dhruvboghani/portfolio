@@ -616,3 +616,6 @@ body.mo .sidenav{opacity:0;pointer-events:none}
 @media (max-width:899px){.sidenav{display:none}}
 @media (max-height:620px){.sidenav a{font-size:13px;line-height:1.35;padding:2px 10px}}
 @media (prefers-reduced-motion:reduce){.sidenav{transition:none}}
+
+/* the header Menu button is for phones only; larger screens use the side menu */
+@media (min-width:900px){html.has-side .hb{display:none}}
