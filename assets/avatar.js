@@ -1,16 +1,16 @@
 function createAvatar(el){
- const T=THREE,sc=new T.Scene();sc.background=new T.Color(0x110F1A).convertSRGBToLinear();let fitH=1.9,fitC=.98;
+ const T=THREE,sc=new T.Scene();sc.background=new T.Color(0xEFEBE2).convertSRGBToLinear();let fitH=1.9,fitC=.98;
  const cam=new T.PerspectiveCamera(28,1,.1,50);cam.position.set(0,1.0,4.7);cam.lookAt(0,.98,0);
  const rd=new T.WebGLRenderer({antialias:true});rd.setPixelRatio(Math.min(devicePixelRatio||1,2));rd.outputEncoding=T.sRGBEncoding;el.appendChild(rd.domElement);
- sc.add(new T.HemisphereLight(0xffffff,0x3a3560,1.1));sc.add(new T.AmbientLight(0xffffff,.45));
+ sc.add(new T.HemisphereLight(0xffffff,0x9C8A70,1.1));sc.add(new T.AmbientLight(0xffffff,.45));
  const dl=new T.DirectionalLight(0xffffff,.9);dl.position.set(1.5,3,3);sc.add(dl);
- const rim=new T.DirectionalLight(0x8a7bff,.55);rim.position.set(-2,2,-2);sc.add(rim);const fr=new T.DirectionalLight(0xffffff,1.1);fr.position.set(0,1.7,4);sc.add(fr);
+ const rim=new T.DirectionalLight(0xE6A45C,.55);rim.position.set(-2,2,-2);sc.add(rim);const fr=new T.DirectionalLight(0xffffff,1.1);fr.position.set(0,1.7,4);sc.add(fr);
  const M=(c,r)=>new T.MeshStandardMaterial({color:new T.Color(c).convertSRGBToLinear(),roughness:r||.7,metalness:0});
  const skin=M(0xdba584,.65),hair=M(0x17130f,.9),shirt=M(0xf4f4f2,.85),jeans=M(0x35588a,.9),dark=M(0x14110e,.5),rose=M(0x7a2f2f,.6);
  const root=new T.Group();sc.add(root);
  const add=(g,m,x,y,z,p)=>{const o=new T.Mesh(g,m);o.position.set(x,y,z);(p||root).add(o);return o};
  const cyl=(a,b,h)=>new T.CylinderGeometry(a,b,h,24),sph=(r,a,b,c,d)=>new T.SphereGeometry(r,24,18,a||0,b||Math.PI*2,c||0,d||Math.PI);
- const fl=add(new T.CircleGeometry(.55,48),M(0x1c1930,1),0,.004,0);fl.rotation.x=-Math.PI/2;
+ const fl=add(new T.CircleGeometry(.55,48),M(0xE0D6C2,1),0,.004,0);fl.rotation.x=-Math.PI/2;
  [-1,1].forEach(s=>{add(cyl(.09,.065,.86),jeans,s*.1,.48,0);add(new T.BoxGeometry(.1,.07,.27),dark,s*.1,.04,.05)});
  add(cyl(.2,.19,.22),jeans,0,.97,0).scale.z=.75;add(cyl(.2,.2,.05),dark,0,1.06,0).scale.z=.75;
  const torso=add(cyl(.21,.185,.58),shirt,0,1.35,0);torso.scale.z=.72;

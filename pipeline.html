@@ -4,16 +4,15 @@
 <title>Real-Time Data Pipeline: Flink &amp; Iceberg | Dhruv Boghani</title>
 <meta name="description" content="Interactive demo of a real-time data lakehouse: stream events through Redpanda, Flink, Apache Iceberg and Trino, then time travel.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=9">
-<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Marcellus&family=Hind:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=10">
 <!--seo-->
 <link rel="canonical" href="https://dhruv-boghani.vercel.app/pipeline.html">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<meta name="theme-color" content="#ECEBE6">
+<meta name="theme-color" content="#F8F6F1">
 <meta property="og:site_name" content="Dhruv Boghani">
 <meta property="og:locale" content="en_IN">
 <meta property="og:type" content="website">
@@ -31,10 +30,9 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "Real-Time Data Pipeline: Flink & Iceberg | Dhruv Boghani", "description": "Interactive demo of a real-time data lakehouse: stream events through Redpanda, Flink, Apache Iceberg and Trino, then time travel.", "url": "https://dhruv-boghani.vercel.app/pipeline.html", "isPartOf": {"@id": "https://dhruv-boghani.vercel.app/#website"}, "about": {"@id": "https://dhruv-boghani.vercel.app/#person"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Real-Time Data Pipeline: Flink & Iceberg", "item": "https://dhruv-boghani.vercel.app/pipeline.html"}]}]}</script>
 <!--/seo-->
 </head><body>
-<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span><span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
 <div id="bar"></div>
 <div class="app">
-<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="pipeline.html" class="on" aria-current="page"><span>Pipeline</span><span>04</span></a><a href="invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="work.html"><span>Work & stack</span><span>07</span></a><a href="blog.html"><span>Blog</span><span>08</span></a><a href="faq.html"><span>FAQ</span><span>09</span></a><a href="experience.html"><span>Experience</span><span>10</span></a><a href="contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<header class="top"><div class="top-in"><a class="brand" href="/" aria-label="Dhruv Boghani, home"><span class="dv">ध्रुव</span><span class="nm">Dhruv Boghani</span></a><nav id="nav" aria-label="Main"><a href="/"><span class="w">ध्रुव</span><span class="t">Home</span><span class="s">Nine words, nine systems</span></a><a href="voice-avatar.html"><span class="w">वाणी</span><span class="t">Sales avatar</span><span class="s">Live demo · a 3D avatar that sells</span></a><a href="admin-assistant.html"><span class="w">दृष्टि</span><span class="t">Admin assistant</span><span class="s">Live demo · ask your data</span></a><a href="pipeline.html" class="on" aria-current="page"><span class="w">लेखा</span><span class="t">Data pipeline</span><span class="s">Live demo · streaming lakehouse</span></a><a href="invoice-ai.html"><span class="w">विवेक</span><span class="t">Invoice AI</span><span class="s">Live demo · catch mismatches</span></a><a href="voice-agent.html"><span class="w">संवाद</span><span class="t">Voice agent</span><span class="s">Live demo · calls that update the CRM</span></a><a href="work.html"><span class="w">कर्म</span><span class="t">Work &amp; stack</span><span class="s">Eleven platforms, case studies</span></a><a href="experience.html"><span class="w">यात्रा</span><span class="t">Experience</span><span class="s">Five years, newest first</span></a><a href="blog.html"><span class="w">ज्ञान</span><span class="t">Blog</span><span class="s">A new post every day</span></a><a href="faq.html"><span class="w">प्रश्न</span><span class="t">FAQ</span><span class="s">Quick answers</span></a><a href="contact.html"><span class="w">अतिथि</span><span class="t">Contact</span><span class="s">Every guest is welcome</span></a></nav><div class="quick"><a href="work.html">Work</a><a href="experience.html">Experience</a><a href="blog.html">Blog</a><a href="contact.html">Contact</a></div><button class="hb" type="button" aria-controls="nav" aria-expanded="false"><span class="ic"><i></i><i></i><i></i></span><span class="lb">Menu</span></button></div></header>
 <main>
 <section id="pipeline" class="rv"><div class="ttl"><h1>Data <span>pipeline</span></h1></div><p class="sub">Real-Time Data Lakehouse. 10M+ events a day flow from Redpanda through Flink into versioned Iceberg tables, queried with Trino. Simulated live below.</p>
 <div class="kp" style="margin:0 0 28px"><div><span class="m u">Events / sec</span><b id="k1">115</b><canvas id="sp" width="160" height="30" style="width:100%;height:30px"></canvas></div><div><span class="m u">Events ingested</span><b id="k2">0</b></div><div><span class="m u">Snapshots</span><b id="k3">0</b></div><div><span class="m u">Quarantined</span><b id="k4">0</b></div></div>
@@ -43,8 +41,8 @@
 <canvas id="pl"></canvas><div class="dt m" id="dt">Click any stage to see what it does.</div>
 <div class="ctl m" style="margin-top:14px"><span class="u">Time travel</span><select id="sn"><option>no snapshots yet</option></select><button class="bt d" id="bq">Run Trino query</button></div><div class="out m" id="qo">trino> run a query to read the lake at any snapshot.</div></div></div>
 <div class="tg m" style="margin:18px 0 50px"><span>Redpanda</span><span>Apache Flink</span><span>Apache Iceberg</span><span>Trino</span><span>MinIO</span><span>Nessie</span></div></section><section class="rv"><div class="ttl"><h2>How it <span>works</span></h2></div><div class="fx" style="margin-bottom:50px"><div><span class="m u" style="color:var(--acc)">01</span><h3>Ingest</h3><p>Redpanda takes in 10M+ events a day with Kafka-compatible streaming.</p></div><div><span class="m u" style="color:var(--acc)">02</span><h3>Transform</h3><p>Flink processes events in flight and quarantines bad ones in a dead-letter queue.</p></div><div><span class="m u" style="color:var(--acc)">03</span><h3>Store</h3><p>Iceberg tables on MinIO, versioned by Nessie, commit a snapshot as data lands.</p></div><div><span class="m u" style="color:var(--acc)">04</span><h3>Query</h3><p>Trino reads the lake with SQL, including any past snapshot.</p></div></div></section><a class="nx pn" href="invoice-ai.html"><span class="m u">Next</span><b>Invoice AI &rarr;</b></a>
-<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+<footer><span>Dhruv Boghani · Ahmedabad, Gujarat, India · 2026</span><span class="iti">॥ इति शुभम् ॥</span><span>AI/ML · Data · Full-stack</span></footer>
 </main></div>
-<script src="assets/common.js?v=7"></script>
-<script src="assets/pipeline.js"></script>
+<script src="assets/common.js?v=10"></script>
+<script src="assets/pipeline.js?v=10"></script>
 </body></html>

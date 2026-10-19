@@ -85,7 +85,7 @@ def seo_block(url, title, desc, typ, ld):
         '<link rel="icon" href="/favicon.ico" sizes="48x48">',
         '<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">',
         '<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">',
-        '<meta name="theme-color" content="#ECEBE6">',
+        '<meta name="theme-color" content="#F8F6F1">',
         og('og:site_name', SITE_NAME), og('og:locale', 'en_IN'), og('og:type', typ),
         og('og:title', title), og('og:description', desc), og('og:url', url),
         og('og:image', OG_IMAGE), og('og:image:width', '1200'), og('og:image:height', '630'),
