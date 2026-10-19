@@ -153,6 +153,18 @@ if(!RM)groups.forEach(g=>{[...g.children].forEach((c,k)=>c.style.setProperty('--
  $$('.bt,.hb').forEach(b=>{b.addEventListener('pointermove',e=>{const q=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-q.left-q.width/2)*.18}px,${(e.clientY-q.top-q.height/2)*.28}px)`});b.addEventListener('pointerleave',()=>b.style.transform='')});
 })();
 
+/* ---------- home: section words on the right edge ---------- */
+(function(){const map=[['top','आरम्भ','Opening'],['w1','ध्रुव','Name'],['w2','मंथन','Skills'],['w3','वाणी','Sales avatar'],['w4','दृष्टि','Admin assistant'],['w5','व्यास','Curriculum engine'],['w6','सारथी','Exam assistant'],['w7','विवेक','Invoice AI'],['w8','संवाद','Calling bot'],['w9','लेखा','Lakehouse'],['journey','कर्म','Journey'],['ct','अतिथि','Contact']];
+ const items=map.map(([id,w,l])=>[document.getElementById(id),w,l,id]).filter(x=>x[0]);if(items.length<6)return;
+ const nav=document.createElement('nav');nav.className='secnav';nav.setAttribute('aria-label','Sections');
+ nav.innerHTML=items.map(([,w,l,id])=>`<a href="#${id}" data-cursor="" title="${l}"><span>${w}</span></a>`).join('');document.body.appendChild(nav);
+ const links=[...nav.children];
+ links.forEach((a,i)=>a.addEventListener('click',e=>{e.preventDefault();items[i][0].scrollIntoView({behavior:RM?'auto':'smooth',block:items[i][3]==='top'?'start':'center'});history.replaceState(null,'','#'+items[i][3])}));
+ let tick=false;const upd=()=>{const mid=innerHeight*.5;let on=0;items.forEach(([el],i)=>{if(el.getBoundingClientRect().top<mid)on=i});links.forEach((a,i)=>{a.classList.toggle('on',i===on);if(i===on)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current')});tick=false};
+ addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});upd();
+ whenReady(()=>nav.classList.add('in'));
+})();
+
 /* ---------- page transitions: the doors close, then the next page opens them ---------- */
 (function(){if(RM)return;
  document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
