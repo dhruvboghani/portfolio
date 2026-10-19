@@ -10,6 +10,17 @@ const DATA_FILE = path.join(__dirname, 'inquiry.json');
 // Middleware
 app.use(cors()); // Allows index.html to talk to this server
 app.use(express.json());
+
+// --- SEO: one URL per page ---
+// 301 duplicate URLs to their canonical form so Google only indexes one version:
+//   //work.html -> /work.html,  /index.html -> /,  /blog/index.html -> /blog/
+app.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+    const clean = req.path.replace(/\/{2,}/g, '/').replace(/\/index\.html$/, '/');
+    if (clean === req.path) return next();
+    const q = req.originalUrl.indexOf('?');
+    res.redirect(301, clean + (q >= 0 ? req.originalUrl.slice(q) : ''));
+});
 app.use(express.static(__dirname)); // Serve static files (css, js, images)
 
 // --- Serve HTML File ---

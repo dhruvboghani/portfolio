@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Change data capture (CDC) explained for data engineers</title>
+<meta name="description" content="What change data capture is, how log-based CDC works, how it compares to batch extracts, and the pitfalls to plan for when streaming database changes.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/change-data-capture-cdc-explained.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Change data capture (CDC) explained for data engineers">
+<meta property="og:description" content="What change data capture is, how log-based CDC works, how it compares to batch extracts, and the pitfalls to plan for when streaming database changes.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/change-data-capture-cdc-explained.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Change data capture (CDC) explained for data engineers">
+<meta name="twitter:description" content="What change data capture is, how log-based CDC works, how it compares to batch extracts, and the pitfalls to plan for when streaming database changes.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Change data capture (CDC) explained for data engineers", "description": "What change data capture is, how log-based CDC works, how it compares to batch extracts, and the pitfalls to plan for when streaming database changes.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-17", "dateModified": "2026-10-17", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/change-data-capture-cdc-explained.html", "inLanguage": "en", "keywords": "data-engineering, cdc, streaming"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Change data capture (CDC) explained for data engineers", "item": "https://dhruv-boghani.vercel.app/blog/change-data-capture-cdc-explained.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Change data capture (CDC) explained for data engineers</h1><p class="m u meta">2026-10-17 / 4 min read / data-engineering, cdc, streaming</p><article class="post"><p>Most important data starts life in an application database: orders, invoices, users, leads. Getting that data into analytics, search indexes or AI systems quickly and reliably is one of the most common jobs in data engineering.</p>
+<p>Change data capture, or CDC, solves it by streaming every insert, update and delete as it happens, instead of copying whole tables on a schedule. This post explains how CDC works, when to use it and what tends to go wrong.</p>
+<h2>The problem with batch extracts</h2>
+<p>The traditional approach runs a query every night or every hour, such as <code>SELECT * FROM orders WHERE updated_at &gt; :last_run</code>, and loads the result elsewhere.</p>
+<p>It works, but it has known weaknesses:</p>
+<ul>
+<li><strong>Latency:</strong> data is only as fresh as the last run.</li>
+<li><strong>Load:</strong> large queries put pressure on the production database.</li>
+<li><strong>Missed changes:</strong> rows deleted between runs disappear without a trace, and rows updated without touching <code>updated_at</code> are skipped.</li>
+<li><strong>No history:</strong> if a row changes three times between runs, you only see the final state.</li>
+</ul>
+<h2>How log-based CDC works</h2>
+<p>Databases already record every change in a log so they can recover from crashes and feed replicas. PostgreSQL has the write-ahead log, MySQL has the binlog. Log-based CDC reads that log and turns each change into an event.</p>
+<ul>
+<li><strong>Low impact:</strong> reading the log does not run heavy queries against your tables.</li>
+<li><strong>Complete:</strong> inserts, updates and deletes are all captured, in commit order.</li>
+<li><strong>Fast:</strong> changes are available within seconds of the commit.</li>
+</ul>
+<p>A typical setup uses a CDC connector such as Debezium to read the log and publish events to Kafka or Redpanda, one topic per table. Downstream consumers then apply the changes to a warehouse, a lakehouse, a search index or a cache.</p>
+<p>Each event usually carries the operation type, the row before and after the change, and metadata such as the transaction and log position.</p>
+<pre><code>{
+  "op": "u",
+  "before": { "id": 42, "status": "pending", "amount": 1200 },
+  "after":  { "id": 42, "status": "paid",    "amount": 1200 },
+  "source": { "table": "invoices", "lsn": 981234567 },
+  "ts_ms": 1760680000000
+}</code></pre>
+<h2>Other CDC approaches</h2>
+<ul>
+<li><strong>Query-based CDC:</strong> poll tables using a timestamp or incrementing column. Simple, but it misses deletes and adds load.</li>
+<li><strong>Trigger-based CDC:</strong> database triggers write changes to an audit table. Complete, but it slows down every write and adds logic to the database.</li>
+<li><strong>Log-based CDC:</strong> reads the transaction log. Usually the best choice for production systems, but it needs the right database settings and permissions.</li>
+</ul>
+<h2>Where CDC events go</h2>
+<ul>
+<li><strong>Lakehouse tables:</strong> apply changes to Apache Iceberg tables with merge operations, keeping history through snapshots and making yesterday's state queryable.</li>
+<li><strong>Real-time analytics:</strong> feed stream processors like Flink to compute live metrics and alerts.</li>
+<li><strong>Search and RAG:</strong> re-embed and re-index a document as soon as its source row changes, so AI answers never rely on stale content.</li>
+<li><strong>Caches and microservices:</strong> keep other services in sync without tight coupling to the main database.</li>
+</ul>
+<h2>Pitfalls to plan for</h2>
+<p><strong>Initial snapshot.</strong> CDC captures changes from a point in time. You also need a consistent initial copy of existing rows, and the connector must switch from snapshot to streaming without gaps or duplicates.</p>
+<p><strong>Schema changes.</strong> Adding or renaming columns changes the event shape. Use a schema registry or well-defined formats, and make sure downstream tables can evolve. Iceberg's schema evolution helps here.</p>
+<p><strong>Ordering and duplicates.</strong> Events for the same row must be applied in order, and most pipelines deliver at least once. Partition topics by primary key and make the consumer idempotent, for example by upserting on the key and ignoring events older than the stored log position.</p>
+<p><strong>Deletes.</strong> Decide how deletes appear downstream: removed rows, soft-delete flags or tombstones. Handle them deliberately so deleted data does not linger in search indexes or AI context.</p>
+<p><strong>Log retention.</strong> If the connector stops for longer than the database keeps its log, changes are lost and you need a new snapshot. Monitor connector lag and set retention with a safety margin.</p>
+<p><strong>Sensitive data.</strong> CDC copies everything, including personal data. Mask or drop sensitive columns early in the pipeline and respect tenant boundaries in multi-tenant systems.</p>
+<h2>When to use CDC</h2>
+<p>CDC is a good fit when downstream systems need fresh data, when you must capture deletes and history, or when heavy extract queries are hurting production. A nightly batch is still fine for small tables, reports that tolerate delay, or teams without streaming infrastructure.</p>
+<h2>Takeaway</h2>
+<p>Change data capture reads the database's own change log and streams every insert, update and delete to the systems that need them. Plan for the initial snapshot, schema changes, ordering, deletes and log retention, and CDC becomes the reliable backbone that keeps your lakehouse, analytics and AI features in step with production.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>
