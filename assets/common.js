@@ -153,6 +153,16 @@ if(!RM)groups.forEach(g=>{[...g.children].forEach((c,k)=>c.style.setProperty('--
  $$('.bt,.hb').forEach(b=>{b.addEventListener('pointermove',e=>{const q=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-q.left-q.width/2)*.18}px,${(e.clientY-q.top-q.height/2)*.28}px)`});b.addEventListener('pointerleave',()=>b.style.transform='')});
 })();
 
+/* ---------- main menu: page words down the left edge, always visible ---------- */
+(function(){const src=$$('#nav a');if(!src.length)return;
+ const here=location.pathname.replace(/\/index\.html$/,'/');const inBlog=/\/blog\//.test(location.pathname);
+ const nav=document.createElement('nav');nav.className='sidenav';nav.setAttribute('aria-label','Pages');
+ nav.innerHTML=src.map(a=>{const href=a.getAttribute('href'),u=new URL(a.href,location.href),p=u.pathname.replace(/\/index\.html$/,'/');
+  const on=p===here||(inBlog&&/blog\.html$/.test(p));
+  return `<a href="${href}"${on?' class="on" aria-current="page"':''} data-cursor=""><span class="w">${a.querySelector('.w').textContent}</span><span class="t">${a.querySelector('.t').textContent}</span></a>`}).join('');
+ document.body.appendChild(nav);document.documentElement.classList.add('has-side');whenReady(()=>nav.classList.add('in'));
+})();
+
 /* ---------- home: section words on the right edge ---------- */
 (function(){const map=[['top','आरम्भ','Opening'],['w1','ध्रुव','Name'],['w2','मंथन','Skills'],['w3','वाणी','Sales avatar'],['w4','दृष्टि','Admin assistant'],['w5','व्यास','Curriculum engine'],['w6','सारथी','Exam assistant'],['w7','विवेक','Invoice AI'],['w8','संवाद','Calling bot'],['w9','लेखा','Lakehouse'],['journey','कर्म','Journey'],['ct','अतिथि','Contact']];
  const items=map.map(([id,w,l])=>[document.getElementById(id),w,l,id]).filter(x=>x[0]);if(items.length<6)return;

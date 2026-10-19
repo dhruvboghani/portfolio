@@ -607,3 +607,27 @@ body.mo .secnav{opacity:0;pointer-events:none}
 @media (min-width:900px) and (max-width:1420px){.hm-hero~section,.hm-hero~.rule{padding-right:88px}}
 @media (max-height:620px){.secnav a{font-size:13px;line-height:1.35;padding:2px 10px}}
 @media (prefers-reduced-motion:reduce){.secnav{transition:none}}
+
+/* main menu: page words down the left edge on every page (900px and up) */
+.sidenav{position:fixed;left:max(14px,env(safe-area-inset-left,0px));top:50%;z-index:60;display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  padding:8px 4px;border-radius:18px;background:rgba(248,246,241,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transform:translate(-16px,-50%);opacity:0;transition:opacity .6s,transform .8s cubic-bezier(.2,.75,.15,1)}
+.sidenav.in{opacity:1;transform:translate(0,-50%)}
+.sidenav a{position:relative;display:block;text-decoration:none;padding:3px 12px;border-radius:999px;font-family:var(--f-dev);font-weight:700;font-size:15px;line-height:1.5;color:var(--ink-2);transition:background .3s,color .3s,transform .3s}
+.sidenav a .t{position:absolute;left:calc(100% + 10px);top:50%;transform:translate(-6px,-50%);white-space:nowrap;font-family:var(--f-cap);font-weight:400;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--maroon);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px;opacity:0;pointer-events:none;transition:opacity .25s,transform .3s;box-shadow:0 10px 24px -16px rgba(124,29,42,.5)}
+.sidenav a:hover{color:var(--maroon);transform:translateX(3px)}
+.sidenav a:hover .t,.sidenav a:focus-visible .t{opacity:1;transform:translate(0,-50%)}
+.sidenav a.on{background:var(--maroon);color:var(--marble)}
+.sidenav a:focus-visible{outline:2px solid var(--maroon);outline-offset:2px}
+.sidenav a:nth-child(6)::after{content:"";display:block;position:absolute;left:12px;right:12px;bottom:-2px;height:1px;background:var(--line)}
+body.mo .sidenav{opacity:0;pointer-events:none}
+@media (min-width:900px){
+  html.has-side .quick{display:none}
+  html.has-side main{padding-left:max(var(--gut),118px)}
+  html.has-side .top-in{padding-left:max(var(--gut),26px)}
+}
+@media (min-width:1500px){html.has-side main{padding-left:var(--gut)}}
+@media (max-width:899px){.sidenav{display:none}}
+@media (max-height:620px){.sidenav a{font-size:13px;line-height:1.35;padding:2px 10px}}
+@media (prefers-reduced-motion:reduce){.sidenav{transition:none}}
