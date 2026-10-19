@@ -57,9 +57,19 @@ $$('.word text').forEach(t=>{try{t.style.setProperty('--L',Math.ceil(t.getComput
  $$('#nav a').forEach(a=>a.addEventListener('click',()=>set(false)));
  addEventListener('keydown',e=>{if(e.key==='Escape')set(false)})})();
 
-/* ---------- header + progress ---------- */
-const top_=$('.top'),bar=$('#bar');
-function prog(){const h=document.documentElement.scrollHeight-innerHeight;if(bar)bar.style.transform=`scaleX(${h>0?scrollY/h:0})`;if(top_)top_.classList.toggle('solid',scrollY>20)}
+/* ---------- ready (after the preloader doors open) ---------- */
+const ROOT=document.documentElement;
+function whenReady(fn){if(ROOT.classList.contains('ready'))fn();else document.addEventListener('site:ready',fn,{once:true})}
+setTimeout(()=>{if(!ROOT.classList.contains('ready')){ROOT.classList.add('ready');document.dispatchEvent(new Event('site:ready'))}},7000);
+
+/* ---------- header: solid after scroll, hides going down, returns going up ---------- */
+const top_=$('.top'),bar=$('#bar');let lastY=scrollY;
+function prog(){const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;if(bar)bar.style.transform=`scaleX(${h>0?y/h:0})`;
+ if(top_){top_.classList.toggle('solid',y>20);if(!document.body.classList.contains('mo'))top_.classList.toggle('away',y>lastY+4&&y>240);if(y<lastY-4||y<240)top_.classList.remove('away')}
+ lastY=y;if(toTop)toTop.classList.toggle('on',y>innerHeight*.8);if(toTop&&ring)ring.style.strokeDashoffset=String(1-(h>0?y/h:0))}
+const toTop=document.createElement('button');toTop.className='totop';toTop.type='button';toTop.setAttribute('aria-label','Back to top');
+toTop.innerHTML='<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><span>↑</span>';
+document.body.appendChild(toTop);const ring=toTop.querySelector('circle');toTop.onclick=()=>scrollTo({top:0,behavior:RM?'auto':'smooth'});
 addEventListener('scroll',prog,{passive:true});addEventListener('resize',prog);prog();
 
 /* ---------- copy buttons ---------- */
@@ -67,12 +77,87 @@ $$('[data-copy]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();c
  const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent=lb,1500)};
  if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,()=>{});}));
 
-/* ---------- drawing + reveal on arrival (everything is visible at rest) ---------- */
-(function(){const targets=$$('.orn.pre,.word.pre,.rv');
- if(RM||!('IntersectionObserver' in window)){targets.forEach(t=>t.classList.remove('pre'));return}
- document.documentElement.classList.add('js');
+/* ---------- split headings into words that rise ---------- */
+function splitWords(el){let i=0;const walk=node=>{[...node.childNodes].forEach(c=>{
+  if(c.nodeType===3){if(!c.textContent.trim())return;const frag=document.createDocumentFragment();
+   c.textContent.split(/(\s+)/).forEach(part=>{if(!part)return;if(/^\s+$/.test(part)){frag.appendChild(document.createTextNode(part));return}
+    const w=document.createElement('span');w.className='w';const inner=document.createElement('span');inner.textContent=part;inner.style.setProperty('--i',i++);w.appendChild(inner);frag.appendChild(w)});
+   c.replaceWith(frag)}
+  else if(c.nodeType===1&&c.tagName!=='BR'&&c.tagName!=='svg')walk(c)})};walk(el);el.classList.add('split')}
+const heads=$$('.ttl h1,.ttl h2,.ph1,#ct h1,#ct h2,.pada h2,.hm-hero h1,.cm h2');
+if(!RM)heads.forEach(splitWords);
+
+/* ---------- stagger groups ---------- */
+const groups=$$('.also,.fx,.kp,.cl,.index,.skills,.journey,.chips,.lg,.sp');
+if(!RM)groups.forEach(g=>{[...g.children].forEach((c,k)=>c.style.setProperty('--d',Math.min(k,12)));g.classList.add('st')});
+
+/* ---------- drawing + reveal on arrival ---------- */
+(function(){const targets=[...new Set([...$$('.orn.pre,.word.pre,.rv'),...heads,...groups])];
+ if(RM||!('IntersectionObserver' in window)){targets.forEach(t=>{t.classList.remove('pre');t.classList.add('shown','in')});return}
  $$('.rv').forEach(el=>{if(el.getBoundingClientRect().top>innerHeight*.9)el.classList.add('pre')});
- const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const t=e.target;requestAnimationFrame(()=>{t.classList.remove('pre');t.classList.add('in')});io.unobserve(t)}}),{rootMargin:'0px 0px -8% 0px'});
+ const show=t=>{t.classList.remove('pre');t.classList.add('shown','in')};
+ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const t=e.target;io.unobserve(t);whenReady(()=>requestAnimationFrame(()=>show(t)))}}),{rootMargin:'0px 0px -8% 0px'});
  targets.forEach(t=>io.observe(t));
- setTimeout(()=>targets.forEach(t=>{if(t.getBoundingClientRect().top<innerHeight)t.classList.remove('pre')}),3000);
+ whenReady(()=>setTimeout(()=>targets.forEach(t=>{if(t.getBoundingClientRect().top<innerHeight)show(t)}),2600));
+})();
+
+/* ---------- seals turn slowly as you scroll ---------- */
+(function(){if(RM)return;const els=$$('.seal>.orn,.pseal>.orn,.hm-hero .mandala>.orn');let tick=false;
+ const run=()=>{els.forEach(e=>{const b=e.getBoundingClientRect();if(b.bottom<-50||b.top>innerHeight+50)return;const c=(b.top+b.height/2-innerHeight/2)/innerHeight;e.style.transform=`rotate(${(c*-28).toFixed(2)}deg)`});tick=false};
+ addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(run)}},{passive:true});run()})();
+
+/* ---------- cursor: kumkum bindu, rangoli ring, diya sparks (mouse and trackpad only) ---------- */
+(function(){if(RM||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+ const petals=Array.from({length:12},(_,i)=>{const a=i*30;return `<path d="M0 -15 Q3 -19 0 -24 Q-3 -19 0 -15Z" transform="rotate(${a})"/>`}).join('');
+ const dots=Array.from({length:24},(_,i)=>{const a=i*Math.PI/12;return `<circle cx="${(19*Math.cos(a)).toFixed(1)}" cy="${(19*Math.sin(a)).toFixed(1)}" r=".9"/>`}).join('');
+ const wrap=document.createElement('div');wrap.className='cur-w';
+ wrap.innerHTML=`<div class="cur-r"><svg viewBox="-28 -28 56 56" aria-hidden="true"><g class="cr-spin"><circle class="cr-o" r="26"/><g class="cr-p">${petals}</g><g class="cr-d">${dots}</g></g></svg><span class="cur-l"></span></div>`;
+ const dot=document.createElement('div');dot.className='cur';
+ const cv=document.createElement('canvas');cv.className='cur-cv';
+ document.body.append(cv,wrap,dot);
+ const ring=wrap.querySelector('svg'),label=wrap.querySelector('.cur-l'),g=cv.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2);
+ const fit=()=>{cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;g.setTransform(dpr,0,0,dpr,0,0)};fit();addEventListener('resize',fit);
+ let x=-200,y=-200,rx=x,ry=y,px=x,py=y,sparks=[],moving=0;
+ addEventListener('pointermove',e=>{x=e.clientX;y=e.clientY;ROOT.classList.add('has-cur');ROOT.classList.remove('cur-hide')},{passive:true});
+ document.addEventListener('mouseleave',()=>ROOT.classList.add('cur-hide'));
+ /* what the ring says over different things */
+ const say=el=>{if(!el)return'';if(el.dataset.cursor)return el.dataset.cursor;
+  if(el.matches('.bt,.hb,button'))return'';
+  if(el.closest('.pr,#latest .also>a')||/\/blog\//.test(el.getAttribute('href')||''))return'Read';
+  if(el.matches('.also>a,.nx,.index a,#nav a,.cl a,.em'))return'Open';
+  if(el.matches('canvas'))return'Click';return''};
+ const hot='a,button,summary,label,canvas,select,.pr';
+ document.addEventListener('pointerover',e=>{const t=e.target;
+  if(t.closest('input,textarea,[contenteditable]')){ROOT.classList.add('cur-text');return}ROOT.classList.remove('cur-text');
+  const h=t.closest(hot);wrap.classList.toggle('big',!!h);const l=say(h);label.textContent=l;wrap.classList.toggle('lbl',!!l);
+  wrap.classList.toggle('dev',!h&&!!t.closest('.word,.pseal,.seal,.mandala,.index b,#nav .w,.brand'))});
+ /* click: a ring of petals opens where you clicked */
+ addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;wrap.classList.add('press');
+  const b=document.createElement('div');b.className='cur-burst';b.style.left=e.clientX+'px';b.style.top=e.clientY+'px';
+  b.innerHTML=Array.from({length:8},(_,i)=>`<i style="--a:${i*45}deg"></i>`).join('');document.body.appendChild(b);setTimeout(()=>b.remove(),700);
+  for(let i=0;i<10;i++)sparks.push(spark(e.clientX,e.clientY,1.6))});
+ addEventListener('pointerup',()=>wrap.classList.remove('press'));
+ function spark(x,y,f){const a=Math.random()*Math.PI*2,v=(.3+Math.random()*.9)*f;return{x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-.35*f,life:1,r:.8+Math.random()*1.6,h:Math.random()<.3}}
+ (function loop(){rx+=(x-rx)*.16;ry+=(y-ry)*.16;
+  wrap.style.transform=`translate(${rx}px,${ry}px)`;dot.style.transform=`translate(${x}px,${y}px)`;
+  const d=Math.hypot(x-px,y-py);moving=moving*.9+d*.1;
+  if(d>2&&!ROOT.classList.contains('cur-text')){const n=Math.min(3,Math.floor(d/9)+1);for(let i=0;i<n;i++)sparks.push(spark(px+(x-px)*i/n,py+(y-py)*i/n,.45))}
+  px=x;py=y;if(sparks.length>90)sparks.splice(0,sparks.length-90);
+  g.clearRect(0,0,innerWidth,innerHeight);
+  sparks=sparks.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy-=.012;p.vx*=.98;p.life-=.022;if(p.life<=0)return false;
+   const a=p.life*p.life;g.beginPath();g.arc(p.x,p.y,p.r*(.6+p.life*.6),0,7);g.fillStyle=p.h?`rgba(124,29,42,${a*.7})`:`rgba(217,150,60,${a*.85})`;g.fill();return true});
+  /* the ring leans in the direction of travel */
+  const sk=Math.min(moving/40,.18);ring.style.transform=`scale(${1+sk},${1-sk*.6}) rotate(${Math.atan2(y-ry,x-rx)}rad)`;
+  requestAnimationFrame(loop)})();
+ /* buttons lean toward the pointer */
+ $$('.bt,.hb').forEach(b=>{b.addEventListener('pointermove',e=>{const q=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-q.left-q.width/2)*.18}px,${(e.clientY-q.top-q.height/2)*.28}px)`});b.addEventListener('pointerleave',()=>b.style.transform='')});
+})();
+
+/* ---------- page transitions: the doors close, then the next page opens them ---------- */
+(function(){if(RM)return;
+ document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+  if(a.target&&a.target!=='_self'||a.hasAttribute('download'))return;const u=new URL(a.href,location.href);
+  if(u.origin!==location.origin||!/^https?:$/.test(u.protocol))return;if(u.pathname===location.pathname&&u.hash)return;if(/\.(xml|json|txt|zip|pdf)$/i.test(u.pathname))return;
+  e.preventDefault();ROOT.classList.add('leave');setTimeout(()=>{location.href=u.href},520)});
+ addEventListener('pageshow',e=>{if(e.persisted)ROOT.classList.remove('leave')});
 })();
