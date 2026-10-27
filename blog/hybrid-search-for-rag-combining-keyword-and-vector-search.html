@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hybrid search for RAG: combining keyword and vector search</title>
+<meta name="description" content="Why hybrid search improves RAG: combining BM25 keyword search with vector search, merging results with reciprocal rank fusion, and adding a reranker.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hybrid search for RAG: combining keyword and vector search">
+<meta property="og:description" content="Why hybrid search improves RAG: combining BM25 keyword search with vector search, merging results with reciprocal rank fusion, and adding a reranker.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hybrid search for RAG: combining keyword and vector search">
+<meta name="twitter:description" content="Why hybrid search improves RAG: combining BM25 keyword search with vector search, merging results with reciprocal rank fusion, and adding a reranker.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Hybrid search for RAG: combining keyword and vector search", "description": "Why hybrid search improves RAG: combining BM25 keyword search with vector search, merging results with reciprocal rank fusion, and adding a reranker.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-25", "dateModified": "2026-10-25", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html", "inLanguage": "en", "keywords": "rag, search, vector-search"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Hybrid search for RAG: combining keyword and vector search", "item": "https://dhruv-boghani.vercel.app/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Hybrid search for RAG: combining keyword and vector search</h1><p class="m u meta">2026-10-25 / 3 min read / rag, search, vector-search</p><article class="post"><p>Vector search is great at meaning and bad at exact details. Keyword search is the opposite. Retrieval-augmented generation depends on finding the right passages, so using only one of them leaves easy wins on the table.</p>
+<p>Hybrid search runs both and combines the results. This post explains why it works, how to merge results and how to tell whether it helped.</p>
+<h2>Where each method fails</h2>
+<p><strong>Vector search</strong> finds passages with similar meaning even when the words differ. It struggles with:</p>
+<ul>
+<li>Product codes, error codes and IDs like <code>ERR_4012</code> or <code>HSN 8471</code>.</li>
+<li>Rare names and new terms the embedding model has not seen much.</li>
+<li>Queries where one exact word changes everything, such as "not supported".</li>
+</ul>
+<p><strong>Keyword search</strong> (usually BM25) matches the actual terms. It struggles with:</p>
+<ul>
+<li>Synonyms and paraphrases, like "cancel subscription" versus "end my plan".</li>
+<li>Natural questions that share few words with the answer.</li>
+<li>Typos and different word forms, unless you add stemming and fuzzy matching.</li>
+</ul>
+<p>Real queries mix both kinds, which is why combining them is so effective.</p>
+<h2>How hybrid search works</h2>
+<p>1. Run the query through keyword search and vector search in parallel. 2. Take the top results from each, for example 30 to 50. 3. Merge them into one ranked list. 4. Optionally rerank the merged list with a cross-encoder. 5. Send the top few passages to the model.</p>
+<h2>Merging results with reciprocal rank fusion</h2>
+<p>Scores from BM25 and cosine similarity are on different scales, so adding them directly does not work well. Reciprocal rank fusion (RRF) avoids the problem by using ranks instead of scores.</p>
+<pre><code>def rrf(result_lists, k=60):
+    scores = {}
+    for results in result_lists:
+        for rank, doc_id in enumerate(results, start=1):
+            scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank)
+    return sorted(scores, key=scores.get, reverse=True)
+
+merged = rrf([bm25_ids, vector_ids])</code></pre>
+<p>A document that ranks well in both lists rises to the top. A document found by only one method still appears, so exact matches are not lost. The constant <code>k</code> softens the advantage of the very top ranks, and 60 is a common default.</p>
+<p>Weighted score fusion is an alternative: normalise each score and combine them with weights. It can work well but needs more tuning.</p>
+<h2>Add a reranker for precision</h2>
+<p>A cross-encoder reranker reads the query and each candidate passage together and scores relevance more accurately than either search method. It is slower, so run it only on the merged top results, perhaps 20 to 50, and keep the best handful.</p>
+<h2>Practical tips</h2>
+<ul>
+<li><strong>Index the same chunks for both methods</strong> so results can be merged by chunk ID.</li>
+<li><strong>Use metadata filters in both searches,</strong> such as tenant, language or document type.</li>
+<li><strong>Keep useful fields searchable by keyword,</strong> like titles, codes and headings, not just body text.</li>
+<li><strong>Check your database first.</strong> Several systems support both full-text and vector search, so you may not need two separate services. PostgreSQL with full-text search and pgvector is one example.</li>
+</ul>
+<h2>Measure the improvement</h2>
+<p>Build a small evaluation set of real questions with the passages that should be found. Compare keyword only, vector only and hybrid on recall at k (did the right passage appear in the top k?) and on final answer quality. Pay special attention to queries with codes, names and exact phrases, which is where hybrid usually helps most.</p>
+<h2>Takeaway</h2>
+<p>Keyword search catches exact terms and vector search catches meaning, and RAG needs both. Run them in parallel, merge with reciprocal rank fusion, rerank the top candidates, and measure recall on real questions to confirm the gain.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

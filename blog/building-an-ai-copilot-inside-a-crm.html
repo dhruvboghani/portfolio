@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Building an AI copilot inside a CRM | Dhruv Boghani</title>
+<meta name="description" content="How to build an AI copilot inside a CRM: useful features, grounding on CRM data, permission-aware retrieval, tool actions, review steps and measuring value.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/building-an-ai-copilot-inside-a-crm.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building an AI copilot inside a CRM">
+<meta property="og:description" content="How to build an AI copilot inside a CRM: useful features, grounding on CRM data, permission-aware retrieval, tool actions, review steps and measuring value.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/building-an-ai-copilot-inside-a-crm.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Building an AI copilot inside a CRM">
+<meta name="twitter:description" content="How to build an AI copilot inside a CRM: useful features, grounding on CRM data, permission-aware retrieval, tool actions, review steps and measuring value.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Building an AI copilot inside a CRM", "description": "How to build an AI copilot inside a CRM: useful features, grounding on CRM data, permission-aware retrieval, tool actions, review steps and measuring value.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-24", "dateModified": "2026-10-24", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/building-an-ai-copilot-inside-a-crm.html", "inLanguage": "en", "keywords": "ai-copilot, crm, llm"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Building an AI copilot inside a CRM", "item": "https://dhruv-boghani.vercel.app/blog/building-an-ai-copilot-inside-a-crm.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Building an AI copilot inside a CRM</h1><p class="m u meta">2026-10-24 / 3 min read / ai-copilot, crm, llm</p><article class="post"><p>Sales and support teams spend a large part of their day reading history, writing follow-ups and updating records. A copilot inside the CRM can take on much of that, but only if it knows the right context, respects permissions and keeps people in control.</p>
+<p>This post covers what to build first, how to ground it in CRM data and how to keep it safe and useful.</p>
+<h2>Start with tasks people already do</h2>
+<p>The best copilot features remove repetitive work that already happens every day.</p>
+<ul>
+<li><strong>Account and deal summaries:</strong> what happened, who is involved, open issues and next steps.</li>
+<li><strong>Call and meeting notes:</strong> turn transcripts into a summary, action items and suggested field updates.</li>
+<li><strong>Email drafting:</strong> follow-ups that reference the actual conversation and deal stage.</li>
+<li><strong>Next best action:</strong> suggest who to contact and why, based on activity and stage.</li>
+<li><strong>Natural language search:</strong> "deals over 10 lakh closing this month with no activity in two weeks".</li>
+</ul>
+<p>Pick one or two, ship them well and measure before adding more.</p>
+<h2>Ground every answer in CRM data</h2>
+<p>A copilot is only as good as the context it sees. Build that context in code before calling the model.</p>
+<ul>
+<li><strong>Structured data:</strong> account fields, deal stage, amounts, dates and owners.</li>
+<li><strong>Activity history:</strong> recent emails, calls, notes and tickets, newest first and trimmed to what fits.</li>
+<li><strong>Documents:</strong> proposals, contracts and product sheets through retrieval.</li>
+</ul>
+<p>Keep the prompt explicit about sources, and ask the model to say when information is missing instead of guessing. For search questions, have the model produce structured filters that your code turns into a real database query, rather than letting it invent results.</p>
+<h2>Respect permissions everywhere</h2>
+<p>CRMs often have detailed access rules: territories, teams, private notes. The copilot must follow them exactly.</p>
+<ul>
+<li><strong>Retrieve as the user.</strong> Every query and every vector search runs with the current user's permissions.</li>
+<li><strong>Filter before the model sees data,</strong> not after. Anything in the prompt can appear in the output.</li>
+<li><strong>Separate tenants</strong> strictly in multi-tenant products, including in caches and vector indexes.</li>
+</ul>
+<h2>Let it act, with review</h2>
+<p>Suggestions become far more useful when the copilot can act on them.</p>
+<ul>
+<li><strong>Tools for safe actions:</strong> create a task, log a call, update a stage or schedule a follow-up through your existing APIs.</li>
+<li><strong>Preview before commit.</strong> Show the proposed change, such as "move to Negotiation, set close date to 30 Nov", and let the user approve it.</li>
+<li><strong>Never send external emails automatically</strong> without the user reviewing the draft.</li>
+<li><strong>Record who approved what,</strong> so the audit trail stays clear.</li>
+</ul>
+<pre><code>{
+  "action": "update_deal",
+  "deal_id": "D-1042",
+  "changes": {"stage": "Negotiation", "close_date": "2026-11-30"},
+  "reason": "Customer requested revised pricing on the call"
+}</code></pre>
+<h2>Design the experience inside the workflow</h2>
+<p>Put the copilot where work happens: a panel on the account page, a button on the call record, suggestions inside the email composer. People should not have to copy context into a separate chat window.</p>
+<p>Show sources for summaries and suggestions, such as links to the emails or notes used, so users can verify quickly.</p>
+<h2>Measure whether it helps</h2>
+<ul>
+<li><strong>Adoption:</strong> how often each feature is used, and by whom.</li>
+<li><strong>Acceptance rate:</strong> how many drafts and suggested updates are accepted, edited or rejected.</li>
+<li><strong>Time saved</strong> on tasks like logging calls or writing follow-ups.</li>
+<li><strong>Data quality:</strong> whether records become more complete and current.</li>
+</ul>
+<p>Collect feedback on each suggestion and turn poor results into test cases for the next prompt or retrieval change.</p>
+<h2>Takeaway</h2>
+<p>A useful CRM copilot starts with everyday tasks, grounds every response in permission-filtered CRM data, acts through existing APIs with a preview and approval step, and lives inside the screens people already use. Measure acceptance and time saved, and expand only when the first features prove their value.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

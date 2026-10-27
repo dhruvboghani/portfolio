@@ -13,3 +13,11 @@ Embedding models: how to choose one
 Change data capture (CDC) explained
 Schema evolution in Apache Iceberg
 Data quality checks in streaming pipelines
+AI agents vs chatbots: what is the difference
+Guardrails for LLM applications
+Semantic caching to cut LLM costs
+Real-time dashboards with Trino and Iceberg
+Building an AI copilot inside a CRM
+Hybrid search for RAG
+Idempotent consumers in event-driven systems
+Observability for LLM applications

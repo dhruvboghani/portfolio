@@ -11,6 +11,14 @@
 <url><loc>https://dhruv-boghani.vercel.app/voice-agent.html</loc></url>
 <url><loc>https://dhruv-boghani.vercel.app/voice-avatar.html</loc></url>
 <url><loc>https://dhruv-boghani.vercel.app/work.html</loc></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/observability-for-llm-applications-tracing-cost-and-quality.html</loc><lastmod>2026-10-27</lastmod></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html</loc><lastmod>2026-10-26</lastmod></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html</loc><lastmod>2026-10-25</lastmod></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/building-an-ai-copilot-inside-a-crm.html</loc><lastmod>2026-10-24</lastmod></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/real-time-dashboards-with-trino-and-apache-iceberg.html</loc><lastmod>2026-10-23</lastmod></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/semantic-caching-to-cut-llm-costs-and-latency.html</loc><lastmod>2026-10-22</lastmod></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/guardrails-for-llm-applications-a-practical-guide.html</loc><lastmod>2026-10-21</lastmod></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/ai-agents-vs-chatbots-what-is-the-difference.html</loc><lastmod>2026-10-20</lastmod></url>
 <url><loc>https://dhruv-boghani.vercel.app/blog/data-quality-checks-in-streaming-pipelines.html</loc><lastmod>2026-10-19</lastmod></url>
 <url><loc>https://dhruv-boghani.vercel.app/blog/schema-evolution-in-apache-iceberg.html</loc><lastmod>2026-10-18</lastmod></url>
 <url><loc>https://dhruv-boghani.vercel.app/blog/change-data-capture-cdc-explained.html</loc><lastmod>2026-10-17</lastmod></url>

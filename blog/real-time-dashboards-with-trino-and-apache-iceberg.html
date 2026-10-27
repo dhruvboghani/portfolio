@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Real-time dashboards with Trino and Apache Iceberg</title>
+<meta name="description" content="How to build near real-time dashboards on Trino and Apache Iceberg: streaming ingestion, commit intervals, table layout, compaction and fast queries.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/real-time-dashboards-with-trino-and-apache-iceberg.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Real-time dashboards with Trino and Apache Iceberg">
+<meta property="og:description" content="How to build near real-time dashboards on Trino and Apache Iceberg: streaming ingestion, commit intervals, table layout, compaction and fast queries.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/real-time-dashboards-with-trino-and-apache-iceberg.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Real-time dashboards with Trino and Apache Iceberg">
+<meta name="twitter:description" content="How to build near real-time dashboards on Trino and Apache Iceberg: streaming ingestion, commit intervals, table layout, compaction and fast queries.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Real-time dashboards with Trino and Apache Iceberg", "description": "How to build near real-time dashboards on Trino and Apache Iceberg: streaming ingestion, commit intervals, table layout, compaction and fast queries.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-23", "dateModified": "2026-10-23", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/real-time-dashboards-with-trino-and-apache-iceberg.html", "inLanguage": "en", "keywords": "trino, iceberg, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Real-time dashboards with Trino and Apache Iceberg", "item": "https://dhruv-boghani.vercel.app/blog/real-time-dashboards-with-trino-and-apache-iceberg.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Real-time dashboards with Trino and Apache Iceberg</h1><p class="m u meta">2026-10-23 / 3 min read / trino, iceberg, data-engineering</p><article class="post"><p>Dashboards used to mean a nightly batch job and a warehouse. With streaming ingestion into Apache Iceberg and Trino as the query engine, the same lakehouse that stores history can serve dashboards that are only minutes, or less, behind reality.</p>
+<p>Getting there takes a few deliberate choices about ingestion, table layout and maintenance. This post walks through them.</p>
+<h2>The architecture</h2>
+<p>A typical setup has four parts.</p>
+<ul>
+<li><strong>Event stream:</strong> Kafka or Redpanda carries events from applications.</li>
+<li><strong>Stream processor:</strong> Apache Flink or Spark Structured Streaming cleans events and writes them to Iceberg tables.</li>
+<li><strong>Iceberg tables</strong> on object storage, with a catalog such as Nessie, Hive Metastore or a REST catalog.</li>
+<li><strong>Trino</strong> queries the tables, and a BI tool or custom dashboard reads from Trino.</li>
+</ul>
+<p>Every write to Iceberg is a commit that creates a new snapshot. Trino reads the latest snapshot, so new data becomes visible as soon as it is committed.</p>
+<h2>Freshness is set by the commit interval</h2>
+<p>The stream processor batches events and commits them periodically, often on each checkpoint.</p>
+<ul>
+<li><strong>Shorter intervals</strong> mean fresher dashboards, but more snapshots and more small files.</li>
+<li><strong>Longer intervals</strong> mean fewer, larger files and less metadata, but older data.</li>
+</ul>
+<p>For most dashboards, commits every one to five minutes are a practical balance. If you truly need second-level freshness, query the stream or a real-time store for the latest minutes and the lakehouse for history.</p>
+<h2>Lay tables out for the queries you run</h2>
+<p>Dashboard queries are usually filtered by time and a few dimensions. Design for that.</p>
+<ul>
+<li><strong>Partition by time</strong> at a sensible grain, such as day or hour, using Iceberg's hidden partitioning so queries do not need to know the partition column.</li>
+<li><strong>Sort within files</strong> on commonly filtered columns, like tenant or region, so Trino can skip data using file statistics.</li>
+<li><strong>Avoid over-partitioning.</strong> Too many small partitions create too many small files.</li>
+</ul>
+<pre><code>CREATE TABLE lake.analytics.orders (
+  order_id   VARCHAR,
+  tenant_id  VARCHAR,
+  amount     DECIMAL(12,2),
+  status     VARCHAR,
+  created_at TIMESTAMP(6) WITH TIME ZONE
+)
+WITH (
+  partitioning = ARRAY['day(created_at)'],
+  sorted_by = ARRAY['tenant_id']
+);</code></pre>
+<h2>Keep tables healthy with maintenance</h2>
+<p>Streaming writes produce many small files and snapshots. Without maintenance, queries slow down over time.</p>
+<ul>
+<li><strong>Compaction:</strong> rewrite small files into larger ones regularly, for example hourly for recent partitions.</li>
+<li><strong>Expire snapshots:</strong> remove old snapshots you no longer need for time travel, which also lets unused files be deleted.</li>
+<li><strong>Remove orphan files</strong> left behind by failed writes.</li>
+<li><strong>Rewrite manifests</strong> when metadata grows large.</li>
+</ul>
+<p>Trino can run several of these with <code>ALTER TABLE ... EXECUTE</code>, such as <code>optimize</code> and <code>expire_snapshots</code>, and they can be scheduled like any other job.</p>
+<h2>Make dashboard queries fast</h2>
+<ul>
+<li><strong>Pre-aggregate</strong> for the busiest views. A streaming job can maintain a summary table by minute or hour, which is far cheaper to query than raw events.</li>
+<li><strong>Always filter on the partition column,</strong> such as the last 24 hours, so Trino reads only recent data.</li>
+<li><strong>Select only needed columns.</strong> Iceberg stores data in columnar Parquet files, so fewer columns means less I/O.</li>
+<li><strong>Size the Trino cluster</strong> for concurrent dashboard refreshes, and set sensible refresh intervals in the dashboard tool.</li>
+</ul>
+<h2>Bonus: history and audits for free</h2>
+<p>Because Iceberg keeps snapshots, the same tables support time travel. You can see what a dashboard showed at a past point, compare numbers before and after a fix, and audit changes without a separate archive.</p>
+<h2>Takeaway</h2>
+<p>Trino on Iceberg can power near real-time dashboards when you choose a commit interval that matches your freshness needs, partition and sort for dashboard filters, run compaction and snapshot expiry regularly, and pre-aggregate the busiest views. You get fresh numbers and full history from one lakehouse.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

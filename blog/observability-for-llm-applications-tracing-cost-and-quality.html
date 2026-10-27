@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Observability for LLM applications: tracing, cost and quality</title>
+<meta name="description" content="How to monitor LLM applications in production: tracing each request, tracking tokens and cost, measuring latency, and evaluating answer quality over time.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/observability-for-llm-applications-tracing-cost-and-quality.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Observability for LLM applications: tracing, cost and quality">
+<meta property="og:description" content="How to monitor LLM applications in production: tracing each request, tracking tokens and cost, measuring latency, and evaluating answer quality over time.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/observability-for-llm-applications-tracing-cost-and-quality.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Observability for LLM applications: tracing, cost and quality">
+<meta name="twitter:description" content="How to monitor LLM applications in production: tracing each request, tracking tokens and cost, measuring latency, and evaluating answer quality over time.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Observability for LLM applications: tracing, cost and quality", "description": "How to monitor LLM applications in production: tracing each request, tracking tokens and cost, measuring latency, and evaluating answer quality over time.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-27", "dateModified": "2026-10-27", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/observability-for-llm-applications-tracing-cost-and-quality.html", "inLanguage": "en", "keywords": "llm, observability, mlops"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Observability for LLM applications: tracing, cost and quality", "item": "https://dhruv-boghani.vercel.app/blog/observability-for-llm-applications-tracing-cost-and-quality.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Observability for LLM applications: tracing, cost and quality</h1><p class="m u meta">2026-10-27 / 3 min read / llm, observability, mlops</p><article class="post"><p>An LLM feature can look healthy on every standard dashboard while quietly giving worse answers, costing twice as much or taking ten seconds per reply. Traditional monitoring sees requests and errors, not whether the model did a good job.</p>
+<p>LLM observability adds the missing pieces: what went into each call, what came out, what it cost and whether it was any good.</p>
+<h2>Trace every request end to end</h2>
+<p>A single user request often involves several steps: retrieval, one or more model calls, tool calls and post-processing. Capture them as one trace with nested spans.</p>
+<p>For each model call, record:</p>
+<ul>
+<li><strong>Prompt template name and version,</strong> plus the filled-in prompt (with personal data masked).</li>
+<li><strong>Model name and parameters,</strong> such as temperature and max tokens.</li>
+<li><strong>Input and output token counts.</strong></li>
+<li><strong>Latency,</strong> including time to first token for streaming responses.</li>
+<li><strong>Tool calls</strong> with arguments and results.</li>
+<li><strong>Retrieved documents</strong> with their IDs and scores.</li>
+</ul>
+<pre><code>with tracer.start_as_current_span("answer_question") as span:
+    docs = retrieve(question)
+    span.set_attribute("retrieval.count", len(docs))
+    with tracer.start_as_current_span("llm.call") as call:
+        resp = llm.generate(prompt_v3.format(q=question, docs=docs))
+        call.set_attribute("llm.model", resp.model)
+        call.set_attribute("llm.tokens.input", resp.usage.input_tokens)
+        call.set_attribute("llm.tokens.output", resp.usage.output_tokens)</code></pre>
+<p>OpenTelemetry works well for this, and there are established conventions and tools for LLM-specific attributes.</p>
+<h2>Track cost as a first-class metric</h2>
+<p>Token usage turns directly into money, and it can change quickly when a prompt grows or an agent loops.</p>
+<ul>
+<li><strong>Cost per request,</strong> per feature and per customer or tenant.</li>
+<li><strong>Tokens per step</strong> to spot prompts that have grown with extra context.</li>
+<li><strong>Calls per request</strong> for agents, with alerts on unusually long loops.</li>
+<li><strong>Cache hit rates</strong> if you use exact or semantic caching.</li>
+</ul>
+<p>Budgets and alerts per feature catch runaway spending early.</p>
+<h2>Watch latency the way users feel it</h2>
+<p>Average latency hides the slow experiences. Track percentiles, especially p95 and p99, and break them down by step: retrieval, model call, tools. For chat interfaces, time to first token matters more than total time, because streaming text makes waiting feel shorter.</p>
+<h2>Measure quality, not just uptime</h2>
+<p>This is the part standard monitoring misses.</p>
+<ul>
+<li><strong>User signals:</strong> thumbs up or down, edits to drafts, retries, abandoned conversations and handoffs to humans.</li>
+<li><strong>Automatic checks:</strong> schema validation failures, guardrail triggers, refusals and empty answers.</li>
+<li><strong>Evaluations on samples:</strong> score a sample of production responses for correctness, grounding in the retrieved sources and relevance. LLM-based judges can help here, but check them against human reviews before trusting them.</li>
+<li><strong>Offline evaluation sets:</strong> run a fixed set of questions before every prompt, model or retrieval change, and compare scores with the previous version.</li>
+</ul>
+<h2>Connect changes to outcomes</h2>
+<p>Most quality regressions follow a change. Version everything that affects behaviour: prompts, models, retrieval settings, chunking and tool definitions. Attach these versions to every trace, so when a metric moves you can see exactly which change caused it.</p>
+<h2>Handle data responsibly</h2>
+<p>Prompts and responses often contain customer data. Mask personal information before storing traces, set retention limits, restrict access to the logs and respect the data agreements you have with customers and model providers.</p>
+<h2>Takeaway</h2>
+<p>Observability for LLM applications means tracing each request across retrieval, model and tool steps, tracking tokens and cost per feature, watching latency percentiles and time to first token, and measuring answer quality with user signals, automatic checks and regular evaluations. Version every prompt and model change, so when something gets worse, you can find out why.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

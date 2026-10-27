@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Idempotent consumers: handling duplicate events safely</title>
+<meta name="description" content="How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Idempotent consumers: handling duplicate events safely">
+<meta property="og:description" content="How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Idempotent consumers: handling duplicate events safely">
+<meta name="twitter:description" content="How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Idempotent consumers: handling duplicate events safely", "description": "How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-26", "dateModified": "2026-10-26", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html", "inLanguage": "en", "keywords": "event-driven, kafka, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Idempotent consumers: handling duplicate events safely", "item": "https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Idempotent consumers: handling duplicate events safely</h1><p class="m u meta">2026-10-26 / 3 min read / event-driven, kafka, data-engineering</p><article class="post"><p>In an event-driven system, the same event will be delivered more than once. Producers retry, consumers crash after doing the work but before committing their offset, and rebalances replay messages.</p>
+<p>Trying to guarantee each event arrives exactly once is hard. Making consumers safe to run twice is much easier, and that is what idempotent consumers do.</p>
+<h2>Why duplicates happen</h2>
+<p>Most messaging systems, including Kafka and Redpanda in their common configurations, give at-least-once delivery to consumers.</p>
+<ul>
+<li><strong>Producer retries:</strong> a send times out, the producer retries, and both attempts were actually written.</li>
+<li><strong>Consumer crashes:</strong> the consumer processes a message, then crashes before committing the offset. On restart, it reads the message again.</li>
+<li><strong>Rebalances:</strong> partitions move between consumers, and the new owner resumes from the last committed offset.</li>
+<li><strong>Replays:</strong> you deliberately reprocess a topic after a bug fix.</li>
+</ul>
+<p>Kafka offers idempotent producers and transactions that help within Kafka, but once a consumer writes to a database, sends an email or calls an API, you need idempotency on the consumer side.</p>
+<h2>The idea</h2>
+<p>An operation is idempotent if doing it twice has the same effect as doing it once. Setting a status to "paid" is idempotent. Adding 500 to a balance is not.</p>
+<p>The goal is to make every consumer's side effects idempotent, either naturally or by tracking what has already been processed.</p>
+<h2>Technique 1: natural idempotency with upserts</h2>
+<p>Design writes so repeating them changes nothing.</p>
+<ul>
+<li><strong>Upserts by a stable key</strong> instead of plain inserts.</li>
+<li><strong>Set values instead of incrementing them,</strong> for example store the final total from the event rather than adding a delta.</li>
+<li><strong>Use versions:</strong> only apply an update if the event's version is newer than the stored one, which also handles out-of-order events.</li>
+</ul>
+<pre><code>INSERT INTO orders (order_id, status, total, version)
+VALUES (:order_id, :status, :total, :version)
+ON CONFLICT (order_id) DO UPDATE
+SET status = EXCLUDED.status, total = EXCLUDED.total, version = EXCLUDED.version
+WHERE orders.version &lt; EXCLUDED.version;</code></pre>
+<h2>Technique 2: a processed-events table</h2>
+<p>When the effect is not naturally idempotent, record which events you have handled.</p>
+<p>1. Every event carries a unique ID, set by the producer. 2. In the same database transaction as the side effect, insert the event ID into a <code>processed_events</code> table with a unique constraint. 3. If the insert fails because the ID exists, the event was already handled, so skip it.</p>
+<p>Doing both in one transaction is the key: either the effect and the record both happen, or neither does.</p>
+<h2>Technique 3: idempotency keys for external calls</h2>
+<p>For payments, emails and third-party APIs, pass an idempotency key derived from the event ID. Many payment and messaging providers support this directly and will return the original result for a repeated key instead of acting twice. Where a provider does not, store the call's outcome against the key before retrying.</p>
+<h2>Do not forget the producer side</h2>
+<p>Consumers can only deduplicate reliably if events have stable IDs. A common problem is a service that writes to its database and then publishes an event; if it crashes in between, the event is lost or published twice.</p>
+<p>The <strong>outbox pattern</strong> fixes this: write the event to an outbox table in the same transaction as the business change, and have a separate process publish from the outbox. Change data capture tools can read the outbox and publish it for you.</p>
+<h2>Testing idempotency</h2>
+<ul>
+<li><strong>Replay tests:</strong> feed the same event twice and assert the state is identical to feeding it once.</li>
+<li><strong>Crash tests:</strong> kill the consumer between processing and committing, then restart.</li>
+<li><strong>Out-of-order tests:</strong> deliver version 2 before version 1 and check the result.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Assume every event can arrive more than once. Prefer naturally idempotent writes such as versioned upserts, track processed event IDs in the same transaction as the side effect, pass idempotency keys to external services, and use the outbox pattern so producers emit reliable, uniquely identified events.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

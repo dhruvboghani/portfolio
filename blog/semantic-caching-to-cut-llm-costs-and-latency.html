@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Semantic caching to cut LLM costs and latency | Dhruv Boghani</title>
+<meta name="description" content="How semantic caching cuts LLM costs and latency: embedding-based lookups, similarity thresholds, cache keys, invalidation and when caching is unsafe.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/semantic-caching-to-cut-llm-costs-and-latency.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Semantic caching to cut LLM costs and latency">
+<meta property="og:description" content="How semantic caching cuts LLM costs and latency: embedding-based lookups, similarity thresholds, cache keys, invalidation and when caching is unsafe.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/semantic-caching-to-cut-llm-costs-and-latency.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Semantic caching to cut LLM costs and latency">
+<meta name="twitter:description" content="How semantic caching cuts LLM costs and latency: embedding-based lookups, similarity thresholds, cache keys, invalidation and when caching is unsafe.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Semantic caching to cut LLM costs and latency", "description": "How semantic caching cuts LLM costs and latency: embedding-based lookups, similarity thresholds, cache keys, invalidation and when caching is unsafe.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-22", "dateModified": "2026-10-22", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/semantic-caching-to-cut-llm-costs-and-latency.html", "inLanguage": "en", "keywords": "llm, caching, cost-optimization"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Semantic caching to cut LLM costs and latency", "item": "https://dhruv-boghani.vercel.app/blog/semantic-caching-to-cut-llm-costs-and-latency.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Semantic caching to cut LLM costs and latency</h1><p class="m u meta">2026-10-22 / 3 min read / llm, caching, cost-optimization</p><article class="post"><p>Many LLM applications answer the same questions again and again, worded slightly differently each time. Every repeat costs tokens and seconds that a cache could save.</p>
+<p>A normal cache only helps when the input is identical. A semantic cache matches requests by meaning, so "how do I reset my password" and "forgot my password, what now" can share an answer.</p>
+<h2>How semantic caching works</h2>
+<p>The idea is simple.</p>
+<p>1. Turn the incoming request into an embedding. 2. Search a vector index of previous requests for the nearest match. 3. If the similarity is above a threshold, return the stored response. 4. Otherwise call the model, then store the request embedding and the response.</p>
+<pre><code>def answer(question: str, ctx: dict) -&gt; str:
+    vec = embed(question)
+    hit = cache.nearest(vec, filters={"tenant": ctx["tenant"], "lang": ctx["lang"]})
+    if hit and hit.score &gt;= 0.92:
+        return hit.response
+    response = llm(question, ctx)
+    cache.add(vec, response, meta={"tenant": ctx["tenant"], "lang": ctx["lang"]})
+    return response</code></pre>
+<p>The embedding call and vector lookup are much cheaper and faster than a full model call, so every hit saves both money and time.</p>
+<h2>Choosing the threshold</h2>
+<p>The similarity threshold is the most important setting.</p>
+<ul>
+<li><strong>Too low</strong> and different questions get the same answer. "Cancel my order" and "cancel my subscription" are close in wording but need different responses.</li>
+<li><strong>Too high</strong> and the cache rarely hits.</li>
+</ul>
+<p>Pick the threshold from your own data. Collect pairs of real questions, label whether they should share an answer, and see which threshold separates them best. Revisit it when you change embedding models, because scores are not comparable across models.</p>
+<h2>What goes into the cache key</h2>
+<p>Meaning is not the only thing that decides the right answer. Store and filter on everything that changes the response.</p>
+<ul>
+<li><strong>Tenant or customer,</strong> so one customer never sees another's data.</li>
+<li><strong>User permissions or role</strong> when answers depend on access.</li>
+<li><strong>Language and locale.</strong></li>
+<li><strong>Prompt and model version,</strong> so a prompt change does not serve answers produced by the old prompt.</li>
+<li><strong>Data version</strong> for answers built from documents that change.</li>
+</ul>
+<p>If an answer depends on the individual user's data, such as their order status, do not cache it in a shared cache at all.</p>
+<h2>Keeping answers fresh</h2>
+<p>Cached answers go stale when the facts behind them change.</p>
+<ul>
+<li><strong>Time to live:</strong> expire entries after a period that matches how often the content changes.</li>
+<li><strong>Event-based invalidation:</strong> when a document, price or policy changes, remove entries built from it. Store source document IDs with each entry to make this possible.</li>
+<li><strong>Version bumps:</strong> changing the prompt or model version in the key effectively starts a fresh cache.</li>
+</ul>
+<h2>Where semantic caching fits best</h2>
+<ul>
+<li><strong>FAQ-style assistants</strong> over stable documentation.</li>
+<li><strong>Classification and extraction</strong> of repeated inputs, such as product descriptions or common email types.</li>
+<li><strong>Expensive generation</strong> that is shared across users, like summaries of the same document.</li>
+</ul>
+<p>It fits poorly where answers are personal, time-sensitive or creative, or where a wrong match has real consequences.</p>
+<h2>Measuring the benefit</h2>
+<p>Track the hit rate, the cost and latency saved, and, most importantly, the quality of cached answers. Sample cache hits and check whether the stored answer was correct for the new question. A high hit rate with wrong answers is worse than no cache.</p>
+<p>A layered approach works well: an exact-match cache first for identical requests, then the semantic cache, then the model.</p>
+<h2>Takeaway</h2>
+<p>Semantic caching matches requests by meaning and can cut LLM costs and latency for repetitive workloads. Tune the similarity threshold on your own labelled pairs, include tenant, permissions, language and versions in the key, invalidate when sources change, and keep personal or high-risk answers out of shared caches.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>
