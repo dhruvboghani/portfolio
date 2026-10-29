@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rate limiting and retries for LLM APIs | Dhruv Boghani</title>
+<meta name="description" content="How to handle LLM API rate limits: request and token limits, exponential backoff with jitter, client-side throttling, queues, fallbacks and timeouts.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/rate-limiting-and-retries-for-llm-apis.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rate limiting and retries for LLM APIs">
+<meta property="og:description" content="How to handle LLM API rate limits: request and token limits, exponential backoff with jitter, client-side throttling, queues, fallbacks and timeouts.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/rate-limiting-and-retries-for-llm-apis.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rate limiting and retries for LLM APIs">
+<meta name="twitter:description" content="How to handle LLM API rate limits: request and token limits, exponential backoff with jitter, client-side throttling, queues, fallbacks and timeouts.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Rate limiting and retries for LLM APIs", "description": "How to handle LLM API rate limits: request and token limits, exponential backoff with jitter, client-side throttling, queues, fallbacks and timeouts.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/rate-limiting-and-retries-for-llm-apis.html", "inLanguage": "en", "keywords": "llm, reliability, api"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Rate limiting and retries for LLM APIs", "item": "https://dhruv-boghani.vercel.app/blog/rate-limiting-and-retries-for-llm-apis.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Rate limiting and retries for LLM APIs</h1><p class="m u meta">2026-10-28 / 3 min read / llm, reliability, api</p><article class="post"><p>Every LLM provider limits how much you can send, and every production application eventually hits those limits. A burst of users, a batch job or an agent stuck in a loop is enough to start getting <code>429 Too Many Requests</code> errors.</p>
+<p>Handled badly, rate limits turn into failed requests and angry users. Handled well, they become short, invisible delays. This post covers how.</p>
+<h2>Know what is being limited</h2>
+<p>LLM APIs usually enforce several limits at once.</p>
+<ul>
+<li><strong>Requests per minute:</strong> how many calls you can make.</li>
+<li><strong>Tokens per minute:</strong> input plus output tokens across all calls. Long prompts hit this first.</li>
+<li><strong>Concurrent requests:</strong> how many calls can be in flight at the same time.</li>
+<li><strong>Daily or monthly quotas</strong> on some plans.</li>
+</ul>
+<p>Limits are often set per API key, per project or per model, so a background job can eat the budget your live chat needs. Check your provider's documentation and the response headers, which often report remaining requests, remaining tokens and when the limit resets.</p>
+<h2>Retry the right errors</h2>
+<p>Not every error deserves a retry.</p>
+<ul>
+<li><strong>Retry:</strong> <code>429</code> rate limit, <code>500</code>, <code>502</code>, <code>503</code>, <code>504</code>, and network timeouts or connection resets.</li>
+<li><strong>Do not retry:</strong> <code>400</code> bad request, <code>401</code> and <code>403</code> authentication errors, and validation errors. Repeating them only wastes time.</li>
+<li><strong>Respect <code>Retry-After</code>.</strong> If the response says how long to wait, wait at least that long.</li>
+</ul>
+<h2>Use exponential backoff with jitter</h2>
+<p>Retrying immediately makes things worse, because every client retries at the same moment. Wait longer after each failure, and add randomness so clients spread out.</p>
+<pre><code>import random, time
+
+RETRYABLE = {429, 500, 502, 503, 504}
+
+def call_with_retry(send, max_attempts=5, base=1.0, cap=30.0):
+    for attempt in range(1, max_attempts + 1):
+        resp = send()
+        if resp.status_code not in RETRYABLE:
+            return resp
+        if attempt == max_attempts:
+            break
+        wait = resp.headers.get("retry-after")
+        delay = float(wait) if wait else min(cap, base * 2 ** (attempt - 1))
+        time.sleep(delay * random.uniform(0.5, 1.0))
+    raise RuntimeError("LLM call failed after retries")</code></pre>
+<p>Many official SDKs already retry with backoff. Check what yours does before adding another layer, or you may multiply retries without meaning to.</p>
+<h2>Throttle on your side</h2>
+<p>Retries handle occasional limits. If you hit them constantly, slow down before sending.</p>
+<ul>
+<li><strong>Token bucket per key or model:</strong> only send when there is budget for the estimated tokens of the request.</li>
+<li><strong>Concurrency limits:</strong> cap in-flight requests with a semaphore or a worker pool.</li>
+<li><strong>Estimate tokens before sending</strong> with the provider's tokenizer, so a huge prompt does not blow through the budget.</li>
+</ul>
+<p>In a system with several servers, keep the shared budget in a central store such as Redis, so all instances see the same limits.</p>
+<h2>Separate traffic by priority</h2>
+<p>Not all requests are equally urgent.</p>
+<ul>
+<li><strong>Interactive requests</strong> from users waiting on a reply get priority.</li>
+<li><strong>Background jobs</strong> like batch summaries, embeddings and evaluations go through a queue with their own lower limits.</li>
+<li><strong>Use batch APIs</strong> where your provider offers them for large offline jobs. They are usually cheaper and do not compete with live traffic.</li>
+</ul>
+<h2>Plan for when retries are not enough</h2>
+<ul>
+<li><strong>Set timeouts</strong> on every call, including a total time budget across retries, so users are not left waiting forever.</li>
+<li><strong>Fallback models:</strong> route to a smaller model or another provider when the primary one is limited or down.</li>
+<li><strong>Graceful degradation:</strong> return a cached answer, a shorter response, or a clear message asking the user to try again shortly.</li>
+<li><strong>Circuit breaker:</strong> if a provider fails repeatedly, stop sending for a short period instead of piling on more requests.</li>
+</ul>
+<h2>Watch it in production</h2>
+<p>Track 429 rates, retries per request, time spent waiting, tokens per minute against your limits, and which features use the most budget. A steady rise in retries is an early warning to raise limits, cache more or trim prompts.</p>
+<h2>Takeaway</h2>
+<p>Know which limits apply, retry only retryable errors with exponential backoff, jitter and <code>Retry-After</code>, throttle requests on your side with token and concurrency budgets, give interactive traffic priority over background jobs, and keep timeouts and fallbacks ready for when retries are not enough.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

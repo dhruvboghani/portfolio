@@ -11,6 +11,8 @@
 <url><loc>https://dhruv-boghani.vercel.app/voice-agent.html</loc></url>
 <url><loc>https://dhruv-boghani.vercel.app/voice-avatar.html</loc></url>
 <url><loc>https://dhruv-boghani.vercel.app/work.html</loc></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/text-to-sql-with-llms-making-it-reliable.html</loc><lastmod>2026-10-29</lastmod></url>
+<url><loc>https://dhruv-boghani.vercel.app/blog/rate-limiting-and-retries-for-llm-apis.html</loc><lastmod>2026-10-28</lastmod></url>
 <url><loc>https://dhruv-boghani.vercel.app/blog/observability-for-llm-applications-tracing-cost-and-quality.html</loc><lastmod>2026-10-27</lastmod></url>
 <url><loc>https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html</loc><lastmod>2026-10-26</lastmod></url>
 <url><loc>https://dhruv-boghani.vercel.app/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html</loc><lastmod>2026-10-25</lastmod></url>

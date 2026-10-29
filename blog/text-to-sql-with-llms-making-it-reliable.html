@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Text-to-SQL with LLMs: making it reliable | Dhruv Boghani</title>
+<meta name="description" content="How to make text-to-SQL with LLMs reliable: giving the model the right schema, safe read-only execution, validation, few-shot examples and evaluation.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/text-to-sql-with-llms-making-it-reliable.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Text-to-SQL with LLMs: making it reliable">
+<meta property="og:description" content="How to make text-to-SQL with LLMs reliable: giving the model the right schema, safe read-only execution, validation, few-shot examples and evaluation.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/text-to-sql-with-llms-making-it-reliable.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Text-to-SQL with LLMs: making it reliable">
+<meta name="twitter:description" content="How to make text-to-SQL with LLMs reliable: giving the model the right schema, safe read-only execution, validation, few-shot examples and evaluation.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Text-to-SQL with LLMs: making it reliable", "description": "How to make text-to-SQL with LLMs reliable: giving the model the right schema, safe read-only execution, validation, few-shot examples and evaluation.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-29", "dateModified": "2026-10-29", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/text-to-sql-with-llms-making-it-reliable.html", "inLanguage": "en", "keywords": "llm, sql, analytics"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Text-to-SQL with LLMs: making it reliable", "item": "https://dhruv-boghani.vercel.app/blog/text-to-sql-with-llms-making-it-reliable.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Text-to-SQL with LLMs: making it reliable</h1><p class="m u meta">2026-10-29 / 3 min read / llm, sql, analytics</p><article class="post"><p>Letting people ask questions about data in plain language is one of the most requested AI features. A model that turns "revenue by region last quarter" into SQL looks impressive in a demo, but in production it can return confident, wrong numbers.</p>
+<p>Reliable text-to-SQL is less about the model and more about the system around it. This post covers the parts that matter.</p>
+<h2>Give the model the right context</h2>
+<p>The model can only write correct SQL if it understands your data.</p>
+<ul>
+<li><strong>Relevant schema only.</strong> Include the tables and columns needed for the question, not your whole database. For large schemas, retrieve relevant tables first using their names and descriptions.</li>
+<li><strong>Descriptions, not just names.</strong> <code>amt</code> and <code>st</code> mean nothing; "order total in INR including tax" and "order status: pending, paid, refunded" mean a lot.</li>
+<li><strong>Business definitions.</strong> Spell out what "active customer", "revenue" or "churn" mean in your company, including which filters apply.</li>
+<li><strong>Sample values</strong> for important columns such as statuses, regions or plan names.</li>
+<li><strong>Join paths</strong> between tables, with the keys to use.</li>
+</ul>
+<h2>Use examples from your own data</h2>
+<p>A few question and SQL pairs from your real schema teach the model your conventions better than instructions alone. Store a library of verified examples and retrieve the most similar ones for each new question.</p>
+<pre><code>-- Q: Revenue by region for last quarter
+SELECT c.region, SUM(o.total_inr) AS revenue
+FROM orders o
+JOIN customers c ON c.customer_id = o.customer_id
+WHERE o.status = 'paid'
+  AND o.paid_at &gt;= date_trunc('quarter', current_date) - interval '3 months'
+  AND o.paid_at &lt;  date_trunc('quarter', current_date)
+GROUP BY c.region
+ORDER BY revenue DESC;</code></pre>
+<h2>Execute safely</h2>
+<p>Generated SQL must never be able to damage data or leak it.</p>
+<ul>
+<li><strong>Read-only database user</strong> with access only to the tables the feature needs.</li>
+<li><strong>Row-level security or views</strong> so users only see the data they are allowed to see. Do not rely on the prompt to apply permission filters.</li>
+<li><strong>Allow only <code>SELECT</code></strong> and reject anything else before execution.</li>
+<li><strong>Limits and timeouts:</strong> add a row limit, set a statement timeout, and run against a replica or analytics store rather than the primary database.</li>
+</ul>
+<h2>Validate before and after running</h2>
+<ul>
+<li><strong>Parse the SQL</strong> with a SQL parser to check syntax and confirm it only touches allowed tables and columns.</li>
+<li><strong>Dry run or <code>EXPLAIN</code></strong> to catch errors and very expensive queries before running them.</li>
+<li><strong>Repair loop:</strong> if the database returns an error, send the error and the query back to the model once to fix it. Stop after one or two attempts.</li>
+<li><strong>Sanity checks on results:</strong> empty results, negative revenue or numbers far outside normal ranges deserve a warning.</li>
+</ul>
+<h2>Show your work to the user</h2>
+<p>Trust comes from transparency.</p>
+<ul>
+<li><strong>Show the SQL</strong> or a plain-language explanation of what was queried, including filters and date ranges.</li>
+<li><strong>State assumptions,</strong> such as "revenue means paid orders, including tax".</li>
+<li><strong>Ask a clarifying question</strong> when the request is ambiguous, for example which date field to use.</li>
+<li><strong>Let users rate answers,</strong> and save corrected queries as new verified examples.</li>
+</ul>
+<h2>Consider a semantic layer</h2>
+<p>For important metrics, letting the model write raw SQL every time is risky. A semantic layer defines metrics and dimensions once, such as revenue, region and month, and the model only chooses which metrics and filters to request. The layer generates consistent SQL, so the same question always means the same thing.</p>
+<h2>Measure accuracy</h2>
+<p>Build an evaluation set of real questions with verified SQL or verified results. Compare the results of generated queries with the expected results, not just the SQL text, since different queries can be equally correct. Run the set whenever you change prompts, models or schema descriptions.</p>
+<h2>Takeaway</h2>
+<p>Reliable text-to-SQL depends on good context and strong guardrails: give the model relevant schema with clear descriptions, business definitions and verified examples, run queries read-only with permissions enforced by the database, validate and repair queries before trusting them, show users what was queried, and measure accuracy on real questions.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>
