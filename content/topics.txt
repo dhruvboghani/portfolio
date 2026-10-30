@@ -1,5 +1,4 @@
 # One topic per line. The next line is used each day. Add more any time.
-Document parsing for RAG: PDFs, tables and scans
 Streaming LLM responses to the browser
 Fine-tuning vs RAG: when to use each
 Apache Iceberg compaction and table maintenance

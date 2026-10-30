@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Document parsing for RAG: PDFs, tables and scans</title>
+<meta name="description" content="How to parse documents for RAG: extracting clean text from PDFs, keeping tables intact, running OCR on scans, preserving structure and checking quality.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=9">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/document-parsing-for-rag-pdfs-tables-and-scans.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Document parsing for RAG: PDFs, tables and scans">
+<meta property="og:description" content="How to parse documents for RAG: extracting clean text from PDFs, keeping tables intact, running OCR on scans, preserving structure and checking quality.">
+<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/document-parsing-for-rag-pdfs-tables-and-scans.html">
+<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Document parsing for RAG: PDFs, tables and scans">
+<meta name="twitter:description" content="How to parse documents for RAG: extracting clean text from PDFs, keeping tables intact, running OCR on scans, preserving structure and checking quality.">
+<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Document parsing for RAG: PDFs, tables and scans", "description": "How to parse documents for RAG: extracting clean text from PDFs, keeping tables intact, running OCR on scans, preserving structure and checking quality.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-30", "dateModified": "2026-10-30", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/document-parsing-for-rag-pdfs-tables-and-scans.html", "inLanguage": "en", "keywords": "rag, document-parsing, llm"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Document parsing for RAG: PDFs, tables and scans", "item": "https://dhruv-boghani.vercel.app/blog/document-parsing-for-rag-pdfs-tables-and-scans.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Document parsing for RAG: PDFs, tables and scans</h1><p class="m u meta">2026-10-30 / 4 min read / rag, document-parsing, llm</p><article class="post"><p>Most RAG problems that look like retrieval problems start earlier, at parsing. If the text you index is out of order, missing table values or full of headers and page numbers, no embedding model or reranker can fix it.</p>
+<p>Real documents are messy: multi-column PDFs, tables that span pages, scanned forms and slides. This post covers how to turn them into clean, structured text that retrieval can work with.</p>
+<h2>Know what kind of document you have</h2>
+<p>Different documents need different handling, so detect the type first.</p>
+<ul>
+<li><strong>Digital PDFs</strong> contain real text, but not always in reading order. Columns, footnotes and sidebars can come out interleaved.</li>
+<li><strong>Scanned PDFs and images</strong> contain only pixels, so they need OCR.</li>
+<li><strong>Mixed PDFs</strong> have some text pages and some scanned pages, or text with embedded images of tables.</li>
+<li><strong>Office files</strong> like DOCX, XLSX and PPTX already carry structure such as headings, cells and slides. Use it rather than converting to PDF first.</li>
+<li><strong>HTML and Markdown</strong> are usually easiest, as long as you strip navigation and boilerplate.</li>
+</ul>
+<p>A quick check works well: if a PDF page yields almost no extractable text, treat it as scanned.</p>
+<h2>Extract text with structure, not just characters</h2>
+<p>Plain text loses the information retrieval needs most. Aim to keep:</p>
+<ul>
+<li><strong>Headings and their levels,</strong> so chunks can carry the section they belong to.</li>
+<li><strong>Reading order</strong> across columns.</li>
+<li><strong>Lists</strong> as lists.</li>
+<li><strong>Page numbers</strong> for citations, stored as metadata rather than in the text.</li>
+</ul>
+<p>Layout-aware parsers and document AI services detect blocks such as titles, paragraphs, tables and figures, and return them in reading order. Converting the result to Markdown is a practical target, because headings, lists and tables survive and models read Markdown well.</p>
+<p>Remove repeated headers, footers, page numbers and watermarks. They add noise to every chunk and can dominate similarity search.</p>
+<h2>Keep tables intact</h2>
+<p>Tables are where naive parsing fails most. Flattened into lines of text, a table loses which value belongs to which row and column.</p>
+<ul>
+<li><strong>Detect tables as tables</strong> and extract them cell by cell.</li>
+<li><strong>Store them as Markdown or HTML tables</strong> so headers stay attached to values.</li>
+<li><strong>Do not split a table across chunks.</strong> If a table is large, split by rows and repeat the header row in each chunk.</li>
+<li><strong>Add a short description</strong> of what the table shows, which helps retrieval for questions phrased in words.</li>
+<li><strong>Join tables that continue across pages</strong> when the header repeats.</li>
+</ul>
+<pre><code>## 4.2 GST rates by product category
+
+| HSN code | Product            | GST rate |
+|----------|--------------------|----------|
+| 8471     | Laptop computers   | 18%      |
+| 6302     | Cotton towels      | 12%      |</code></pre>
+<h2>Handle scans with OCR</h2>
+<ul>
+<li><strong>Improve the image first:</strong> straighten skewed pages, increase contrast and use a sensible resolution.</li>
+<li><strong>Choose OCR that supports your languages and scripts,</strong> including Indian languages if your documents use them.</li>
+<li><strong>Keep OCR confidence scores</strong> and flag low-confidence pages for review instead of indexing bad text silently.</li>
+<li><strong>Use layout-aware OCR</strong> for forms and tables, so fields and cells keep their positions.</li>
+</ul>
+<p>Vision-capable language models can also read complex pages, charts and handwriting well. They are slower and more expensive, so a common pattern is to use them only for pages where standard extraction fails.</p>
+<h2>Don't forget images and charts</h2>
+<p>Charts and diagrams often hold the key fact on a page. Generate a short text description or caption for each important figure and index it alongside the page, with a link back to the image.</p>
+<h2>Attach metadata for retrieval and citations</h2>
+<p>Every chunk should carry its source document, page numbers, section heading path, document date and any access permissions. This enables filtering, recent-first ranking and answers that cite exactly where information came from.</p>
+<h2>Check parsing quality</h2>
+<ul>
+<li><strong>Spot-check samples</strong> from each document type and source, comparing parsed text with the original.</li>
+<li><strong>Track simple metrics:</strong> pages with no text, OCR confidence, number of tables found, and very short or very long chunks.</li>
+<li><strong>Keep the parsed output,</strong> not just the embeddings, so you can inspect and re-index without parsing again.</li>
+<li><strong>Re-run a retrieval evaluation</strong> when you change parsers, because better parsing usually shows up directly as better recall.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Good RAG starts with good parsing: detect each document's type, extract text in reading order with headings and lists intact, keep tables whole with their headers, use OCR carefully on scans, describe important figures, and attach page and section metadata. Check parsing quality regularly, because retrieval can only be as good as the text it searches.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

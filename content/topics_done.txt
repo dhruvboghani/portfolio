@@ -23,3 +23,4 @@ Idempotent consumers in event-driven systems
 Observability for LLM applications
 Rate limiting and retries for LLM APIs
 Text-to-SQL with LLMs: making it reliable
+Document parsing for RAG: PDFs, tables and scans
