@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 ROOT = os.path.dirname(os.path.abspath(__file__))
 # Set your real domain here, or as the SITE_URL variable in GitHub. A trailing slash is stripped,
 # otherwise every canonical/sitemap URL would get a double slash (https://site.com//page.html).
-SITE_URL = (os.environ.get('SITE_URL') or 'https://dhruv-boghani.vercel.app').strip().rstrip('/')
+SITE_URL = (os.environ.get('SITE_URL') or 'https://www.dhruvboghani.com').strip().rstrip('/')
 AUTHOR = 'Dhruv Boghani'
 SITE_NAME = 'Dhruv Boghani'
 OG_IMAGE = SITE_URL + '/assets/og-image.png'   # 1200x630 share preview

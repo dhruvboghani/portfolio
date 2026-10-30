@@ -11,6 +11,18 @@ const DATA_FILE = path.join(__dirname, 'inquiry.json');
 app.use(cors()); // Allows index.html to talk to this server
 app.use(express.json());
 
+// --- SEO: one domain ---
+// The site lives at www.dhruvboghani.com. Send visitors and search engines that
+// arrive on the old Vercel address there with a permanent redirect.
+// (Preview deployments use other *.vercel.app hosts and are not affected.)
+const CANONICAL_HOST = 'www.dhruvboghani.com';
+const OLD_HOSTS = new Set(['dhruv-boghani.vercel.app', 'dhruvboghani.com']);
+app.use((req, res, next) => {
+    const host = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(':')[0].toLowerCase();
+    if (!OLD_HOSTS.has(host)) return next();
+    res.redirect(301, 'https://' + CANONICAL_HOST + req.originalUrl);
+});
+
 // --- SEO: one URL per page ---
 // 301 duplicate URLs to their canonical form so Google only indexes one version:
 //   //work.html -> /work.html,  /index.html -> /,  /blog/index.html -> /blog/

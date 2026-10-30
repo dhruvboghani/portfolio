@@ -9,7 +9,7 @@
 
 <script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
 <!--seo-->
-<link rel="canonical" href="https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html">
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/idempotent-consumers-handling-duplicate-events-safely.html">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
@@ -20,16 +20,16 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Idempotent consumers: handling duplicate events safely">
 <meta property="og:description" content="How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.">
-<meta property="og:url" content="https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html">
-<meta property="og:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/idempotent-consumers-handling-duplicate-events-safely.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Idempotent consumers: handling duplicate events safely">
 <meta name="twitter:description" content="How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.">
-<meta name="twitter:image" content="https://dhruv-boghani.vercel.app/assets/og-image.png">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Idempotent consumers: handling duplicate events safely", "description": "How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.", "image": "https://dhruv-boghani.vercel.app/assets/og-image.png", "datePublished": "2026-10-26", "dateModified": "2026-10-26", "author": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "publisher": {"@type": "Person", "@id": "https://dhruv-boghani.vercel.app/#person", "name": "Dhruv Boghani", "url": "https://dhruv-boghani.vercel.app/"}, "mainEntityOfPage": "https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html", "inLanguage": "en", "keywords": "event-driven, kafka, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dhruv-boghani.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://dhruv-boghani.vercel.app/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Idempotent consumers: handling duplicate events safely", "item": "https://dhruv-boghani.vercel.app/blog/idempotent-consumers-handling-duplicate-events-safely.html"}]}]}</script>
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Idempotent consumers: handling duplicate events safely", "description": "How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-10-26", "dateModified": "2026-10-26", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/idempotent-consumers-handling-duplicate-events-safely.html", "inLanguage": "en", "keywords": "event-driven, kafka, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Idempotent consumers: handling duplicate events safely", "item": "https://www.dhruvboghani.com/blog/idempotent-consumers-handling-duplicate-events-safely.html"}]}]}</script>
 <!--/seo-->
 </head><body>
 <div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
