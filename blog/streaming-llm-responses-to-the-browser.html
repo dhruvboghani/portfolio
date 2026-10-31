@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Streaming LLM responses to the browser | Dhruv Boghani</title>
+<meta name="description" content="How to stream LLM responses to the browser: server-sent events vs WebSockets, a FastAPI example, reading the stream in JavaScript, proxies and errors.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/streaming-llm-responses-to-the-browser.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Streaming LLM responses to the browser">
+<meta property="og:description" content="How to stream LLM responses to the browser: server-sent events vs WebSockets, a FastAPI example, reading the stream in JavaScript, proxies and errors.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/streaming-llm-responses-to-the-browser.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Streaming LLM responses to the browser">
+<meta name="twitter:description" content="How to stream LLM responses to the browser: server-sent events vs WebSockets, a FastAPI example, reading the stream in JavaScript, proxies and errors.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Streaming LLM responses to the browser", "description": "How to stream LLM responses to the browser: server-sent events vs WebSockets, a FastAPI example, reading the stream in JavaScript, proxies and errors.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-10-31", "dateModified": "2026-10-31", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/streaming-llm-responses-to-the-browser.html", "inLanguage": "en", "keywords": "llm, streaming, web-development"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Streaming LLM responses to the browser", "item": "https://www.dhruvboghani.com/blog/streaming-llm-responses-to-the-browser.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Streaming LLM responses to the browser</h1><p class="m u meta">2026-10-31 / 4 min read / llm, streaming, web-development</p><article class="post"><p>A language model can take several seconds to write a full answer. If your interface waits for the whole response, users stare at a spinner; if it streams, words appear almost immediately and the same answer feels much faster.</p>
+<p>Streaming is simple in principle but has a few traps around transport, buffering and errors. This post walks through a setup that works in production.</p>
+<h2>How streaming works end to end</h2>
+<p>1. The browser sends the question to your backend. 2. The backend calls the model API with streaming turned on. 3. The model returns the answer as a series of small chunks, often a few tokens each. 4. The backend forwards each chunk to the browser as soon as it arrives. 5. The browser appends each chunk to the message on screen.</p>
+<p>Keep the model API key on the server. The browser should only ever talk to your backend.</p>
+<h2>Server-sent events or WebSockets</h2>
+<p><strong>Server-sent events (SSE)</strong> send a one-way stream of text events over a normal HTTP response.</p>
+<ul>
+<li>Simple to implement on both sides.</li>
+<li>Works through most proxies and load balancers.</li>
+<li>A natural fit for one question followed by one streamed answer.</li>
+</ul>
+<p><strong>WebSockets</strong> keep a two-way connection open.</p>
+<ul>
+<li>Useful when the client needs to send data during the answer, such as live audio or interruptions in a voice agent.</li>
+<li>More work: connection management, reconnection and scaling sticky connections.</li>
+</ul>
+<p>For chat-style text answers, SSE is usually the right choice.</p>
+<h2>The backend: forwarding chunks with FastAPI</h2>
+<pre><code>from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+import json
+
+app = FastAPI()
+
+@app.post("/api/chat")
+async def chat(req: dict):
+    async def events():
+        try:
+            async for chunk in llm.stream(req["message"]):
+                yield f"data: {json.dumps({'text': chunk})}\n\n"
+            yield "data: [DONE]\n\n"
+        except Exception:
+            yield f"data: {json.dumps({'error': 'generation_failed'})}\n\n"
+
+    return StreamingResponse(
+        events(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )</code></pre>
+<p>Each event is a line starting with <code>data:</code> followed by a blank line. Encoding each chunk as JSON keeps newlines and special characters safe.</p>
+<h2>The frontend: reading the stream</h2>
+<p>The built-in <code>EventSource</code> only supports GET requests, so for a POST with a request body, read the response stream with <code>fetch</code>.</p>
+<pre><code>const res = await fetch("/api/chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ message }),
+  signal: controller.signal,
+});
+const reader = res.body.getReader();
+const decoder = new TextDecoder();
+let buffer = "";
+while (true) {
+  const { value, done } = await reader.read();
+  if (done) break;
+  buffer += decoder.decode(value, { stream: true });
+  const events = buffer.split("\n\n");
+  buffer = events.pop();
+  for (const e of events) {
+    const data = e.replace(/^data: /, "");
+    if (data === "[DONE]") return;
+    const msg = JSON.parse(data);
+    if (msg.error) return showError();
+    appendToMessage(msg.text);
+  }
+}</code></pre>
+<p>Keep the partial last event in <code>buffer</code>, because a network read can end in the middle of an event.</p>
+<h2>Watch out for buffering</h2>
+<p>The most common problem is a stream that arrives all at once at the end. Something between the model and the browser is buffering.</p>
+<ul>
+<li><strong>Reverse proxies</strong> such as Nginx buffer responses by default. Disable buffering for the streaming route, for example with the <code>X-Accel-Buffering: no</code> header.</li>
+<li><strong>Compression</strong> can hold back small chunks. Turn it off for event streams.</li>
+<li><strong>Hosting platforms</strong> may need streaming enabled or a specific runtime. Check your platform's documentation.</li>
+<li><strong>Timeouts:</strong> long answers can hit idle timeouts. Send occasional keep-alive comments if needed.</li>
+</ul>
+<h2>Handle the user experience</h2>
+<ul>
+<li><strong>Show something within a second,</strong> even just a typing indicator, until the first chunk arrives.</li>
+<li><strong>Let users stop generation</strong> with an <code>AbortController</code>, and stop the model call on the server when the client disconnects to avoid paying for unused tokens.</li>
+<li><strong>Render Markdown carefully</strong> while text is incomplete, for example by re-rendering the whole message on each update and sanitising the HTML.</li>
+<li><strong>Keep scroll behaviour polite:</strong> follow new text only when the user is already at the bottom.</li>
+<li><strong>Show clear errors</strong> if the stream fails halfway, and offer a retry.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Stream LLM answers through your own backend using server-sent events for chat-style responses, forward each chunk as it arrives, read the stream in the browser with <code>fetch</code> and a buffer, and disable proxy buffering and compression on that route. Add a stop button, cancel generation on disconnect and handle mid-stream errors, and answers will feel fast and reliable.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>
