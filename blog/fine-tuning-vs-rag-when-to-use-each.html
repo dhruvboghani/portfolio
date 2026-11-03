@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fine-tuning vs RAG: when to use each | Dhruv Boghani</title>
+<meta name="description" content="Fine-tuning vs RAG explained: what each one changes, when to use retrieval, when fine-tuning pays off, costs and maintenance, and how to combine them.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/fine-tuning-vs-rag-when-to-use-each.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fine-tuning vs RAG: when to use each">
+<meta property="og:description" content="Fine-tuning vs RAG explained: what each one changes, when to use retrieval, when fine-tuning pays off, costs and maintenance, and how to combine them.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/fine-tuning-vs-rag-when-to-use-each.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fine-tuning vs RAG: when to use each">
+<meta name="twitter:description" content="Fine-tuning vs RAG explained: what each one changes, when to use retrieval, when fine-tuning pays off, costs and maintenance, and how to combine them.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Fine-tuning vs RAG: when to use each", "description": "Fine-tuning vs RAG explained: what each one changes, when to use retrieval, when fine-tuning pays off, costs and maintenance, and how to combine them.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-01", "dateModified": "2026-11-01", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/fine-tuning-vs-rag-when-to-use-each.html", "inLanguage": "en", "keywords": "llm, rag, fine-tuning"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Fine-tuning vs RAG: when to use each", "item": "https://www.dhruvboghani.com/blog/fine-tuning-vs-rag-when-to-use-each.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Fine-tuning vs RAG: when to use each</h1><p class="m u meta">2026-11-01 / 3 min read / llm, rag, fine-tuning</p><article class="post"><p>When a general model does not know enough about your business, two options come up: retrieval-augmented generation (RAG) and fine-tuning. They are often presented as alternatives, but they solve different problems.</p>
+<p>Choosing the wrong one wastes weeks. This post explains what each one actually changes and how to decide.</p>
+<h2>What each approach changes</h2>
+<p><strong>RAG changes what the model sees.</strong> At question time, you search your documents or database for relevant passages and put them in the prompt. The model stays the same; the context changes with every request.</p>
+<p><strong>Fine-tuning changes how the model behaves.</strong> You train the model further on examples of inputs and desired outputs. The model's weights change, so the new behaviour applies to every request without extra context.</p>
+<p>A useful shorthand: RAG gives the model <strong>knowledge</strong>, fine-tuning teaches it <strong>habits</strong>.</p>
+<h2>When RAG is the right choice</h2>
+<ul>
+<li><strong>Facts change often:</strong> prices, policies, inventory, documentation, tickets. Update the index and answers change immediately, with no retraining.</li>
+<li><strong>Answers must be traceable:</strong> RAG can cite the exact source passage, which users and auditors can check.</li>
+<li><strong>Access control matters:</strong> retrieval can filter documents by user permissions. Knowledge baked into weights cannot be hidden from some users.</li>
+<li><strong>You have lots of content and few labelled examples.</strong> RAG works with the documents you already have.</li>
+</ul>
+<p>Most "the model doesn't know our data" problems are RAG problems.</p>
+<h2>When fine-tuning pays off</h2>
+<ul>
+<li><strong>Consistent format or style</strong> that prompts alone do not hold reliably, such as a strict output structure or your brand's tone.</li>
+<li><strong>Narrow, repeated tasks</strong> like classification, extraction or routing, where a smaller fine-tuned model can match a larger general model at lower cost and latency.</li>
+<li><strong>Shorter prompts:</strong> behaviour that needed long instructions and many examples in every prompt can move into the model.</li>
+<li><strong>Domain language</strong> the base model handles poorly, such as specialised abbreviations, when you have enough good examples.</li>
+</ul>
+<p>Fine-tuning is a poor way to add facts. Models learn facts from training unreliably, cannot cite them, and need retraining whenever they change.</p>
+<h2>Cost and maintenance</h2>
+<p><strong>RAG costs</strong> are mostly engineering and runtime: parsing, chunking, an index, a retrieval step on every request and longer prompts. Updating knowledge is cheap.</p>
+<p><strong>Fine-tuning costs</strong> are mostly data: collecting and cleaning hundreds to thousands of high-quality examples, training runs, evaluation, and repeating the process when requirements or the base model change. Runtime can be cheaper if you move to a smaller model.</p>
+<p>Either way, you need an evaluation set to show the change actually helped.</p>
+<h2>A practical order of steps</h2>
+<p>1. <strong>Start with prompting.</strong> Clear instructions and a few examples solve more than people expect. 2. <strong>Add RAG</strong> when the model needs your knowledge. 3. <strong>Improve retrieval</strong> before blaming the model: parsing, chunking, hybrid search and reranking. 4. <strong>Fine-tune</strong> when you have a stable, repeated task, clear examples and evidence that prompting and RAG are not enough for format, cost or latency.</p>
+<h2>Using both together</h2>
+<p>They combine well. A common pattern is a fine-tuned model that reliably follows your answer format and tone, fed by RAG that supplies current facts and sources. Another is fine-tuning a small model to rewrite queries or rerank results inside a RAG pipeline.</p>
+<h2>Takeaway</h2>
+<p>Use RAG when the model needs knowledge that changes, must be cited or depends on permissions. Use fine-tuning when you need consistent behaviour, format or a cheaper model for a narrow, repeated task. Start with prompting and RAG, measure carefully, and fine-tune only when the data and the evidence justify it.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

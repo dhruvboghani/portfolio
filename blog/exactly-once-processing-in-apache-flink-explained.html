@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exactly-once processing in Apache Flink explained</title>
+<meta name="description" content="How exactly-once processing works in Apache Flink: checkpoints and barriers, state recovery, transactional sinks with two-phase commit, and common pitfalls.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/exactly-once-processing-in-apache-flink-explained.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Exactly-once processing in Apache Flink explained">
+<meta property="og:description" content="How exactly-once processing works in Apache Flink: checkpoints and barriers, state recovery, transactional sinks with two-phase commit, and common pitfalls.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/exactly-once-processing-in-apache-flink-explained.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Exactly-once processing in Apache Flink explained">
+<meta name="twitter:description" content="How exactly-once processing works in Apache Flink: checkpoints and barriers, state recovery, transactional sinks with two-phase commit, and common pitfalls.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Exactly-once processing in Apache Flink explained", "description": "How exactly-once processing works in Apache Flink: checkpoints and barriers, state recovery, transactional sinks with two-phase commit, and common pitfalls.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-03", "dateModified": "2026-11-03", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/exactly-once-processing-in-apache-flink-explained.html", "inLanguage": "en", "keywords": "flink, streaming, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Exactly-once processing in Apache Flink explained", "item": "https://www.dhruvboghani.com/blog/exactly-once-processing-in-apache-flink-explained.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Exactly-once processing in Apache Flink explained</h1><p class="m u meta">2026-11-03 / 3 min read / flink, streaming, data-engineering</p><article class="post"><p>Exactly-once is one of the most cited and most misunderstood features of Apache Flink. It does not mean each event is physically processed once; after a failure, Flink replays events. It means the results, in Flink's state and in supported sinks, look as if each event was processed exactly once.</p>
+<p>Understanding how that works tells you what Flink guarantees on its own and what your sources and sinks have to do.</p>
+<h2>Checkpoints are the foundation</h2>
+<p>Flink periodically takes a consistent snapshot of the whole job, called a checkpoint.</p>
+<ul>
+<li>The job manager injects <strong>checkpoint barriers</strong> into the input streams.</li>
+<li>Barriers flow through the job with the data. When an operator has received the barrier on all its inputs, it snapshots its state to durable storage and passes the barrier on.</li>
+<li>Sources record their <strong>positions</strong>, such as Kafka offsets, as part of the same checkpoint.</li>
+</ul>
+<p>When a checkpoint completes, Flink has a consistent picture: input positions plus every operator's state at the same logical point in the stream.</p>
+<h2>Recovery: rewind and replay</h2>
+<p>When a task fails, Flink restores every operator's state from the last completed checkpoint and resets the sources to the stored positions. Events after the checkpoint are read and processed again.</p>
+<p>Because state is rolled back to the same point, replayed events update it exactly as before. Counts, aggregations and windows end up as if no failure happened. That is exactly-once <strong>for internal state</strong>.</p>
+<pre><code>StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+env.enableCheckpointing(60_000, CheckpointingMode.EXACTLY_ONCE);
+env.getCheckpointConfig().setMinPauseBetweenCheckpoints(30_000);
+env.getCheckpointConfig().setCheckpointTimeout(10 * 60_000);</code></pre>
+<h2>The sink is where it gets hard</h2>
+<p>Replay is harmless inside Flink, but outputs already written to the outside world would be written again. End-to-end exactly-once needs a sink that cooperates.</p>
+<p><strong>Transactional sinks with two-phase commit.</strong> The sink writes output inside a transaction that stays open until the checkpoint completes.</p>
+<p>1. During processing, records are written to an open transaction. 2. On the checkpoint barrier, the sink pre-commits, flushing data so it is durable. 3. When the whole checkpoint succeeds, Flink tells sinks to commit. 4. If the job fails first, the open transaction is aborted and the replayed records are written again in a new one.</p>
+<p>The Kafka sink supports this with Kafka transactions, and file and table sinks such as Iceberg commit files only when checkpoints complete.</p>
+<p><strong>Idempotent sinks</strong> are the other option: writes keyed by a stable ID, such as upserts into a database, so repeating them has no extra effect.</p>
+<h2>Pitfalls to know about</h2>
+<ul>
+<li><strong>Latency equals the checkpoint interval</strong> for transactional sinks, because data becomes visible only on commit. Choose the interval with that in mind.</li>
+<li><strong>Consumers must read committed data only.</strong> Kafka consumers downstream need <code>isolation.level=read_committed</code>, or they will see uncommitted records that may be aborted.</li>
+<li><strong>Transaction timeouts:</strong> Kafka transaction timeouts must be longer than the maximum checkpoint duration plus recovery time, or transactions expire and data is lost.</li>
+<li><strong>Side effects inside operators,</strong> such as calling an external API or sending an email from a map function, are not covered. They will repeat on replay unless you make them idempotent.</li>
+<li><strong>Non-deterministic logic,</strong> like using processing time or random values, can produce different results on replay.</li>
+<li><strong>Large state</strong> makes checkpoints slow. Use incremental checkpoints with the RocksDB state backend for big jobs.</li>
+</ul>
+<h2>At-least-once can be enough</h2>
+<p>Exactly-once has a cost in latency and complexity. If your sink is naturally idempotent, or occasional duplicates are acceptable and handled downstream, at-least-once checkpointing with idempotent writes is simpler and faster.</p>
+<h2>Takeaway</h2>
+<p>Flink achieves exactly-once results by checkpointing operator state and source positions together, then rewinding and replaying after failures. End-to-end guarantees also need a transactional or idempotent sink, read-committed consumers, sensible transaction timeouts and side-effect-free operators. Choose exactly-once where duplicates truly matter, and at-least-once with idempotent writes where they do not.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

@@ -25,3 +25,6 @@ Rate limiting and retries for LLM APIs
 Text-to-SQL with LLMs: making it reliable
 Document parsing for RAG: PDFs, tables and scans
 Streaming LLM responses to the browser
+Fine-tuning vs RAG: when to use each
+Apache Iceberg compaction and table maintenance
+Exactly-once processing in Apache Flink

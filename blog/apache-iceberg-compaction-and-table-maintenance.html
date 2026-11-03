@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apache Iceberg compaction and table maintenance</title>
+<meta name="description" content="How to keep Apache Iceberg tables fast: compacting small files, expiring snapshots, removing orphan files, rewriting manifests and scheduling maintenance.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/apache-iceberg-compaction-and-table-maintenance.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Iceberg compaction and table maintenance">
+<meta property="og:description" content="How to keep Apache Iceberg tables fast: compacting small files, expiring snapshots, removing orphan files, rewriting manifests and scheduling maintenance.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/apache-iceberg-compaction-and-table-maintenance.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Apache Iceberg compaction and table maintenance">
+<meta name="twitter:description" content="How to keep Apache Iceberg tables fast: compacting small files, expiring snapshots, removing orphan files, rewriting manifests and scheduling maintenance.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Apache Iceberg compaction and table maintenance", "description": "How to keep Apache Iceberg tables fast: compacting small files, expiring snapshots, removing orphan files, rewriting manifests and scheduling maintenance.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-02", "dateModified": "2026-11-02", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/apache-iceberg-compaction-and-table-maintenance.html", "inLanguage": "en", "keywords": "iceberg, lakehouse, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Apache Iceberg compaction and table maintenance", "item": "https://www.dhruvboghani.com/blog/apache-iceberg-compaction-and-table-maintenance.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Apache Iceberg compaction and table maintenance</h1><p class="m u meta">2026-11-02 / 3 min read / iceberg, lakehouse, data-engineering</p><article class="post"><p>Apache Iceberg tables stay correct without maintenance, but they do not stay fast. Every streaming commit adds files and metadata, and over weeks a busy table can slow queries and raise storage costs.</p>
+<p>The fix is routine maintenance: a handful of jobs that rewrite small files, clean up history and tidy metadata. This post covers each one and how to schedule them.</p>
+<h2>Why tables degrade</h2>
+<ul>
+<li><strong>Small files:</strong> streaming jobs commit often, and each commit writes new data files. Thousands of small files mean more file opens, more metadata to read and slower planning.</li>
+<li><strong>Delete files:</strong> row-level updates and deletes in merge-on-read mode write delete files that every query must apply until they are merged.</li>
+<li><strong>Snapshot history:</strong> every commit creates a snapshot. Old snapshots keep old files alive for time travel.</li>
+<li><strong>Metadata growth:</strong> manifests multiply and become less well organised.</li>
+<li><strong>Orphan files:</strong> failed or interrupted writes can leave files that no snapshot references.</li>
+</ul>
+<h2>Compaction: rewrite data files</h2>
+<p>Compaction combines many small files into fewer larger ones, often targeting a few hundred megabytes per file, and applies pending delete files.</p>
+<ul>
+<li><strong>Bin-packing</strong> simply groups small files together. It is the cheapest option.</li>
+<li><strong>Sorting</strong> rewrites data ordered by columns you filter on often, which improves file skipping.</li>
+<li><strong>Z-ordering</strong> clusters data across several columns when queries filter on different combinations.</li>
+</ul>
+<p>Compact the partitions that are actively changing, usually recent ones, rather than the whole table every time.</p>
+<pre><code>-- Spark
+CALL catalog.system.rewrite_data_files(
+  table =&gt; 'analytics.events',
+  strategy =&gt; 'sort',
+  sort_order =&gt; 'tenant_id, event_time',
+  where =&gt; 'event_date &gt;= current_date() - 2'
+);
+
+-- Trino
+ALTER TABLE analytics.events EXECUTE optimize(file_size_threshold =&gt; '128MB');</code></pre>
+<h2>Expire old snapshots</h2>
+<p>Snapshots enable time travel and rollback, but you rarely need every one forever. Expiring snapshots older than a retention period lets Iceberg delete files that are no longer referenced.</p>
+<pre><code>CALL catalog.system.expire_snapshots(
+  table =&gt; 'analytics.events',
+  older_than =&gt; TIMESTAMP '2026-10-26 00:00:00',
+  retain_last =&gt; 50
+);</code></pre>
+<p>Choose retention based on how far back you need to audit or recover, and keep it consistent with any branches or tags you rely on.</p>
+<h2>Remove orphan files</h2>
+<p>Orphan file cleanup finds files in the table location that no metadata references and deletes them. Only remove files older than your longest running write, typically a few days, so you never delete files from a commit still in progress.</p>
+<h2>Rewrite manifests</h2>
+<p>When a table has many small or poorly grouped manifests, query planning slows down. Rewriting manifests regroups them, often by partition, so planning reads less metadata. This is cheap and worth running when planning time grows.</p>
+<h2>Scheduling maintenance</h2>
+<ul>
+<li><strong>Streaming tables:</strong> compact recent partitions every hour or few hours; expire snapshots daily.</li>
+<li><strong>Batch tables:</strong> compact after large loads; expire snapshots daily or weekly.</li>
+<li><strong>Orphan cleanup and manifest rewrites:</strong> weekly is usually enough.</li>
+<li><strong>Avoid conflicts:</strong> compaction commits like any writer. Iceberg handles concurrent commits with optimistic concurrency, but heavy overlap with streaming writes causes retries, so compact partitions that writers are no longer touching when possible.</li>
+</ul>
+<p>Run these as scheduled jobs in your orchestrator, or use your platform's automatic table maintenance if it has one.</p>
+<h2>Monitor table health</h2>
+<p>Track file count and average file size per partition, the number of snapshots, delete file counts, metadata size and query planning time. A rising file count or planning time is the signal that maintenance is falling behind.</p>
+<h2>Takeaway</h2>
+<p>Iceberg tables need regular care to stay fast: compact small files with bin-packing or sorting, expire snapshots you no longer need, remove orphan files safely, and rewrite manifests when planning slows. Schedule each job to match how the table is written, and monitor file counts and planning time to know when to adjust.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>
