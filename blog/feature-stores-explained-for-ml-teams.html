@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feature stores explained for ML teams | Dhruv Boghani</title>
+<meta name="description" content="What a feature store is and when ML teams need one: offline and online stores, point-in-time correctness, training-serving skew, and simpler alternatives.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/feature-stores-explained-for-ml-teams.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Feature stores explained for ML teams">
+<meta property="og:description" content="What a feature store is and when ML teams need one: offline and online stores, point-in-time correctness, training-serving skew, and simpler alternatives.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/feature-stores-explained-for-ml-teams.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Feature stores explained for ML teams">
+<meta name="twitter:description" content="What a feature store is and when ML teams need one: offline and online stores, point-in-time correctness, training-serving skew, and simpler alternatives.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Feature stores explained for ML teams", "description": "What a feature store is and when ML teams need one: offline and online stores, point-in-time correctness, training-serving skew, and simpler alternatives.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-04", "dateModified": "2026-11-04", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/feature-stores-explained-for-ml-teams.html", "inLanguage": "en", "keywords": "machine-learning, mlops, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Feature stores explained for ML teams", "item": "https://www.dhruvboghani.com/blog/feature-stores-explained-for-ml-teams.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Feature stores explained for ML teams</h1><p class="m u meta">2026-11-04 / 3 min read / machine-learning, mlops, data-engineering</p><article class="post"><p>A model is only as good as the features it sees. In many teams, those features are computed once in a notebook for training and again, slightly differently, in production code for serving. The result is models that score well offline and disappoint in production.</p>
+<p>A feature store is a system for defining features once and serving them consistently to both training and live predictions. This post explains what it does and when you actually need one.</p>
+<h2>The problem it solves</h2>
+<ul>
+<li><strong>Training-serving skew:</strong> the training pipeline and the serving code calculate "orders in the last 30 days" in different ways, so the model sees different numbers in production.</li>
+<li><strong>Data leakage:</strong> training rows accidentally use information from after the prediction time, which inflates offline accuracy.</li>
+<li><strong>Duplicated work:</strong> every team rebuilds the same customer and product features.</li>
+<li><strong>Slow serving:</strong> computing aggregates from raw tables on every request is too slow for real-time predictions.</li>
+</ul>
+<h2>The main parts</h2>
+<p><strong>Feature definitions.</strong> Each feature is defined once, with its entity (such as customer or product), source, transformation and freshness requirement. Definitions are versioned like code.</p>
+<p><strong>Offline store.</strong> Historical feature values kept in a warehouse or lakehouse, used to build training datasets and for batch scoring.</p>
+<p><strong>Online store.</strong> The latest feature values per entity in a low-latency key-value store, such as Redis or DynamoDB, used for live predictions in milliseconds.</p>
+<p><strong>Materialisation.</strong> Batch or streaming jobs compute features and write them to both stores, so both are fed by the same logic.</p>
+<p><strong>Registry.</strong> A catalogue of features with owners, descriptions and lineage, so teams can find and reuse them.</p>
+<h2>Point-in-time correctness</h2>
+<p>This is the feature that prevents leakage. To build a training set, you give the feature store a list of entities and timestamps, such as the moment each past loan application was made. It returns each feature's value as it was at that moment, never a later value.</p>
+<pre><code>training_df = store.get_historical_features(
+    entity_df=applications[["customer_id", "applied_at", "defaulted"]],
+    features=[
+        "customer_stats:orders_30d",
+        "customer_stats:avg_order_value_90d",
+        "customer_stats:days_since_last_payment",
+    ],
+).to_df()</code></pre>
+<p>At prediction time, the same feature names are read from the online store for the current customer, so training and serving use the same definitions.</p>
+<h2>Batch, streaming and on-demand features</h2>
+<ul>
+<li><strong>Batch features</strong> are computed on a schedule, such as daily lifetime value.</li>
+<li><strong>Streaming features</strong> are updated from event streams within seconds, such as transactions in the last ten minutes for fraud detection.</li>
+<li><strong>On-demand features</strong> are computed at request time from request data, such as the distance between delivery and billing addresses.</li>
+</ul>
+<p>Most real systems combine all three.</p>
+<h2>Do you need one?</h2>
+<p>A feature store adds infrastructure and process. It is worth it when:</p>
+<ul>
+<li>You serve <strong>real-time predictions</strong> that need fresh aggregates in milliseconds.</li>
+<li><strong>Several models or teams</strong> share the same features.</li>
+<li>You have been bitten by <strong>skew or leakage</strong> before.</li>
+</ul>
+<p>It is probably overkill when you have one or two batch models, features computed in a single SQL pipeline, and predictions written back to a table. In that case, well-organised feature tables in your warehouse, with careful point-in-time joins, give most of the benefit.</p>
+<p>Open source options such as Feast, and managed feature stores from cloud and data platforms, let you start small and grow.</p>
+<h2>Takeaway</h2>
+<p>A feature store defines features once and serves them consistently: historical values with point-in-time correctness for training, and the latest values from a fast online store for live predictions. Adopt one when you have real-time models, shared features or skew problems; otherwise, start with clean feature tables and correct point-in-time joins.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

@@ -1,8 +1,4 @@
 # One topic per line. The next line is used each day. Add more any time.
-Feature stores explained for ML teams
-Designing APIs for AI agents
-Evaluating voice AI agents
-Reranking models for better search results
 Cost of running LLMs in production: a practical breakdown
 Data contracts between producers and consumers
 Vector index types: HNSW vs IVF

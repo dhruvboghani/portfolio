@@ -28,3 +28,7 @@ Streaming LLM responses to the browser
 Fine-tuning vs RAG: when to use each
 Apache Iceberg compaction and table maintenance
 Exactly-once processing in Apache Flink
+Feature stores explained for ML teams
+Designing APIs for AI agents
+Evaluating voice AI agents
+Reranking models for better search results

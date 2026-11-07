@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reranking models for better search results | Dhruv Boghani</title>
+<meta name="description" content="How reranking models improve search and RAG: bi-encoders vs cross-encoders, retrieve-then-rerank pipelines, choosing a reranker and latency.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/reranking-models-for-better-search-results.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reranking models for better search results">
+<meta property="og:description" content="How reranking models improve search and RAG: bi-encoders vs cross-encoders, retrieve-then-rerank pipelines, choosing a reranker and latency.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/reranking-models-for-better-search-results.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reranking models for better search results">
+<meta name="twitter:description" content="How reranking models improve search and RAG: bi-encoders vs cross-encoders, retrieve-then-rerank pipelines, choosing a reranker and latency.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Reranking models for better search results", "description": "How reranking models improve search and RAG: bi-encoders vs cross-encoders, retrieve-then-rerank pipelines, choosing a reranker and latency.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-07", "dateModified": "2026-11-07", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/reranking-models-for-better-search-results.html", "inLanguage": "en", "keywords": "search, rag, machine-learning"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Reranking models for better search results", "item": "https://www.dhruvboghani.com/blog/reranking-models-for-better-search-results.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Reranking models for better search results</h1><p class="m u meta">2026-11-07 / 3 min read / search, rag, machine-learning</p><article class="post"><p>First-stage search is built for speed: it finds a few dozen plausible results out of millions in milliseconds. It is not built for precision, so the best answer is often at position seven instead of position one.</p>
+<p>A reranker fixes this. It takes the top candidates and reorders them with a slower, more accurate model. For RAG systems, where only the top few passages reach the language model, that reordering often matters more than anything else.</p>
+<h2>Why first-stage retrieval is imprecise</h2>
+<p>Vector search uses a <strong>bi-encoder</strong>: the query and each document are embedded separately, and similarity is measured between the two vectors. Documents are embedded once, ahead of time, which makes search fast. But the model never sees the query and document together, so it misses fine details such as negation, exact constraints or which entity a sentence is about.</p>
+<p>Keyword search such as BM25 has the opposite weakness: it matches words, not meaning.</p>
+<h2>How a reranker works</h2>
+<p>A <strong>cross-encoder</strong> reranker reads the query and one candidate passage together, as a single input, and outputs a relevance score. Because it sees both at once, it can judge whether the passage actually answers the question.</p>
+<p>The cost is speed: it must run once per query-passage pair, at query time. That is why it is used only on a short list.</p>
+<h2>The retrieve-then-rerank pipeline</h2>
+<p>1. <strong>Retrieve</strong> 50 to 100 candidates with fast search, ideally hybrid keyword and vector search. 2. <strong>Rerank</strong> those candidates with the cross-encoder. 3. <strong>Keep the top</strong> 3 to 10 for display or for the language model's context.</p>
+<pre><code>from sentence_transformers import CrossEncoder
+
+reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+
+candidates = hybrid_search(query, k=50)
+pairs = [(query, c.text) for c in candidates]
+scores = reranker.predict(pairs)
+top = [c for _, c in sorted(zip(scores, candidates), key=lambda x: -x[0])][:5]</code></pre>
+<h2>Choosing a reranker</h2>
+<ul>
+<li><strong>Open-source cross-encoders</strong> in small, base and large sizes. Small models are fast enough for many applications on CPU; larger ones are more accurate and usually need a GPU.</li>
+<li><strong>Multilingual rerankers</strong> if your users or documents use more than one language.</li>
+<li><strong>Hosted reranking APIs</strong> from search and model providers, which avoid running your own model at the cost of a network call and per-request pricing.</li>
+<li><strong>Language models as rerankers,</strong> asked to score or order passages. Flexible and strong, but slower and more expensive, so best for small candidate sets or offline use.</li>
+</ul>
+<p>Test candidates on your own data; general benchmark rankings do not always carry over to a specific domain.</p>
+<h2>Managing latency</h2>
+<ul>
+<li><strong>Limit the candidate count.</strong> Reranking 30 passages instead of 100 cuts cost roughly in proportion.</li>
+<li><strong>Truncate passages</strong> to the model's useful length; chunking well helps here.</li>
+<li><strong>Batch the pairs</strong> and run on a GPU for larger models.</li>
+<li><strong>Cache scores</strong> for frequent queries.</li>
+<li><strong>Skip reranking</strong> for simple lookups where the first stage is already precise, such as exact ID searches.</li>
+</ul>
+<h2>Measuring the gain</h2>
+<p>Use a labelled set of real queries with known relevant passages. Compare before and after reranking on precision at k, mean reciprocal rank (MRR) or NDCG, and for RAG, on final answer quality. Look at specific queries that improved or got worse to understand what the reranker is doing.</p>
+<h2>Takeaway</h2>
+<p>Fast retrieval finds candidates; a reranker puts the best ones first. Retrieve 50 to 100 results with hybrid search, rerank them with a cross-encoder that reads query and passage together, and keep the top few. Pick a reranker on your own evaluation data, control latency by limiting candidates, and measure the improvement in ranking and answer quality.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

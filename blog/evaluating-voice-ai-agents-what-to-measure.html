@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evaluating voice AI agents: what to measure | Dhruv Boghani</title>
+<meta name="description" content="How to evaluate voice AI agents: speech recognition accuracy, latency and turn-taking, task success, simulated calls and production monitoring.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/evaluating-voice-ai-agents-what-to-measure.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Evaluating voice AI agents: what to measure">
+<meta property="og:description" content="How to evaluate voice AI agents: speech recognition accuracy, latency and turn-taking, task success, simulated calls and production monitoring.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/evaluating-voice-ai-agents-what-to-measure.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Evaluating voice AI agents: what to measure">
+<meta name="twitter:description" content="How to evaluate voice AI agents: speech recognition accuracy, latency and turn-taking, task success, simulated calls and production monitoring.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Evaluating voice AI agents: what to measure", "description": "How to evaluate voice AI agents: speech recognition accuracy, latency and turn-taking, task success, simulated calls and production monitoring.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-06", "dateModified": "2026-11-06", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/evaluating-voice-ai-agents-what-to-measure.html", "inLanguage": "en", "keywords": "voice-ai, evaluation, llm"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Evaluating voice AI agents: what to measure", "item": "https://www.dhruvboghani.com/blog/evaluating-voice-ai-agents-what-to-measure.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Evaluating voice AI agents: what to measure</h1><p class="m u meta">2026-11-06 / 3 min read / voice-ai, evaluation, llm</p><article class="post"><p>A voice agent can sound impressive in a demo and still fail real callers. It mishears a phone number, pauses too long, talks over the customer or confidently books the wrong slot. Unlike a chat interface, users cannot scroll back or edit what they said, so small errors hurt more.</p>
+<p>Evaluating a voice agent means looking at every layer: hearing, thinking, speaking and the conversation as a whole.</p>
+<h2>Layer 1: did it hear correctly?</h2>
+<p>Speech recognition errors flow into everything downstream.</p>
+<ul>
+<li><strong>Word error rate (WER)</strong> on recorded calls from your real users, with their accents, background noise and phone line quality.</li>
+<li><strong>Entity accuracy:</strong> for the details that matter, such as names, phone numbers, dates, amounts and product codes, measure exact-match accuracy. A low overall WER can still hide a wrong digit.</li>
+<li><strong>Language and code-mixing:</strong> test calls where people switch languages mid-sentence, which is common in India.</li>
+</ul>
+<h2>Layer 2: was it fast and natural?</h2>
+<p>Timing defines how a voice agent feels.</p>
+<ul>
+<li><strong>Response latency:</strong> the time from the end of the caller's speech to the start of the agent's audio. Track percentiles, not just averages.</li>
+<li><strong>Endpointing quality:</strong> how often the agent cuts in before the caller finished, or waits awkwardly after they stopped.</li>
+<li><strong>Interruption handling (barge-in):</strong> when the caller speaks over the agent, does it stop and listen?</li>
+<li><strong>Speech quality:</strong> pronunciation of names and numbers, pacing, and whether the voice suits the brand.</li>
+</ul>
+<h2>Layer 3: did it do the job?</h2>
+<ul>
+<li><strong>Task success rate:</strong> did the call reach the intended outcome, such as a booked appointment, a qualified lead or a resolved query?</li>
+<li><strong>Slot accuracy:</strong> were the captured details correct when checked against the recording or the source system?</li>
+<li><strong>Correct tool use:</strong> did it call the right CRM or calendar actions with the right arguments?</li>
+<li><strong>Escalation quality:</strong> did it hand off to a human when it should, with a useful summary?</li>
+</ul>
+<h2>Layer 4: was the conversation good?</h2>
+<ul>
+<li><strong>Turns to completion</strong> compared with a reasonable path.</li>
+<li><strong>Repetition and loops:</strong> asking the same question twice or getting stuck.</li>
+<li><strong>Policy adherence:</strong> required disclosures, no promises it cannot make, staying in scope.</li>
+<li><strong>Tone and sentiment:</strong> caller frustration signals such as raised voice, repeated "no" or asking for a human.</li>
+</ul>
+<h2>How to test before launch</h2>
+<p><strong>Scenario libraries.</strong> Write test cases from real call types: a caller who changes their mind, one who gives the date in an unusual format, one with a noisy background, one who asks something out of scope.</p>
+<p><strong>Simulated callers.</strong> Use a second model as the caller, following a persona and goal, and run conversations through the full pipeline, including speech synthesis and recognition, so audio errors are part of the test.</p>
+<pre><code>scenario: reschedule_with_interruption
+caller_persona: busy clinic patient, speaks quickly, interrupts once
+goal: move appointment from Friday 4pm to Monday morning
+expect:
+  - appointment.rescheduled_to: "Monday 10:00-12:00"
+  - confirms_new_time_aloud: true
+  - max_turns: 8</code></pre>
+<p><strong>Graded transcripts.</strong> Score results automatically where outcomes are checkable, and use human or model-based review for conversation quality. Check model-based judges against human reviews regularly.</p>
+<h2>Monitoring in production</h2>
+<ul>
+<li>Sample and review real calls every week, especially failed or escalated ones.</li>
+<li>Track latency percentiles, task success, escalation rate and caller hang-ups by call type.</li>
+<li>Turn every real failure into a new test scenario.</li>
+<li>Re-run the full scenario suite before changing the speech model, the language model, prompts or voice.</li>
+</ul>
+<p>Always handle recordings with consent and mask personal details in stored transcripts.</p>
+<h2>Takeaway</h2>
+<p>Evaluate voice agents layer by layer: recognition accuracy on real audio and key entities, latency and turn-taking, task success and correct actions, and overall conversation quality. Test with realistic scenarios and simulated callers before launch, monitor real calls after it, and feed every failure back into your test suite.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>
