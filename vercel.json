@@ -15,7 +15,8 @@
           "inquiry.json",
           "robots.txt",
           "sitemap.xml",
-          "rss.xml"
+          "rss.xml",
+          "BingSiteAuth.xml"
         ]
       }
     }
