@@ -69,10 +69,10 @@ TPL = SEO.sub('', rd('index.html'))
 def shell(title, desc, body, cur, depth=0):
     h = TPL
     if depth: h = re.sub(r'(href|src)="(?!https?:|mailto:|tel:|#|data:|/)', lambda m: m.group(1) + '="../', h)
-    h = re.sub(r'<title>.*?</title>', lambda m: '<title>%s</title>' % E(title), h, 1)
-    h = re.sub(r'(<meta name="description" content=").*?(">)', lambda m: m.group(1) + E(desc) + m.group(2), h, 1)
-    h = re.sub(r'(<main>\n).*?(\n<footer)', lambda m: m.group(1) + body + m.group(2), h, 1, flags=re.S)
-    h = re.sub(r'(<script src="[^"]*common\.js[^"]*"></script>).*?(</body>)', lambda m: m.group(1) + m.group(2), h, 1, flags=re.S)
+    h = re.sub(r'<title>.*?</title>', lambda m: '<title>%s</title>' % E(title), h, count=1)
+    h = re.sub(r'(<meta name="description" content=").*?(">)', lambda m: m.group(1) + E(desc) + m.group(2), h, count=1)
+    h = re.sub(r'(<main>\n).*?(\n<footer)', lambda m: m.group(1) + body + m.group(2), h, count=1, flags=re.S)
+    h = re.sub(r'(<script src="[^"]*common\.js[^"]*"></script>).*?(</body>)', lambda m: m.group(1) + m.group(2), h, count=1, flags=re.S)
     h = h.replace(' class="on" aria-current="page"', '')
     return h.replace('<a href="%s%s">' % ('../' if depth else '', cur), '<a href="%s%s" class="on" aria-current="page">' % ('../' if depth else '', cur), 1)
 
@@ -82,6 +82,7 @@ def seo_block(url, title, desc, typ, ld):
     tags = [
         '<link rel="canonical" href="%s">' % E(url),
         '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">',
+        '<meta name="author" content="%s">' % E(AUTHOR),
         '<link rel="icon" href="/favicon.ico" sizes="48x48">',
         '<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">',
         '<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">',
@@ -121,7 +122,11 @@ for p in posts:
     ld = {'@context': 'https://schema.org', '@graph': [
           {'@type': 'BlogPosting', 'headline': p['title'], 'description': p['desc'], 'image': OG_IMAGE,
            'datePublished': p['date'], 'dateModified': p['updated'], 'author': AUTHOR_REF, 'publisher': AUTHOR_REF,
-           'mainEntityOfPage': url, 'inLanguage': 'en', 'keywords': ', '.join(p['tags'])},
+           'mainEntityOfPage': url, 'inLanguage': 'en', 'keywords': ', '.join(p['tags']),
+           'articleSection': p['tags'][0] if p['tags'] else 'Technology',
+           'wordCount': len(p['html'].split()),
+           'timeRequired': 'PT%dM' % p['mins'],
+           'speakable': {'@type': 'SpeakableSpecification', 'cssSelector': ['.ph1', '.post > p:first-of-type', '.post > h2:first-of-type']}},
           crumbs(('Home', SITE_URL + '/'), ('Blog', SITE_URL + '/blog.html'), (p['title'], url))]}
     wr('blog/%s.html' % p['slug'], add_seo(h, seo_block(url, p['title'], p['desc'], 'article', ld)))
 # ---- blog index
@@ -142,17 +147,29 @@ if posts:
     cards = ''.join('<a href="blog/%s.html"><span class="m u" style="color:var(--mute)">%s</span><h3>%s</h3><p>%s</p><span class="m u go">Read &rarr;</span></a>' % (
         p['slug'], p['date'], E(p['title']), E(p['desc'])) for p in posts[:n])
     sec = '<section id="latest" class="rv"><div class="ttl"><h2>Latest <span>posts</span></h2></div><div class="pn"><div class="also" style="--c:%d">%s</div></div></section>' % (n, cards)
-    h = rd('index.html'); h = re.sub(r'<section id="latest".*?</section>', lambda m: sec, h, 1, flags=re.S); wr('index.html', h)
+    h = rd('index.html'); h = re.sub(r'<section id="latest".*?</section>', lambda m: sec, h, count=1, flags=re.S); wr('index.html', h)
 # ---- SEO on every root page
 PERSON = dict(AUTHOR_REF, **{
-          'jobTitle': 'Senior Full Stack, AI & Data Platform Engineer', 'image': OG_IMAGE,
+          'jobTitle': 'Senior Full Stack, AI & Data Platform Engineer',
+          'description': 'Senior Full Stack, AI & Data Platform Engineer with 5+ years experience building production AI/LLM architectures, streaming lakehouses (Kafka, Flink, Iceberg), and voice AI agents.',
+          'image': OG_IMAGE,
           'email': 'mailto:ramboghani726@gmail.com', 'telephone': '+91-84909-81272',
           'worksFor': {'@type': 'Organization', 'name': 'Novuscode Softtech Pvt. Ltd.'},
           'address': {'@type': 'PostalAddress', 'addressLocality': 'Ahmedabad', 'addressRegion': 'Gujarat', 'addressCountry': 'IN'},
           'sameAs': SAME_AS,
           'knowsAbout': ['Generative AI', 'Large language models', 'RAG', 'Voice AI agents', 'Multi-agent AI', 'Vector databases',
                          'Data engineering', 'Apache Kafka', 'Redpanda', 'Apache Flink', 'Apache Iceberg', 'Trino',
-                         'Django', 'FastAPI', 'Node.js', 'Angular', 'React', 'Full-stack development']})
+                         'Django', 'FastAPI', 'Node.js', 'Angular', 'React', 'Full-stack development',
+                         'Generative Engine Optimization', 'Answer Engine Optimization'],
+          'hasOfferCatalog': {
+              '@type': 'OfferCatalog',
+              'name': 'Engineering Services',
+              'itemListElement': [
+                  {'@type': 'Offer', 'itemOffered': {'@type': 'Service', 'name': 'Generative AI & LLM Engineering', 'description': 'Production RAG pipelines, fine-tuning, prompt engineering, and intelligent agent workflows.'}},
+                  {'@type': 'Offer', 'itemOffered': {'@type': 'Service', 'name': 'Real-Time Voice AI Agents', 'description': 'Low-latency WebRTC conversational voice bots, telephony integration, and 3D talking avatars.'}},
+                  {'@type': 'Offer', 'itemOffered': {'@type': 'Service', 'name': 'Streaming Data Lakehouses', 'description': 'Real-time data platforms with Kafka, Redpanda, Apache Flink, Apache Iceberg, and Trino.'}}
+              ]
+          }})
 WEBSITE = {'@type': 'WebSite', '@id': SITE_URL + '/#website', 'url': SITE_URL + '/', 'name': SITE_NAME,
            'inLanguage': 'en', 'publisher': {'@id': SITE_URL + '/#person'}}
 urls, serp = [], [(SITE_URL + '/blog/%s.html' % p['slug'], serp_title(p['title']), p['desc']) for p in posts]
@@ -174,7 +191,53 @@ for f in sorted(os.listdir(ROOT)):
 urls += [('%s/blog/%s.html' % (SITE_URL, p['slug']), p['updated']) for p in posts]
 wr('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
    ''.join('<url><loc>%s</loc>%s</url>\n' % (u, '<lastmod>%s</lastmod>' % m if m else '') for u, m in urls) + '</urlset>\n')
-wr('robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE_URL)
+robots_txt = (
+    "User-agent: *\n"
+    "Allow: /\n\n"
+    "# AI & Answer Engine Crawlers\n"
+    "User-agent: GPTBot\n"
+    "Allow: /\n\n"
+    "User-agent: ChatGPT-User\n"
+    "Allow: /\n\n"
+    "User-agent: ClaudeBot\n"
+    "Allow: /\n\n"
+    "User-agent: PerplexityBot\n"
+    "Allow: /\n\n"
+    "User-agent: Google-Extended\n"
+    "Allow: /\n\n"
+    "User-agent: Applebot-Extended\n"
+    "Allow: /\n\n"
+    "Sitemap: %s/sitemap.xml\n"
+) % SITE_URL
+wr('robots.txt', robots_txt)
+llms_txt = (
+    "# Dhruv Boghani - Senior Full Stack, AI & Data Platform Engineer\n\n"
+    "> Senior Full Stack, AI & Data Platform Engineer with 5+ years experience building production AI/LLM architectures, streaming lakehouses (Kafka, Flink, Iceberg), and voice AI agents.\n\n"
+    "## Identity & Verification\n"
+    "- Full Name: Dhruv Boghani\n"
+    "- Professional Role: Senior Full Stack, AI & Data Platform Engineer\n"
+    "- Location: Ahmedabad, Gujarat, India\n"
+    "- Canonical Website: https://www.dhruvboghani.com\n"
+    "- GitHub: https://github.com/dhruvboghani\n"
+    "- LinkedIn: https://www.linkedin.com/in/dhruv-boghani-21b8781b1\n"
+    "- Email: ramboghani726@gmail.com\n"
+    "- Phone: +91 84909 81272\n\n"
+    "## Core Technical Capabilities\n"
+    "- **Generative AI & LLMs:** RAG architectures, prompt compression, semantic caching, function calling, fine-tuning, multi-agent workflows, vector databases (pgvector, Pinecone).\n"
+    "- **Voice AI & Real-time Agents:** WebRTC audio streaming, LiveKit, low-latency STT/TTS pipelines, conversational barge-in, 3D interactive avatars.\n"
+    "- **Real-Time Data Platforms:** Apache Kafka, Redpanda, Apache Flink stateful processing, Apache Iceberg lakehouses, Trino distributed SQL, Nessie catalog, Change Data Capture (CDC).\n"
+    "- **Full Stack Development:** Python (FastAPI, Django), Node.js, Angular, React, Vue, PostgreSQL, Docker, GitHub Actions CI/CD.\n\n"
+    "## Interactive Demos & Case Studies\n"
+    "- [AI Sales Avatar](https://www.dhruvboghani.com/voice-avatar.html): 3D talking avatar capturing leads and booking meetings.\n"
+    "- [AI Admin Assistant](https://www.dhruvboghani.com/admin-assistant.html): Natural language SQL/API tool-calling assistant for enterprise backoffices.\n"
+    "- [Real-time Data Pipeline](https://www.dhruvboghani.com/pipeline.html): Redpanda, Flink, Iceberg, and Trino streaming lakehouse processing 10M+ daily events.\n"
+    "- [Invoice AI Intelligence](https://www.dhruvboghani.com/invoice-ai.html): Document AI parsing, matching, and anomaly detection.\n"
+    "- [Voice AI Calling Bot](https://www.dhruvboghani.com/voice-agent.html): Sub-500ms conversational phone agent for inbound/outbound calls.\n"
+    "- [Grahavani](https://grahavani.dhruvboghani.com/): Vedic astrology in 6 Indian languages.\n"
+    "- [Rankdesk](https://rankdesk.dhruvboghani.com/): Free SEO audit and toolkit.\n\n"
+    "## Engineering Blog Directory (%d Guides)\n"
+) % len(posts) + '\n'.join('- [%s](%s/blog/%s.html): %s (%s)' % (p['title'], SITE_URL, p['slug'], p['desc'], p['date']) for p in posts) + '\n'
+wr('llms.txt', llms_txt)
 wr('rss.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>%s Blog</title><link>%s/blog.html</link><description>AI, LLM and data engineering</description>\n' % (AUTHOR, SITE_URL) +
    ''.join('<item><title>%s</title><link>%s/blog/%s.html</link><guid>%s/blog/%s.html</guid><pubDate>%s</pubDate><description>%s</description></item>\n' % (
        E(p['title']), SITE_URL, p['slug'], SITE_URL, p['slug'], datetime.datetime.strptime(p['date'], '%Y-%m-%d').strftime('%a, %d %b %Y 00:00:00 +0000'), E(p['desc'])) for p in posts) + '</channel></rss>\n')
