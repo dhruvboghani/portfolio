@@ -113,7 +113,7 @@ LD = {}
 # ---- posts
 for p in posts:
     url = '%s/blog/%s.html' % (SITE_URL, p['slug'])
-    body = ('<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">%s</h1>'
+    body = ('<section class="rv in"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">%s</h1>'
             '<p class="m u meta">%s / %d min read / %s</p><article class="post">%s</article>'
             '<p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section>%s') % (
             E(p['title']), p['date'], p['mins'], E(', '.join(p['tags'])), p['html'], nxl('../blog.html', 'All posts'))
@@ -128,14 +128,14 @@ for p in posts:
 rows = ''.join('<a class="pr" href="blog/%s.html"><span class="m u">%s / %d min read</span><h2>%s</h2><p>%s</p>%s</a>' % (
     p['slug'], p['date'], p['mins'], E(p['title']), E(p['desc']), tagsh(p['tags'])) for p in posts) or '<p class="pb">First post coming soon.</p>'
 wr('blog.html', shell('AI, LLM & Data Engineering Blog | ' + AUTHOR, 'Practical guides on LLMs, RAG, voice AI agents, vector databases and real-time data pipelines (Kafka, Flink, Iceberg), from production work.',
-    '<section class="rv">' + head('Engineering', 'blog', 'Practical notes on AI, LLMs and data engineering. <a href="rss.xml"><b>RSS</b></a>') + '<div class="pn">' + rows + '</div><div style="height:50px"></div></section>', 'blog.html'))
+    '<section class="rv in">' + head('Engineering', 'blog', 'Practical notes on AI, LLMs and data engineering. <a href="rss.xml"><b>RSS</b></a>') + '<div class="pn">' + rows + '</div><div style="height:50px"></div></section>', 'blog.html'))
 # ---- FAQ
 faq = json.load(open(os.path.join(ROOT, 'content/faq.json'), encoding='utf-8'))
 items = ''.join('<details class="fq"><summary>%s</summary><p>%s</p></details>' % (E(q), E(a)) for q, a in faq)
 LD['faq.html'] = {'@type': 'FAQPage', 'mainEntity': [
     {'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in faq]}
 wr('faq.html', shell('FAQ: Hiring an AI & Data Engineer | ' + AUTHOR, 'Answers on hiring Dhruv Boghani for AI, LLM, RAG, voice agent, 3D avatar and data engineering projects: stack, process, timelines and remote work.',
-    '<section class="rv">' + head('Frequently asked', 'questions', 'Quick answers about how I work and what I build.') + '<div class="pn pb">' + items + '</div><div style="height:50px"></div></section>' + nxl('contact.html', 'Contact'), 'faq.html'))
+    '<section class="rv in">' + head('Frequently asked', 'questions', 'Quick answers about how I work and what I build.') + '<div class="pn pb">' + items + '</div><div style="height:50px"></div></section>' + nxl('contact.html', 'Contact'), 'faq.html'))
 # ---- home: latest posts
 if posts:
     n = min(3, len(posts))

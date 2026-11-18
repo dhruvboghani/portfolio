@@ -54,5 +54,9 @@ function prog(){bar.style.transform=`scaleX(${scrollY/Math.max(1,document.docume
 addEventListener('scroll',prog,{passive:true});addEventListener('resize',prog);prog();
 
 // reveal on scroll
-const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.08});
-$$('.rv').forEach(e=>io.observe(e));
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:0});
+$$('.rv').forEach(e=>{
+ const r=e.getBoundingClientRect();
+ if(r.top<innerHeight&&r.bottom>0)e.classList.add('in');
+ else io.observe(e);
+});
