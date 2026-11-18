@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data contracts for reliable data pipelines | Dhruv Boghani</title>
+<meta name="description" content="Why data contracts matter for modern data platforms: schema enforcement, semantic guarantees, change management, and automated CI/CD checks.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/data-contracts-between-producers-and-consumers.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Data contracts for reliable data pipelines">
+<meta property="og:description" content="Why data contracts matter for modern data platforms: schema enforcement, semantic guarantees, change management, and automated CI/CD checks.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/data-contracts-between-producers-and-consumers.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Data contracts for reliable data pipelines">
+<meta name="twitter:description" content="Why data contracts matter for modern data platforms: schema enforcement, semantic guarantees, change management, and automated CI/CD checks.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Data contracts for reliable data pipelines", "description": "Why data contracts matter for modern data platforms: schema enforcement, semantic guarantees, change management, and automated CI/CD checks.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/data-contracts-between-producers-and-consumers.html", "inLanguage": "en", "keywords": "data-engineering, architecture, data-quality"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Data contracts for reliable data pipelines", "item": "https://www.dhruvboghani.com/blog/data-contracts-between-producers-and-consumers.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Data contracts for reliable data pipelines</h1><p class="m u meta">2026-11-09 / 3 min read / data-engineering, architecture, data-quality</p><article class="post"><p>In modern organizations, upstream application developers frequently alter a database column name or drop a field during routine refactoring. Minutes later, downstream data lakehouse pipelines break, business dashboards go blank, and data engineers scramble to fix the outage.</p>
+<p>Data contracts solve this operational breakdown by establishing clear, enforceable agreements between upstream data producers and downstream consumers.</p>
+<h2>What is a data contract?</h2>
+<p>A data contract is an explicit specification governing the data emitted by a service or application. Rather than treating analytical data as an incidental side-effect of transactional databases, data contracts treat data as a formal product API.</p>
+<p>A comprehensive data contract includes:</p>
+<ul>
+<li><strong>Schema definitions:</strong> Required fields, data types, nullability, and allowed enumerated values.</li>
+<li><strong>Semantic guarantees:</strong> Business logic constraints, such as order totals never being negative and currency adhering to ISO-4217.</li>
+<li><strong>Service level agreements (SLAs):</strong> Update frequency, freshness targets, delivery latency, and retention periods.</li>
+<li><strong>Ownership metadata:</strong> The specific engineering team responsible for maintaining the contract and responding to incidents.</li>
+</ul>
+<h2>Why traditional schema registries are not enough</h2>
+<p>Many streaming systems use Confluent Schema Registry or AWS Glue with Avro or Protobuf schemas. While schema registries prevent catastrophic deserialization errors, they are insufficient for data reliability:</p>
+<ul>
+<li>Registries enforce syntactic types (such as <code>integer</code> vs <code>string</code>), but cannot validate that a <code>user_id</code> refers to an active account.</li>
+<li>They do not enforce business logic invariants or volume expectations.</li>
+<li>Upstream engineers often register a new schema version without realizing downstream SQL models and ML feature pipelines depend on deprecated fields.</li>
+</ul>
+<p>A data contract sits a level above the raw serialization format, linking technical schema to business guarantees.</p>
+<h2>Anatomy of a contract specification</h2>
+<p>Data contracts are typically authored in declarative YAML or JSON format and committed directly to the producer service repository:</p>
+<pre><code>version: 1
+dataset: orders_completed
+owner: checkout-platform-team
+sla:
+  freshness: 5m
+  availability: 99.9%
+schema:
+  - name: order_id
+    type: string
+    description: Primary identifier for completed orders
+    primary_key: true
+  - name: customer_id
+    type: string
+    nullable: false
+  - name: total_cents
+    type: integer
+    nullable: false
+    checks:
+      - min: 0
+  - name: status
+    type: string
+    enum: [pending, settled, refunded]</code></pre>
+<h2>Enforcing contracts in CI/CD and production</h2>
+<p>Having a written contract only helps if enforcement is automated at every step of the development lifecycle:</p>
+<ul>
+<li><strong>Pre-commit and pull request checks:</strong> When upstream developers modify an API endpoint or database migration, CI runs contract validation against existing consumer expectations to catch breaking schema changes before code merges.</li>
+<li><strong>Producer-side gateway validation:</strong> Emitting services run lightweight validations at event generation time, dropping invalid payloads to a dead-letter quarantine instead of broadcasting corrupted events.</li>
+<li><strong>Downstream consumer verification:</strong> Stream processing jobs (such as Flink or Spark) test incoming payloads against the contract schema and fail gracefully with alerting when semantic guarantees are violated.</li>
+</ul>
+<h2>Managing schema evolution safely</h2>
+<p>Inevitably, schemas must evolve as business requirements change. Data contracts establish formal rules for changes:</p>
+<ul>
+<li><strong>Non-breaking changes:</strong> Adding an optional field or extending an enum can proceed with standard automated verification.</li>
+<li><strong>Breaking changes:</strong> Renaming fields, removing columns, or changing field types require an explicit deprecation window, version increment, and sign-off from downstream consumers.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Relying on informal communication or brittle downstream defensive code guarantees recurring data pipeline incidents. Implement explicit data contracts stored as code, validate them automatically in producer CI/CD workflows, and treat analytical data with the same rigorous versioning and SLA guarantees as customer-facing APIs.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

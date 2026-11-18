@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PII masking strategies for AI pipelines | Dhruv Boghani</title>
+<meta name="description" content="How to detect and mask personally identifiable information in LLM and RAG pipelines using regex, NER models, token preservation, and audits.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/pii-masking-in-ai-pipelines.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PII masking strategies for AI pipelines">
+<meta property="og:description" content="How to detect and mask personally identifiable information in LLM and RAG pipelines using regex, NER models, token preservation, and audits.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/pii-masking-in-ai-pipelines.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PII masking strategies for AI pipelines">
+<meta name="twitter:description" content="How to detect and mask personally identifiable information in LLM and RAG pipelines using regex, NER models, token preservation, and audits.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "PII masking strategies for AI pipelines", "description": "How to detect and mask personally identifiable information in LLM and RAG pipelines using regex, NER models, token preservation, and audits.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-11", "dateModified": "2026-11-11", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/pii-masking-in-ai-pipelines.html", "inLanguage": "en", "keywords": "security, llm, data-privacy"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "PII masking strategies for AI pipelines", "item": "https://www.dhruvboghani.com/blog/pii-masking-in-ai-pipelines.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">PII masking strategies for AI pipelines</h1><p class="m u meta">2026-11-11 / 3 min read / security, llm, data-privacy</p><article class="post"><p>Sending raw customer data directly to third-party language models or storing unredacted customer transcripts in vector databases introduces serious compliance and security liabilities. A single leaked email address, credit card, or social security number can trigger GDPR or HIPAA violations.</p>
+<p>Implementing automated Personally Identifiable Information (PII) masking ensures that sensitive entities are scrubbed before prompt submission or vector embedding, without compromising model reasoning.</p>
+<h2>Common types of sensitive data</h2>
+<p>In enterprise AI applications, PII detection must address multiple distinct classes of sensitive information:</p>
+<ul>
+<li><strong>Structured patterns:</strong> Predictable identifiers with rigid formats, including credit card numbers, US social security numbers, phone numbers, and email addresses.</li>
+<li><strong>Contextual unstructured entities:</strong> Names, physical street addresses, medical conditions, and organization names that depend heavily on surrounding sentence context.</li>
+<li><strong>Proprietary business secrets:</strong> Internal project codenames, API keys, and financial metrics.</li>
+</ul>
+<h2>Layered detection: Regex and Named Entity Recognition</h2>
+<p>Relying on a single detection mechanism creates dangerous blind spots. Production systems use a hybrid multi-stage detection pipeline:</p>
+<ul>
+<li><strong>Stage 1: Fast pattern matching (Regex &amp; Checksums).</strong> Standard regular expressions coupled with algorithmic checksum validation (such as the Luhn algorithm for payment cards) catch structured identifiers in sub-millisecond time.</li>
+<li><strong>Stage 2: Named Entity Recognition (NER).</strong> Specialized small transformer models (such as Microsoft Presidio with spaCy or RoBERTa) parse sentence syntax to identify person names, locations, and organizations that lack fixed formats.</li>
+</ul>
+<pre><code>from presidio_analyzer import AnalyzerEngine
+from presidio_anonymizer import AnonymizerEngine
+
+analyzer = AnalyzerEngine()
+anonymizer = AnonymizerEngine()
+
+text = "Please refund order 4920 to Jane Doe at jane@example.com."
+results = analyzer.analyze(text=text, entities=["PERSON", "EMAIL_ADDRESS"], language="en")
+anonymized = anonymizer.anonymize(text=text, analyzer_results=results)
+
+print(anonymized.text)
+# Output: Please refund order 4920 to &lt;PERSON&gt; at &lt;EMAIL_ADDRESS&gt;.</code></pre>
+<h2>Replacement strategies: Redaction vs Pseudonymization</h2>
+<p>How PII is replaced dictates whether the downstream model can still understand and complete the user task:</p>
+<ul>
+<li><strong>Blanket redaction:</strong> Replacing detected text with generic placeholders like <code>&lt;REDACTED&gt;</code>. While safe, this removes relationship context when multiple entities interact in the same prompt.</li>
+<li><strong>Typed tagging:</strong> Replacing text with categorized labels like <code>&lt;PERSON_1&gt;</code> and <code>&lt;EMAIL_1&gt;</code>. This maintains conversational coherence while shielding the real value.</li>
+<li><strong>Reversible pseudonymization (Vaulting):</strong> Storing a mapping of masked values to synthetic tokens in an isolated, encrypted redis cache. The synthetic token is sent to the LLM, and the response is de-anonymized before being presented back to the authenticated user.</li>
+</ul>
+<h2>PII handling in RAG embeddings</h2>
+<p>Redaction must occur <strong>before</strong> text is sent to embedding models and inserted into vector databases. If unredacted documents are converted into vector representations:</p>
+<ul>
+<li>Sensitive text remains permanently stored in index metadata and chunk payloads.</li>
+<li>Vector inversion attacks can reconstruct partial text fragments from raw high-dimensional embeddings.</li>
+<li>Access control becomes complicated because access to the vector index implies access to the underlying sensitive data.</li>
+</ul>
+<p>Cleanse, normalize, and tokenize text in the ingestion pipeline before running chunking and embedding.</p>
+<h2>Auditing and verification</h2>
+<p>PII masking is not fire-and-forget. Model updates and unexpected user formatting can cause detection regressions. Maintain compliance with continuous safeguards:</p>
+<ul>
+<li><strong>Automated synthetic test suites:</strong> Run CI tests containing diverse edge-case PII permutations to detect regression drops in recall.</li>
+<li><strong>Outbound response scanning:</strong> Inspect generated model responses for accidental echoes of sensitive tokens before returning output to users.</li>
+<li><strong>Audit logs without leaks:</strong> Record detection events, timestamps, and entity types, but never write the actual raw sensitive values to application logs.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Protecting user privacy in AI pipelines requires defense in depth. Combine fast regex pattern matching with machine-learning NER models, adopt reversible pseudonymization to preserve LLM reasoning fidelity, scrub data before vector embedding, and audit both incoming prompts and outgoing generations.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

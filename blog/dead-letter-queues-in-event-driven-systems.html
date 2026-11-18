@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dead letter queues in event-driven systems | Dhruv Boghani</title>
+<meta name="description" content="How to design resilient dead letter queues for Kafka and event systems: retry backoff, poison pill handling, replay workflows, and monitoring.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/dead-letter-queues-in-event-driven-systems.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dead letter queues in event-driven systems">
+<meta property="og:description" content="How to design resilient dead letter queues for Kafka and event systems: retry backoff, poison pill handling, replay workflows, and monitoring.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/dead-letter-queues-in-event-driven-systems.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dead letter queues in event-driven systems">
+<meta name="twitter:description" content="How to design resilient dead letter queues for Kafka and event systems: retry backoff, poison pill handling, replay workflows, and monitoring.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Dead letter queues in event-driven systems", "description": "How to design resilient dead letter queues for Kafka and event systems: retry backoff, poison pill handling, replay workflows, and monitoring.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-12", "dateModified": "2026-11-12", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/dead-letter-queues-in-event-driven-systems.html", "inLanguage": "en", "keywords": "event-driven, kafka, streaming"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Dead letter queues in event-driven systems", "item": "https://www.dhruvboghani.com/blog/dead-letter-queues-in-event-driven-systems.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Dead letter queues in event-driven systems</h1><p class="m u meta">2026-11-12 / 3 min read / event-driven, kafka, streaming</p><article class="post"><p>In event-driven architectures, unexpected message payloads inevitably arrive: corrupted JSON, missing foreign keys, or payloads that trigger unhandled runtime exceptions. If a consumer crashes on a single malformed event, it gets stuck in an infinite crash loop, blocking subsequent valid messages in the partition.</p>
+<p>A Dead Letter Queue (DLQ) is a dedicated quarantine channel that intercepts failed messages, allowing real-time processing to continue while preserving failed events for triage and replay.</p>
+<h2>Anatomy of a message failure</h2>
+<p>When a consumer encounters an error, the failure usually falls into one of two categories:</p>
+<ul>
+<li><strong>Transient errors:</strong> Temporary database connection timeouts, network blips, or downstream rate limits. These resolve automatically when retried after a brief delay.</li>
+<li><strong>Poison pills:</strong> Malformed schemas, corrupted data bytes, or business logic violations that will permanently fail regardless of how many times they are re-executed.</li>
+</ul>
+<p>Treating poison pills like transient errors results in blocked partitions and consumer lag spikes. Treating transient errors like poison pills risks unnecessary routing to DLQs and out-of-order processing.</p>
+<h2>The retry-topic pattern</h2>
+<p>In streaming platforms like Apache Kafka or Redpanda, pausing a single partition for exponential backoff is non-trivial. The standard resilient architecture uses staged retry topics before routing to the final DLQ:</p>
+<ul>
+<li><strong>Main topic:</strong> Receives incoming events from producers. If processing fails, the message is routed to <code>orders-retry-1</code> with metadata headers.</li>
+<li><strong>Staged retry topics:</strong> Dedicated topics (e.g., <code>orders-retry-10s</code>, <code>orders-retry-5m</code>) where consumers pause between retries. This decouples retry delays from main topic throughput.</li>
+<li><strong>Dead letter queue:</strong> If a message exceeds maximum retries (e.g., 3 attempts), it is forwarded to <code>orders-dlq</code> along with complete diagnostic failure metadata.</li>
+</ul>
+<pre><code>def handle_event(event, record):
+    try:
+        process_order(event)
+    except TransientException as e:
+        if record.retry_count &lt; 3:
+            publish_to_retry_topic(record, delay=2 ** record.retry_count)
+        else:
+            publish_to_dlq(record, reason=str(e), fatal=False)
+    except PermanentSchemaError as e:
+        publish_to_dlq(record, reason=str(e), fatal=True)</code></pre>
+<h2>Essential DLQ message headers</h2>
+<p>A raw message sitting in a DLQ is useless without diagnostic context. When routing an event to a dead letter topic, attach comprehensive metadata in message headers:</p>
+<ul>
+<li><strong>Origin details:</strong> Source topic, source partition, and original message offset.</li>
+<li><strong>Error classification:</strong> Exception class, stack trace, and timestamp of the final failure.</li>
+<li><strong>Attempt count:</strong> Number of failed attempts prior to DLQ diversion.</li>
+<li><strong>Service identity:</strong> The specific consumer group and application version that rejected the message.</li>
+</ul>
+<p>This allows engineers to diagnose bugs instantly without needing to cross-reference multiple distributed log files.</p>
+<h2>Safe message replay and remediation</h2>
+<p>A dead letter queue is not a black hole; it is a temporary holding bay. Operational success depends on having automated recovery workflows:</p>
+<ul>
+<li><strong>Fixing consumer bugs:</strong> When an unhandled edge case is identified, deploy updated consumer code, then trigger an administrative batch job that reads from the DLQ and republishes to the main topic.</li>
+<li><strong>Data patching:</strong> If upstream emitted invalid payloads, write a transformation script to sanitize DLQ records before reinjecting them into the pipeline.</li>
+<li><strong>TTL and archival:</strong> Messages stored in DLQ topics should have extended retention policies (such as 14 to 30 days) and be mirrored to cold object storage (S3 or GCS) for compliance audits.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Unmanaged poison pill messages can halt an entire streaming pipeline. Build multi-stage retry queues to separate transient glitches from permanent schema bugs, attach detailed error metadata to dead letter records, and establish clear operational procedures to inspect, remediate, and replay failed events.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

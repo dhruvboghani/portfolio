@@ -32,3 +32,14 @@ Feature stores explained for ML teams
 Designing APIs for AI agents
 Evaluating voice AI agents
 Reranking models for better search results
+Cost of running LLMs in production: a practical breakdown
+Data contracts between producers and consumers
+Vector index types: HNSW vs IVF
+PII masking in AI pipelines
+Dead letter queues in event-driven systems
+Context window management in LLM apps
+Partitioning strategies in Apache Iceberg
+WebRTC for real-time voice AI agents
+Backpressure handling in streaming pipelines
+Multi-agent orchestration patterns
+Synthetic data generation for LLM evaluation

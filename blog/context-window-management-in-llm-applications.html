@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Context window management in LLM apps | Dhruv Boghani</title>
+<meta name="description" content="Techniques to fit large inputs into LLM context windows: summarization, rolling buffers, prompt compression, and smart passage selection.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/context-window-management-in-llm-applications.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Context window management in LLM apps">
+<meta property="og:description" content="Techniques to fit large inputs into LLM context windows: summarization, rolling buffers, prompt compression, and smart passage selection.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/context-window-management-in-llm-applications.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Context window management in LLM apps">
+<meta name="twitter:description" content="Techniques to fit large inputs into LLM context windows: summarization, rolling buffers, prompt compression, and smart passage selection.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Context window management in LLM apps", "description": "Techniques to fit large inputs into LLM context windows: summarization, rolling buffers, prompt compression, and smart passage selection.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-13", "dateModified": "2026-11-13", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/context-window-management-in-llm-applications.html", "inLanguage": "en", "keywords": "llm, prompt-engineering, rag"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Context window management in LLM apps", "item": "https://www.dhruvboghani.com/blog/context-window-management-in-llm-applications.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Context window management in LLM apps</h1><p class="m u meta">2026-11-13 / 3 min read / llm, prompt-engineering, rag</p><article class="post"><p>Modern frontier models offer massive context windows reaching hundreds of thousands or even millions of tokens. However, stuffing entire documents and infinite conversation histories into a prompt degrades reasoning, inflates latency, and rapidly exhausts API budgets.</p>
+<p>The phenomenon known as "lost in the middle" demonstrates that models recall information at the extreme beginning and end of long contexts far better than facts buried in the middle. Efficient context window management is essential for reliable AI performance.</p>
+<h2>The true costs of large context windows</h2>
+<p>Relying on brute-force maximum context windows creates three severe production bottlenecks:</p>
+<ul>
+<li><strong>Time-to-first-token latency:</strong> Processing massive prompts requires quadratic or heavy linear attention computation, delaying the initial stream response for end users.</li>
+<li><strong>Attention dilution:</strong> As irrelevant conversational fluff increases, the model's ability to extract nuanced constraints and instructions deteriorates.</li>
+<li><strong>Prohibitive recurring costs:</strong> A 50,000-token prompt billed on every turn of a 20-turn chat session burns 1,000,000 tokens for a single user interaction.</li>
+</ul>
+<h2>Rolling buffer with progressive summarization</h2>
+<p>In long-running chat applications, full conversation history quickly outgrows safe token budgets. The standard architectural solution is a hybrid rolling memory buffer:</p>
+<ul>
+<li>Keep the last $K$ message turns (typically 4 to 6 messages) completely verbatim to preserve immediate conversational context and tone.</li>
+<li>Compress older turns into an evolving structured summary maintained by a small, fast background model.</li>
+<li>Store the summary as a persistent system note injected into subsequent prompt turns.</li>
+</ul>
+<pre><code>def assemble_prompt(system_prompt, summary, recent_messages):
+    messages = [{"role": "system", "content": system_prompt}]
+    if summary:
+        messages.append({
+            "role": "system", 
+            "content": f"Prior conversation summary:\n{summary}"
+        })
+    messages.extend(recent_messages)
+    return messages</code></pre>
+<h2>Selective passage pruning in RAG</h2>
+<p>In Retrieval-Augmented Generation, search pipelines often retrieve 10 to 20 candidate chunks. Passing all 20 chunks into the generation prompt wastes space and introduces contradictory information:</p>
+<ul>
+<li><strong>Similarity threshold filtering:</strong> Discard retrieved passages whose relevance score drops sharply below the top match, even if the target $k$ parameter requested more chunks.</li>
+<li><strong>Sentence-level extraction:</strong> Use a fast cross-encoder or extractive model to extract only the specific two or three sentences answering the query from each retrieved 500-token passage.</li>
+<li><strong>Deduplication:</strong> Remove overlapping semantic chunks to prevent repetitive context.</li>
+</ul>
+<h2>Token-aware prompt compression</h2>
+<p>Specialized prompt compression algorithms (such as LLMLingua) analyze token perplexity with small, local language models (like LLaMA-3-8B). Tokens that contribute minimal entropy or meaning are dynamically stripped:</p>
+<ul>
+<li>Removes boilerplate syntactic words without altering core semantic intent.</li>
+<li>Can compress technical documentation and prompt instructions by 30% to 50% with negligible loss in downstream task accuracy.</li>
+<li>Runs locally in milliseconds, lowering cloud LLM token consumption significantly.</li>
+</ul>
+<h2>Strategic context ordering</h2>
+<p>Because transformer attention exhibits primacy and recency biases, the positioning of components inside the prompt matters as much as their length:</p>
+<ul>
+<li><strong>Beginning of prompt:</strong> Core identity, safety boundaries, and global system rules.</li>
+<li><strong>Middle of prompt:</strong> Retrieved reference context, background documents, and few-shot examples.</li>
+<li><strong>End of prompt:</strong> The immediate user query, precise formatting instructions, and final trigger markers.</li>
+</ul>
+<p>Placing the user's explicit question and structural constraints at the very bottom ensures the model attends to them directly during generation.</p>
+<h2>Takeaway</h2>
+<p>Large context windows are an architectural tool, not an excuse to abandon context hygiene. Maintain rolling summaries for chat history, prune and extract retrieved passages before prompt injection, compress low-entropy tokens, and place critical instructions at the end of the prompt for peak accuracy and minimal cost.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WebRTC for real-time voice AI agents | Dhruv Boghani</title>
+<meta name="description" content="Why WebRTC is replacing WebSockets for interactive voice AI agents: sub-500ms latency, UDP audio streaming, jitter buffers, and interruption.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/webrtc-for-real-time-voice-ai-agents.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebRTC for real-time voice AI agents">
+<meta property="og:description" content="Why WebRTC is replacing WebSockets for interactive voice AI agents: sub-500ms latency, UDP audio streaming, jitter buffers, and interruption.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/webrtc-for-real-time-voice-ai-agents.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WebRTC for real-time voice AI agents">
+<meta name="twitter:description" content="Why WebRTC is replacing WebSockets for interactive voice AI agents: sub-500ms latency, UDP audio streaming, jitter buffers, and interruption.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "WebRTC for real-time voice AI agents", "description": "Why WebRTC is replacing WebSockets for interactive voice AI agents: sub-500ms latency, UDP audio streaming, jitter buffers, and interruption.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-15", "dateModified": "2026-11-15", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/webrtc-for-real-time-voice-ai-agents.html", "inLanguage": "en", "keywords": "voice-ai, webrtc, real-time"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "WebRTC for real-time voice AI agents", "item": "https://www.dhruvboghani.com/blog/webrtc-for-real-time-voice-ai-agents.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">WebRTC for real-time voice AI agents</h1><p class="m u meta">2026-11-15 / 3 min read / voice-ai, webrtc, real-time</p><article class="post"><p>Building voice AI agents that feel natural and human requires total round-trip latency to stay under 500 milliseconds. When response delays exceed 800 milliseconds, users perceive the interaction as awkward and start talking over the bot.</p>
+<p>While early voice bots relied on audio streaming over TCP-based WebSockets, production-grade conversational agents are standardizing on WebRTC to achieve ultra-low latency, robust packet-loss resilience, and instant interruption handling.</p>
+<h2>The WebSocket bottleneck: TCP Head-of-Line blocking</h2>
+<p>WebSockets run over TCP, which guarantees in-order, lossless packet delivery. When a single audio packet drops over a mobile network:</p>
+<ul>
+<li>TCP pauses all subsequent audio packets until the missing packet is retransmitted and acknowledged.</li>
+<li>This creates <strong>Head-of-Line (HoL) blocking</strong>, causing sudden audio stuttering followed by unnatural bursts of speed.</li>
+<li>In voice conversations, a dropped 20-millisecond audio frame is completely irrelevant a second later; retransmitting stale audio hurts conversational fluidity.</li>
+</ul>
+<p>WebRTC uses UDP (via SRTP) where dropped frames are discarded gracefully rather than stalling the live audio stream.</p>
+<h2>Why WebRTC fits voice AI</h2>
+<p>WebRTC was engineered specifically for real-time voice and video communication across browsers and mobile clients:</p>
+<ul>
+<li><strong>Built-in Adaptive Jitter Buffers:</strong> WebRTC dynamically smooths out packet arrival timing variations without adding fixed artificial delays.</li>
+<li><strong>Acoustic Echo Cancellation (AEC) and Noise Suppression:</strong> WebRTC provides native hardware and browser audio processing, stripping speaker playback echoes before the user's microphone stream reaches your speech-to-text model.</li>
+<li><strong>Bi-directional data channels:</strong> WebRTC allows multiplexing binary Opus audio alongside an out-of-band JSON data channel for telemetry, transcript updates, and function-call events.</li>
+</ul>
+<h2>Architecture of a WebRTC voice pipeline</h2>
+<p>An enterprise WebRTC voice agent pipeline coordinates four specialized components:</p>
+<pre><code>[User Browser / Phone]
+        │  WebRTC (SRTP / UDP Audio)
+        ▼
+[Media Server / Gateway] (LiveKit / Pion)
+        │  Raw PCM Audio Frames
+        ▼
+[Speech-to-Text] (Whisper / Deepgram Streaming STT)
+        │  Streaming Token Transcripts
+        ▼
+[LLM Orchestrator] (FastAPI / vLLM / Claude / GPT)
+        │  Streaming Sentence Chunks
+        ▼
+[Text-to-Speech] (Cartesia / ElevenLabs / Kokoro)
+        │  Synthesized Audio Packets
+        ▼
+[Media Server] ──► WebRTC Return Stream ──► [User Speaker]</code></pre>
+<h2>Handling instant user interruptions (Barge-in)</h2>
+<p>The most critical test of a conversational voice agent is how it responds when a user interrupts midway through the assistant's response:</p>
+<ul>
+<li>When the user speaks, local Voice Activity Detection (VAD) triggers within 100 milliseconds.</li>
+<li>An immediate cancellation signal is sent over the WebRTC data channel to the backend orchestrator.</li>
+<li>The backend aborts in-flight LLM generation, flushes pending TTS audio queues, and signals the media server to clear the playback buffer.</li>
+</ul>
+<p>Because WebRTC decouples media control from audio transport, playback stops instantaneously, mirroring human conversation.</p>
+<h2>Scaling WebRTC infrastructure</h2>
+<p>Unlike stateless HTTP servers, WebRTC connections maintain persistent peer-to-peer or client-to-server media sessions. Production deployments require:</p>
+<ul>
+<li><strong>Selective Forwarding Units (SFUs):</strong> Open-source media engines like LiveKit or Pion written in Go/Rust that handle thousands of concurrent audio tracks efficiently.</li>
+<li><strong>STUN/TURN infrastructure:</strong> Relays to navigate corporate firewalls and symmetric NATs, ensuring connections establish reliably across cellular and enterprise networks.</li>
+<li><strong>Edge deployment:</strong> Co-locating media gateways close to users to shave 40 to 80 milliseconds of geographic round-trip flight time.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Sub-500ms conversational latency requires ditching TCP-based audio streaming. Adopt WebRTC for UDP transport, built-in echo cancellation, and responsive barge-in handling, while deploying specialized media gateways to bridge real-time audio with streaming STT, LLM, and TTS pipelines.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

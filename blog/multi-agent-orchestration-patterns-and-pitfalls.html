@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Multi-agent orchestration patterns | Dhruv Boghani</title>
+<meta name="description" content="Core architectural patterns for multi-agent systems: supervisor routing, peer networks, shared state, error loops, and practical debugging.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/multi-agent-orchestration-patterns-and-pitfalls.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Multi-agent orchestration patterns">
+<meta property="og:description" content="Core architectural patterns for multi-agent systems: supervisor routing, peer networks, shared state, error loops, and practical debugging.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/multi-agent-orchestration-patterns-and-pitfalls.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Multi-agent orchestration patterns">
+<meta name="twitter:description" content="Core architectural patterns for multi-agent systems: supervisor routing, peer networks, shared state, error loops, and practical debugging.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Multi-agent orchestration patterns", "description": "Core architectural patterns for multi-agent systems: supervisor routing, peer networks, shared state, error loops, and practical debugging.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-17", "dateModified": "2026-11-17", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/multi-agent-orchestration-patterns-and-pitfalls.html", "inLanguage": "en", "keywords": "ai-agents, multi-agent, architecture"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Multi-agent orchestration patterns", "item": "https://www.dhruvboghani.com/blog/multi-agent-orchestration-patterns-and-pitfalls.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Multi-agent orchestration patterns</h1><p class="m u meta">2026-11-17 / 3 min read / ai-agents, multi-agent, architecture</p><article class="post"><p>Single-agent AI systems struggle when asked to tackle multifaceted problems requiring disparate tools, contradictory system instructions, and extensive step-by-step reasoning. Asking one model instance to simultaneously search documentation, write Python code, format HTML, and critique security parameters frequently results in hallucinated steps and context confusion.</p>
+<p>Multi-agent architectures decompose complex challenges into specialized sub-agents, each equipped with dedicated system prompts, constrained tools, and explicit communication protocols.</p>
+<h2>Core orchestration patterns</h2>
+<p>Production multi-agent frameworks generally implement one of three topological patterns:</p>
+<h3>1. Supervisor-Worker (Hierarchical)</h3>
+<p>A central supervisor agent receives the overall user objective, formulates a execution plan, delegates individual sub-tasks to specialized worker agents, and aggregates results. Workers report exclusively to the supervisor and never communicate directly with each other.</p>
+<p>This pattern is predictable, easy to trace, and prevents runaway conversation cycles.</p>
+<h3>2. Sequential Pipeline (Assembly Line)</h3>
+<p>Agents pass structured state down a linear chain where each agent performs a specific transformation:</p>
+<ul>
+<li><strong>Researcher agent:</strong> Gathers raw context from APIs and vector stores.</li>
+<li><strong>Author agent:</strong> Synthesizes draft prose from researcher notes.</li>
+<li><strong>Reviewer agent:</strong> Evaluates the draft against strict editorial and safety guidelines, returning feedback if standards are not met.</li>
+</ul>
+<p>Pipelines are deterministic and ideal for document generation and ETL workflows.</p>
+<h3>3. Collaborative Peer Network (Mesh)</h3>
+<p>Agents communicate dynamically through a shared message board or pub/sub bus. Any agent can invoke peers or request peer feedback based on evolving task requirements. While highly flexible, peer meshes are prone to non-deterministic divergence and require hard step limits.</p>
+<pre><code># Supervisor routing pattern
+class SupervisorAgent:
+    def route_task(self, state: TaskState) -&gt; str:
+        decision = self.llm.predict_structured(
+            system="Analyze the state and select the next worker.",
+            options=["coder", "researcher", "verifier", "FINISH"],
+            input=state.summary()
+        )
+        return decision.worker</code></pre>
+<h2>Shared state management</h2>
+<p>The backbone of any multi-agent system is its state graph. Agents should not pass massive unstructured text transcripts back and forth; instead, they operate on a structured, versioned state schema:</p>
+<ul>
+<li><strong>Immutable message history:</strong> Appending structured messages with author role attributes ensures clear provenance.</li>
+<li><strong>Explicit working artifacts:</strong> Storing generated code, extracted tables, and research summaries in dedicated typed fields rather than raw conversational chat turns.</li>
+<li><strong>Checkpointing and replay:</strong> Persisting state transitions to a database after each agent turn enables human-in-the-loop review, rollbacks, and recovery from network timeouts.</li>
+</ul>
+<h2>Common pitfalls in multi-agent deployments</h2>
+<p>While powerful, multi-agent systems introduce complex distributed systems challenges:</p>
+<ul>
+<li><strong>Infinite conversational loops:</strong> Agent A asks Agent B for clarification; Agent B misinterprets and asks Agent A to rephrase, generating endless recursive token bills. Always enforce maximum hop limits (e.g., maximum 10 turns per execution graph).</li>
+<li><strong>Context degradation:</strong> Passing the entire history of all agent messages to every worker bloats prompts and confuses models. Pass only task-relevant slices of the state to each specialized agent.</li>
+<li><strong>Tool permission bleed:</strong> Giving all agents broad file system or database write access risks unintended system side-effects. Restrict read-only agents strictly to retrieval tools, confining write permissions to sandboxed verification steps.</li>
+</ul>
+<h2>Observability and debugging</h2>
+<p>Debugging a multi-agent system without distributed tracing is nearly impossible. Integrate open-telemetry instrumentation (such as Langfuse or Arize Phoenix) to monitor:</p>
+<ul>
+<li>Token consumption and wall-clock latency per individual agent.</li>
+<li>The directed acyclic graph (DAG) of agent invocations per run.</li>
+<li>Exact tool inputs and outputs across every intermediate transition.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Multi-agent systems excel by dividing complex cognitive tasks among specialized, narrow models. Standardize on supervisor-worker or pipeline topologies, pass clean typed state rather than unbounded transcripts, enforce strict turn boundaries, and instrument every agent turn with distributed tracing.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

@@ -1,5 +1,11 @@
 # One topic per line. The next line is used each day. Add more any time.
-Cost of running LLMs in production: a practical breakdown
-Data contracts between producers and consumers
-Vector index types: HNSW vs IVF
-PII masking in AI pipelines
+DSPy and programmatic prompt optimization
+Schema-aware chunking for SQL and tabular data
+Handling cold starts in serverless LLM deployments
+Real-time anomaly detection with Apache Flink and Kafka
+GraphRAG: knowledge graphs meet vector retrieval
+Distributed model inference with vLLM and Ray
+Dynamic batching for high-throughput LLM serving
+Delta Lake vs Apache Iceberg: choosing a table format
+Voice cloning and neural audio codec architectures
+Continuous evaluation of RAG systems in production

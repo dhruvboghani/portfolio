@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Synthetic data generation for LLM evaluation | Dhruv Boghani</title>
+<meta name="description" content="How to create high-quality synthetic datasets to benchmark and fine-tune LLMs: seed curation, perturbation, quality filtering, and LLM-as-a-judge.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Synthetic data generation for LLM evaluation">
+<meta property="og:description" content="How to create high-quality synthetic datasets to benchmark and fine-tune LLMs: seed curation, perturbation, quality filtering, and LLM-as-a-judge.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Synthetic data generation for LLM evaluation">
+<meta name="twitter:description" content="How to create high-quality synthetic datasets to benchmark and fine-tune LLMs: seed curation, perturbation, quality filtering, and LLM-as-a-judge.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Synthetic data generation for LLM evaluation", "description": "How to create high-quality synthetic datasets to benchmark and fine-tune LLMs: seed curation, perturbation, quality filtering, and LLM-as-a-judge.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-18", "dateModified": "2026-11-18", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html", "inLanguage": "en", "keywords": "evaluation, synthetic-data, llm"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Synthetic data generation for LLM evaluation", "item": "https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Synthetic data generation for LLM evaluation</h1><p class="m u meta">2026-11-18 / 3 min read / evaluation, synthetic-data, llm</p><article class="post"><p>Evaluating generative AI systems requires comprehensive test suites with hundreds of realistic test cases. However, manually authoring diverse test prompts, edge cases, and ground-truth references is painfully slow, and logging real customer interactions introduces privacy and compliance barriers.</p>
+<p>Synthetic data generation solves this evaluation bottleneck by using high-capability models to programmatically generate diverse, production-representative benchmarks and fine-tuning datasets at scale.</p>
+<h2>The evolution of synthetic dataset pipelines</h2>
+<p>Early synthetic data generation relied on naive prompt expansion: asking an LLM to "write 50 customer questions about billing." This approach produces repetitive, shallow prompts that fail to stress-test production edge cases.</p>
+<p>Modern synthetic generation pipelines (such as Evol-Instruct and Ragas) follow a rigorous multi-stage synthesis loop:</p>
+<ul>
+<li><strong>Seed data curation:</strong> Starting with a small, curated set of genuine high-quality production examples (50 to 100 seeds).</li>
+<li><strong>Multi-dimensional evolution:</strong> Programmatically applying transformations to deepen complexity, introduce adversarial noise, or shift domain constraints.</li>
+<li><strong>Automated quality gating:</strong> Filtering out unparseable, duplicate, or trivial generations using heuristics and judge models before human audit.</li>
+</ul>
+<h2>Techniques for dataset diversification</h2>
+<p>To build a benchmark that exposes real production vulnerabilities, synthetic generation must introduce systematic variance:</p>
+<ul>
+<li><strong>Constraint addition:</strong> Modifying a simple request ("Summarize this report") by adding strict operational constraints ("Summarize in under 150 words using bullet points, while omitting financial metrics").</li>
+<li><strong>Persona simulation:</strong> Prompting generator models to adopt specific user personas (such as frustrated non-technical users, adversarial prompt injectors, or legal compliance auditors).</li>
+<li><strong>Adversarial perturbation:</strong> Introducing typos, broken grammar, ambiguous entity references, and colloquial slang to mirror real-world user typing behavior.</li>
+<li><strong>RAG context synthesis:</strong> Generating plausible question-context-answer triplets directly from internal documentation chunks, including both answerable and explicitly unanswerable test queries.</li>
+</ul>
+<pre><code>def evolve_instruction(seed_prompt: str, evolution_type: str) -&gt; str:
+    system_prompt = (
+        "You are an AI data curator. Rewrite the following instruction "
+        "to make it substantially more complex and challenging, "
+        "adding real-world edge cases while keeping the core task intact."
+    )
+    return generator_llm.generate(
+        system=system_prompt,
+        user=f"Evolution: {evolution_type}\nSeed: {seed_prompt}"
+    )</code></pre>
+<h2>Quality filtering and validation</h2>
+<p>Unchecked synthetic generation suffers from model collapse and self-reinforcing hallucinations. Enforce strict automated filters before accepting any synthetic record:</p>
+<ul>
+<li><strong>Semantic deduplication:</strong> Embed generated queries and discard any generation with cosine similarity above 0.88 against existing dataset entries.</li>
+<li><strong>Format and length heuristics:</strong> Reject records that fail JSON schema validation, exceed token boundaries, or contain known model refusal phrases ("As an AI language model...").</li>
+<li><strong>LLM-as-a-Judge verification:</strong> Pass generated question-answer pairs to an independent frontier model with a rubric to verify that the ground truth directly answers the question without hallucination.</li>
+</ul>
+<h2>Applications in fine-tuning and evaluation</h2>
+<p>Once verified, synthetic datasets unlock high-impact engineering workflows:</p>
+<ul>
+<li><strong>Pre-deployment regression testing:</strong> Running CI/CD evaluation suites on pull requests to ensure new system prompts or model versions do not degrade accuracy on golden synthetic test suites.</li>
+<li><strong>Specialized task distillation:</strong> Fine-tuning compact, cheap 8B models on tens of thousands of high-quality synthetic reasoning chains generated by frontier models.</li>
+<li><strong>Negative testing:</strong> Validating that guardrail classifiers accurately reject jailbreaks, toxic inputs, and prompt injection attempts.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>High-quality synthetic data bridges the gap between limited human annotations and the immense volume required for rigorous AI evaluation. Curate strong seed examples, evolve complexity systematically across diverse personas, apply strict automated quality filters, and leverage synthetic benchmarks to continuously test and refine production models.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

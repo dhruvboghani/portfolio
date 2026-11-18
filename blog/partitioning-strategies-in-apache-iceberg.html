@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Partitioning strategies in Apache Iceberg | Dhruv Boghani</title>
+<meta name="description" content="How Apache Iceberg hidden partitioning works: partition transforms, partition evolution, avoiding small files, and optimizing query pruning.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/partitioning-strategies-in-apache-iceberg.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Partitioning strategies in Apache Iceberg">
+<meta property="og:description" content="How Apache Iceberg hidden partitioning works: partition transforms, partition evolution, avoiding small files, and optimizing query pruning.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/partitioning-strategies-in-apache-iceberg.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Partitioning strategies in Apache Iceberg">
+<meta name="twitter:description" content="How Apache Iceberg hidden partitioning works: partition transforms, partition evolution, avoiding small files, and optimizing query pruning.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Partitioning strategies in Apache Iceberg", "description": "How Apache Iceberg hidden partitioning works: partition transforms, partition evolution, avoiding small files, and optimizing query pruning.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-14", "dateModified": "2026-11-14", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/partitioning-strategies-in-apache-iceberg.html", "inLanguage": "en", "keywords": "apache-iceberg, data-lakehouse, data-engineering"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Partitioning strategies in Apache Iceberg", "item": "https://www.dhruvboghani.com/blog/partitioning-strategies-in-apache-iceberg.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Partitioning strategies in Apache Iceberg</h1><p class="m u meta">2026-11-14 / 3 min read / apache-iceberg, data-lakehouse, data-engineering</p><article class="post"><p>In traditional Hive-style data warehouses, partitioning is both explicit and fragile. Tables are physically structured into nested directory trees (such as <code>/year=2026/month=11/day=14/</code>), forcing queries to include explicit partition columns to avoid full table scans. If a user queries by timestamp instead of the synthetic date string, pruning fails.</p>
+<p>Apache Iceberg eliminates this operational headache through hidden partitioning. Iceberg separates physical data layout from logical query syntax, providing fast query pruning while preserving table evolution.</p>
+<h2>How hidden partitioning works</h2>
+<p>In Hive, users must know how the table was partitioned to write efficient queries:</p>
+<pre><code>-- Traditional Hive: User must supply synthetic date strings
+SELECT * FROM events 
+WHERE event_time &gt;= '2026-11-14 00:00:00' 
+  AND event_date = '2026-11-14';</code></pre>
+<p>In Apache Iceberg, partition values are produced directly from source columns via built-in transforms. The query engine reads table metadata, recognizes that <code>event_time</code> is partitioned by day, and prunes partitions automatically without requiring redundant predicates:</p>
+<pre><code>-- Apache Iceberg: Hidden partitioning prunes files automatically
+SELECT * FROM events 
+WHERE event_time &gt;= TIMESTAMP '2026-11-14 00:00:00';</code></pre>
+<h2>Built-in partition transforms</h2>
+<p>Iceberg provides native partition transforms that maintain clean file layouts without requiring auxiliary columns:</p>
+<ul>
+<li><strong>Temporal transforms:</strong> <code>years()</code>, <code>months()</code>, <code>days()</code>, and <code>hours()</code>. These automatically extract calendar units from timestamp or date columns.</li>
+<li><strong>Bucket transform:</strong> <code>bucket(N, col)</code>. Hashes a column (such as <code>user_id</code>) into $N$ buckets, distributing high-cardinality keys evenly across files to prevent uneven skew.</li>
+<li><strong>Truncate transform:</strong> <code>truncate(W, col)</code>. Truncates strings to $W$ characters, grouping similar text keys into manageable partition boundaries.</li>
+<li><strong>Identity transform:</strong> Partitions directly on the raw column value, recommended only for low-cardinality categorical fields (such as region or department).</li>
+</ul>
+<pre><code>CREATE TABLE lakehouse.telemetry (
+    device_id STRING,
+    event_time TIMESTAMP,
+    metric_value DOUBLE
+)
+USING iceberg
+PARTITIONED BY (days(event_time), bucket(16, device_id));</code></pre>
+<h2>Partition evolution without rewrites</h2>
+<p>In legacy table formats, changing a table's partition scheme (for example, migrating from daily partitioning to hourly partitioning as data volume explodes) requires rewriting every terabyte of historical data into new directories.</p>
+<p>Iceberg supports true <strong>partition evolution</strong>. When partition specs change, Iceberg assigns a new partition spec ID to newly written files while leaving historical data files untouched:</p>
+<ul>
+<li>Queries covering historical dates prune files using the original partition spec.</li>
+<li>Queries covering new dates prune files using the updated partition spec.</li>
+<li>No historical data files are moved, renamed, or rewritten.</li>
+</ul>
+<p>This allows data engineering teams to adapt table architectures smoothly as ingestion throughput grows over time.</p>
+<h2>Avoiding the small-files problem</h2>
+<p>Over-partitioning is a common pitfall. If you partition by hour on a dataset that only receives 10 megabytes of data per day, you create hundreds of tiny files. Small files overwhelm object store metadata APIs and severely degrade analytical query engines like Trino and Spark.</p>
+<p>To prevent small-file degradation:</p>
+<ul>
+<li>Aim for parquet file sizes between 128MB and 512MB after compression.</li>
+<li>Do not partition on high-cardinality fields using identity transforms.</li>
+<li>Combine larger temporal partitions (such as <code>months</code> or <code>days</code>) with sorting (Z-ordering or clustering) inside each file rather than slicing into tiny physical directories.</li>
+<li>Schedule recurring background table maintenance jobs using <code>rewrite_data_files</code> to compact fragmented writes into optimal target file sizes.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Apache Iceberg hidden partitioning decouples physical storage organization from user SQL queries. Use built-in transforms like <code>days</code> and <code>bucket</code> to avoid synthetic columns, evolve partition specs safely as data scales without table rewrites, and size partitions conservatively to maintain healthy file sizes.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>
