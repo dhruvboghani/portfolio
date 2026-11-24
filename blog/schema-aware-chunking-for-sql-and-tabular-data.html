@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Schema-aware chunking for SQL and tabular data | Dhruv Boghani</title>
+<meta name="description" content="Why naive text chunking fails on relational tables and how schema-aware chunking preserves table context, row integrity, and foreign key relations for RAG.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8829216905817441"
+     crossorigin="anonymous"></script>
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/schema-aware-chunking-for-sql-and-tabular-data.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Dhruv Boghani">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Schema-aware chunking for SQL and tabular data">
+<meta property="og:description" content="Why naive text chunking fails on relational tables and how schema-aware chunking preserves table context, row integrity, and foreign key relations for RAG.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/schema-aware-chunking-for-sql-and-tabular-data.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Schema-aware chunking for SQL and tabular data">
+<meta name="twitter:description" content="Why naive text chunking fails on relational tables and how schema-aware chunking preserves table context, row integrity, and foreign key relations for RAG.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Schema-aware chunking for SQL and tabular data", "description": "Why naive text chunking fails on relational tables and how schema-aware chunking preserves table context, row integrity, and foreign key relations for RAG.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-20", "dateModified": "2026-11-20", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/schema-aware-chunking-for-sql-and-tabular-data.html", "inLanguage": "en", "keywords": "chunking, rag, databases", "articleSection": "chunking", "wordCount": 643, "timeRequired": "PT3M", "speakable": {"@type": "SpeakableSpecification", "cssSelector": [".ph1", ".post > p:first-of-type", ".post > h2:first-of-type"]}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Schema-aware chunking for SQL and tabular data", "item": "https://www.dhruvboghani.com/blog/schema-aware-chunking-for-sql-and-tabular-data.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv in"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Schema-aware chunking for SQL and tabular data</h1><p class="m u meta">2026-11-20 / 3 min read / chunking, rag, databases</p><article class="post"><p>Standard retrieval-augmented generation pipelines often struggle with tabular and structured data. Splitting a CSV file or database dump using standard recursive character splitters or fixed token boundaries scrambles row relationships, breaks headers, and destroys numerical context.</p>
+<p>Schema-aware chunking solves this problem by treating tables as relational entities, preserving column definitions, row semantics, and foreign key linkages before generating vector embeddings.</p>
+<h2>Why naive chunking destroys tabular semantics</h2>
+<p>Fixed-size chunking algorithms make assumptions suited for natural prose: sentences form paragraphs, and paragraphs represent coherent thoughts. Relational tables behave completely differently:</p>
+<ul>
+<li><strong>Header detachment:</strong> A standard 500-token chunk cut in the middle of a table separates data rows from their column headers, leaving the embedding model with meaningless numbers and dates.</li>
+<li><strong>Row splitting:</strong> A row cut across two chunks splits critical multi-column correlations, preventing queries that filter across multiple attributes from matching.</li>
+<li><strong>Loss of relational context:</strong> In normalized databases, an order row contains foreign keys rather than human-readable customer or product names. Vector search over raw row text cannot resolve these joins.</li>
+</ul>
+<p>When an LLM searches naive chunks for "total revenue in the western region for Q3," the relevant rows are often scattered without headers or geographic mappings, leading to failed retrieval or severe hallucinations.</p>
+<h2>Key strategies for schema-aware chunking</h2>
+<p>To make tabular data searchable via vector retrieval and LLMs, data pipelines must preserve structural context within each document chunk:</p>
+<ul>
+<li><strong>Row-level encapsulation with markdown or key-value format:</strong> Transform every database record into a self-contained document containing explicit column headers and entity types.</li>
+<li><strong>Denormalized view extraction:</strong> Pre-join critical dimension tables before chunking so each fact record includes contextual entity names rather than opaque integer IDs.</li>
+<li><strong>Hierarchical chunking:</strong> Create two layers of chunks: high-level table summaries containing schema definitions and statistics for table discovery, paired with granular row chunks for specific lookups.</li>
+</ul>
+<pre><code>def serialize_row_as_context(table_name: str, schema_desc: dict, row: dict) -&gt; str:
+    lines = [f"Table: {table_name}"]
+    for col, val in row.items():
+        doc_label = schema_desc.get(col, col)
+        lines.append(f"- {doc_label}: {val}")
+    return "\n".join(lines)
+
+# Example output chunk:
+# Table: customer_orders
+# - Order ID: 94821
+# - Customer Name: Acme Corp (Region: West)
+# - Product SKU: Lakehouse-Enterprise-License
+# - Order Date: 2026-10-14
+# - Total Amount: $42,500.00</code></pre>
+<p>By prefixing every row chunk with its table name and denormalized attributes, each vector embedding retains its complete semantic meaning independently of other rows.</p>
+<h2>Table summarization and synthetic questions</h2>
+<p>For large tables with millions of rows, vector search over every individual row is neither practical nor cost-effective. Instead, combine schema-aware chunking with table-level synthetic indexing:</p>
+<ul>
+<li><strong>Column profiles:</strong> Store summary documents containing column names, data types, distinct value counts, min/max ranges, and business definitions.</li>
+<li><strong>Synthetic user questions:</strong> Use an LLM to generate 20 to 50 plausible questions that each table can answer (such as "Where do I find monthly recurring revenue per customer?"), embedding those questions directly into your vector catalog.</li>
+<li><strong>Hybrid routing:</strong> Route broad aggregation queries ("What was our total quarterly volume?") to a Text-to-SQL engine, while routing entity lookups ("Show contract terms for Acme Corp") to schema-aware vector chunks.</li>
+</ul>
+<h2>Indexing trade-offs and query routing</h2>
+<p>Choosing between vector retrieval of tabular chunks and direct Text-to-SQL execution depends on the query pattern:</p>
+<ul>
+<li><strong>Semantic entity search:</strong> When users search using ambiguous names, descriptions, or unstructured comments stored in database columns, schema-aware vector chunks excel at fuzzy matching.</li>
+<li><strong>Mathematical aggregation:</strong> If the user query requires sums, averages, counts, or group-by aggregations, vector chunks fail because LLMs cannot reliably do mental arithmetic over dozens of retrieved rows. Text-to-SQL is required.</li>
+<li><strong>Storage overhead:</strong> Expanding tables into denormalized, self-describing text chunks increases storage and vector index size compared to raw parquet or relational storage.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Relational data requires structure-preserving chunking. Avoid naive character-count splitters on tabular files. Instead, denormalize related entities, serialize records into self-contained key-value chunks with full header context, and pair schema-level summary vectors with Text-to-SQL routing for reliable data retrieval.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

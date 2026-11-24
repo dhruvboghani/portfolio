@@ -59,7 +59,43 @@ A: Send an email or WhatsApp message through the Contact page with a short descr
 ### Q: Where are you based?
 A: I am based in Ahmedabad, Gujarat, India.
 
-## Technical Articles & Guides (47 Published)
+## Technical Articles & Guides (53 Published)
+### Distributed model inference with vLLM and Ray
+- URL: https://www.dhruvboghani.com/blog/distributed-model-inference-with-vllm-and-ray.html
+- Date: 2026-11-24
+- Description: Scaling LLM serving with vLLM and Ray: tensor parallelism, PagedAttention memory optimization, continuous batching, and distributed worker management.
+- Keywords: vllm, distributed-systems, inference
+
+### GraphRAG: knowledge graphs meet vector retrieval
+- URL: https://www.dhruvboghani.com/blog/graphrag-knowledge-graphs-meet-vector-retrieval.html
+- Date: 2026-11-23
+- Description: How GraphRAG combines vector search with knowledge graphs to resolve multi-hop queries, preserve relationship topology, and improve answer grounding.
+- Keywords: graphrag, vector-search, rag
+
+### Real-time anomaly detection with Flink and Kafka
+- URL: https://www.dhruvboghani.com/blog/real-time-anomaly-detection-with-apache-flink-and-kafka.html
+- Date: 2026-11-22
+- Description: Building real-time anomaly detection pipelines with Apache Flink and Kafka: tumbling windows, keyed process functions, dynamic thresholding, and alerts.
+- Keywords: apache-flink, kafka, streaming
+
+### Handling cold starts in serverless LLM deployments
+- URL: https://www.dhruvboghani.com/blog/handling-cold-starts-in-serverless-llm-deployments.html
+- Date: 2026-11-21
+- Description: Strategies to mitigate cold start latency in serverless LLM serving: model weight pre-warming, container caching, quantization, and fast init hooks.
+- Keywords: serverless, inference, devops
+
+### Schema-aware chunking for SQL and tabular data
+- URL: https://www.dhruvboghani.com/blog/schema-aware-chunking-for-sql-and-tabular-data.html
+- Date: 2026-11-20
+- Description: Why naive text chunking fails on relational tables and how schema-aware chunking preserves table context, row integrity, and foreign key relations for RAG.
+- Keywords: chunking, rag, databases
+
+### DSPy and programmatic prompt optimization
+- URL: https://www.dhruvboghani.com/blog/dspy-and-programmatic-prompt-optimization.html
+- Date: 2026-11-19
+- Description: How DSPy replaces manual prompt engineering with programmatic signatures, optimizers like BootstrapFewShot, and automated metric tuning.
+- Keywords: dspy, prompt-engineering, llm
+
 ### Synthetic data generation for LLM evaluation
 - URL: https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html
 - Date: 2026-11-18

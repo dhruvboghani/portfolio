@@ -67,6 +67,42 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://www.dhruvboghani.com/blog/distributed-model-inference-with-vllm-and-ray.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/graphrag-knowledge-graphs-meet-vector-retrieval.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/real-time-anomaly-detection-with-apache-flink-and-kafka.html</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/handling-cold-starts-in-serverless-llm-deployments.html</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/schema-aware-chunking-for-sql-and-tabular-data.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/dspy-and-programmatic-prompt-optimization.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html</loc>
     <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>

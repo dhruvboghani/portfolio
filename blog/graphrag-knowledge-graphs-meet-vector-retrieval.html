@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GraphRAG: knowledge graphs meet vector retrieval</title>
+<meta name="description" content="How GraphRAG combines vector search with knowledge graphs to resolve multi-hop queries, preserve relationship topology, and improve answer grounding.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8829216905817441"
+     crossorigin="anonymous"></script>
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/graphrag-knowledge-graphs-meet-vector-retrieval.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Dhruv Boghani">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GraphRAG: knowledge graphs meet vector retrieval">
+<meta property="og:description" content="How GraphRAG combines vector search with knowledge graphs to resolve multi-hop queries, preserve relationship topology, and improve answer grounding.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/graphrag-knowledge-graphs-meet-vector-retrieval.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="GraphRAG: knowledge graphs meet vector retrieval">
+<meta name="twitter:description" content="How GraphRAG combines vector search with knowledge graphs to resolve multi-hop queries, preserve relationship topology, and improve answer grounding.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "GraphRAG: knowledge graphs meet vector retrieval", "description": "How GraphRAG combines vector search with knowledge graphs to resolve multi-hop queries, preserve relationship topology, and improve answer grounding.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-23", "dateModified": "2026-11-23", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/graphrag-knowledge-graphs-meet-vector-retrieval.html", "inLanguage": "en", "keywords": "graphrag, vector-search, rag", "articleSection": "graphrag", "wordCount": 623, "timeRequired": "PT3M", "speakable": {"@type": "SpeakableSpecification", "cssSelector": [".ph1", ".post > p:first-of-type", ".post > h2:first-of-type"]}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "GraphRAG: knowledge graphs meet vector retrieval", "item": "https://www.dhruvboghani.com/blog/graphrag-knowledge-graphs-meet-vector-retrieval.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv in"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">GraphRAG: knowledge graphs meet vector retrieval</h1><p class="m u meta">2026-11-23 / 3 min read / graphrag, vector-search, rag</p><article class="post"><p>Standard vector retrieval has clear limitations. While embedding similarity works exceptionally well for finding text chunks that discuss a specific, localized topic, it frequently fails on multi-hop questions and global dataset synthesis that require connecting disparate facts across different documents.</p>
+<p>GraphRAG bridges this capability gap by combining unstructured semantic vector embeddings with structured knowledge graphs, unlocking interconnected reasoning and holistic dataset understanding.</p>
+<h2>The multi-hop problem in standard RAG</h2>
+<p>Traditional vector search operates on independent chunks in isolation. If document A states that "Person X founded Startup Y," and document B mentions that "Startup Y was acquired by Enterprise Z," standard vector retrieval faces major challenges:</p>
+<ul>
+<li><strong>Top-k blindness:</strong> A user asking "Which company acquired Person X's startup?" has an embedding that does not directly match document A or document B with high similarity, often causing retrieval to miss one of the necessary links.</li>
+<li><strong>Lack of relational context:</strong> Vector distance measures conceptual overlap, not directional relationships, entity hierarchies, or causal links.</li>
+<li><strong>Global summary failures:</strong> Asking an entire corpus "What are the major themes and systemic risks across all legal filings?" cannot be answered by pulling top-5 text passages because no single chunk summarizes the global narrative.</li>
+</ul>
+<p>Knowledge graphs provide the missing topological structure by explicitly representing entities as nodes and relationships as typed edges.</p>
+<h2>How GraphRAG extracts and structures data</h2>
+<p>A production GraphRAG pipeline extracts structured graph representations from unstructured text using a multi-step indexing process:</p>
+<ul>
+<li><strong>Entity and relation extraction:</strong> An LLM scans document chunks to extract named entities (people, technologies, organizations, locations) and the explicit relationships connecting them.</li>
+<li><strong>Entity resolution and deduplication:</strong> Similar entity mentions across different source files (such as "Apache Iceberg" and "Iceberg Table Format") are resolved into unified canonical nodes.</li>
+<li><strong>Graph community clustering:</strong> Hierarchical clustering algorithms (such as the Leiden community detection algorithm) group closely connected entity clusters into topical communities.</li>
+<li><strong>Community summarization:</strong> An LLM generates pre-computed summaries for each entity cluster at multiple hierarchical levels, creating comprehensive syntheses from local sub-graphs up to global themes.</li>
+</ul>
+<pre><code># Conceptual representation of a GraphRAG knowledge triplet
+graph_triplet = {
+    "source_entity": "Redpanda",
+    "relationship": "COMPATIBLE_WITH",
+    "target_entity": "Apache Kafka API",
+    "evidence_chunk_id": "chunk_9824",
+    "confidence_score": 0.98
+}</code></pre>
+<h2>Dual retrieval: local and global queries</h2>
+<p>GraphRAG pipelines route user questions into two distinct retrieval paradigms depending on query intent:</p>
+<ul>
+<li><strong>Local search (entity-centric):</strong> When a user asks about specific entities ("How does our voice agent handle CRM record updates?"), the engine matches the query to seed entities, traverses connected neighbors across 1 to 2 hops, and retrieves both the graph relations and the original source text chunks.</li>
+<li><strong>Global search (corpus-centric):</strong> When a user asks a high-level query ("What are the top three customer complaints across all support tickets this month?"), the engine bypasses individual raw chunks and synthesizes answers directly from the pre-computed community summaries.</li>
+</ul>
+<p>This dual-routing structure provides high precision on narrow entity lookups while allowing exhaustive, hallucination-resistant summaries over entire document archives.</p>
+<h2>Engineering trade-offs and indexing costs</h2>
+<p>While GraphRAG delivers superior reasoning depth, teams must evaluate its operational requirements:</p>
+<ul>
+<li><strong>Heavy indexing computation:</strong> Building the knowledge graph requires passing your entire document corpus through an LLM multiple times for entity extraction, resolution, and cluster summarization, resulting in higher indexing costs than simple vector chunking.</li>
+<li><strong>Graph database infrastructure:</strong> Serving GraphRAG requires maintaining a graph database (such as Neo4j, Memgraph, or FalkorDB) alongside your vector database (such as pgvector or Pinecone).</li>
+<li><strong>Latency considerations:</strong> Multi-hop graph traversal and hybrid context assembly can add 200ms to 600ms of retrieval latency prior to LLM generation.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>Standard vector search excels at point lookups, but complex reasoning requires relational context. GraphRAG combines vector embeddings with structured knowledge graphs and hierarchical community summaries, enabling language models to traverse multi-hop connections and synthesize comprehensive global insights without losing factual grounding.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

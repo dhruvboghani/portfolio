@@ -1,11 +1,13 @@
 # One topic per line. The next line is used each day. Add more any time.
-DSPy and programmatic prompt optimization
-Schema-aware chunking for SQL and tabular data
-Handling cold starts in serverless LLM deployments
-Real-time anomaly detection with Apache Flink and Kafka
-GraphRAG: knowledge graphs meet vector retrieval
-Distributed model inference with vLLM and Ray
 Dynamic batching for high-throughput LLM serving
 Delta Lake vs Apache Iceberg: choosing a table format
 Voice cloning and neural audio codec architectures
 Continuous evaluation of RAG systems in production
+Speculative decoding for ultra-low latency LLM generation
+Nessie catalog versioning and zero-copy branching
+Prompt caching patterns in frontier LLM architectures
+Stateful stream joins in Apache Flink
+Multimodal document understanding: Vision-Language Models vs OCR
+Zero-downtime database migrations with Debezium and Kafka
+Agentic tool calling with OpenAPI specs and validation
+Semantic compression of conversational memory in voice bots

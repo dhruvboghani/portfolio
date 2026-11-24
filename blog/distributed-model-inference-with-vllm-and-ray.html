@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Distributed model inference with vLLM and Ray | Dhruv Boghani</title>
+<meta name="description" content="Scaling LLM serving with vLLM and Ray: tensor parallelism, PagedAttention memory optimization, continuous batching, and distributed worker management.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8829216905817441"
+     crossorigin="anonymous"></script>
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/distributed-model-inference-with-vllm-and-ray.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Dhruv Boghani">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Distributed model inference with vLLM and Ray">
+<meta property="og:description" content="Scaling LLM serving with vLLM and Ray: tensor parallelism, PagedAttention memory optimization, continuous batching, and distributed worker management.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/distributed-model-inference-with-vllm-and-ray.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Distributed model inference with vLLM and Ray">
+<meta name="twitter:description" content="Scaling LLM serving with vLLM and Ray: tensor parallelism, PagedAttention memory optimization, continuous batching, and distributed worker management.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Distributed model inference with vLLM and Ray", "description": "Scaling LLM serving with vLLM and Ray: tensor parallelism, PagedAttention memory optimization, continuous batching, and distributed worker management.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-24", "dateModified": "2026-11-24", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/distributed-model-inference-with-vllm-and-ray.html", "inLanguage": "en", "keywords": "vllm, distributed-systems, inference", "articleSection": "vllm", "wordCount": 650, "timeRequired": "PT3M", "speakable": {"@type": "SpeakableSpecification", "cssSelector": [".ph1", ".post > p:first-of-type", ".post > h2:first-of-type"]}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Distributed model inference with vLLM and Ray", "item": "https://www.dhruvboghani.com/blog/distributed-model-inference-with-vllm-and-ray.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv in"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Distributed model inference with vLLM and Ray</h1><p class="m u meta">2026-11-24 / 3 min read / vllm, distributed-systems, inference</p><article class="post"><p>Serving 70B+ parameter language models or handling thousands of concurrent user queries pushes single-GPU infrastructure past its physical memory and throughput limits. Splitting weights across multiple GPUs and distributing requests across clusters is mandatory for production LLM systems.</p>
+<p>Combining vLLM's memory-efficient inference engine with Ray's distributed actor orchestration provides a robust, high-throughput platform for enterprise LLM serving.</p>
+<h2>The core bottlenecks in high-throughput LLM serving</h2>
+<p>Serving language models at scale presents distinct engineering challenges compared to traditional stateless microservices:</p>
+<ul>
+<li><strong>VRAM capacity limits:</strong> A 70B parameter model in FP16 precision requires approximately 140GB of memory just to hold weights, necessitating multi-GPU tensor parallelism across devices like NVIDIA A100s or H100s.</li>
+<li><strong>KV cache memory fragmentation:</strong> During generation, keys and values for preceding tokens must be cached in GPU memory. Standard sequential memory allocation causes severe fragmentation, wasting up to 60% of available VRAM.</li>
+<li><strong>Dynamic request lengths:</strong> Users submit unpredictable prompt lengths and expect varying output sizes. Static batching forces fast requests to wait for the slowest generation to complete, wasting GPU compute cycles.</li>
+</ul>
+<p>vLLM addresses memory fragmentation and batching bottlenecks, while Ray manages inter-node cluster orchestration and worker lifecycles.</p>
+<h2>PagedAttention and continuous batching in vLLM</h2>
+<p>vLLM introduced two foundational innovations that increased LLM serving throughput by 2x to 4x over earlier frameworks:</p>
+<ul>
+<li><strong>PagedAttention:</strong> Inspired by virtual memory paging in operating systems, PagedAttention stores KV-cache values in non-contiguous physical memory blocks. This eliminates external fragmentation, allowing the engine to pack significantly more concurrent requests into available VRAM.</li>
+<li><strong>Continuous (iteration-level) batching:</strong> Instead of waiting for an entire batch of requests to finish, vLLM dynamically inserts newly arrived queries into the current generation iteration as soon as any existing request finishes generating.</li>
+</ul>
+<pre><code>from vllm import LLM, SamplingParams
+
+sampling_params = SamplingParams(temperature=0.7, top_p=0.95, max_tokens=256)
+
+# Tensor parallelism across 4 local GPUs with continuous batching
+llm = LLM(
+    model="meta-llama/Llama-3.3-70B-Instruct",
+    tensor_parallel_size=4,
+    gpu_memory_utilization=0.90,
+    max_num_seqs=256
+)
+
+prompts = ["Explain distributed consensus algorithms in streaming pipelines."]
+outputs = llm.generate(prompts, sampling_params)</code></pre>
+<h2>Scaling across nodes with Ray</h2>
+<p>While tensor parallelism splits layers across GPUs within a single node over NVLink, scaling throughput across multiple servers requires distributed worker orchestration.</p>
+<p>Ray acts as the distributed computing backbone for vLLM:</p>
+<ul>
+<li><strong>Multi-node tensor and pipeline parallelism:</strong> Ray coordinates GPU workers across separate physical host machines, managing inter-process communication and synchronized weight distribution.</li>
+<li><strong>Dynamic replica autoscaling:</strong> Ray Serve allows you to deploy multiple vLLM engine replicas, automatically distributing incoming HTTP requests and scaling worker pools up or down based on queue depth and latency thresholds.</li>
+<li><strong>Fault detection and recovery:</strong> If a GPU worker fails or encounters a CUDA out-of-memory error, Ray detects the unhealthy actor, restarts the worker process, and reschedules pending requests without bringing down the entire cluster.</li>
+</ul>
+<pre><code>import ray
+from ray import serve
+from vllm.engine.async_llm_engine import AsyncLLMEngine
+from vllm.engine.arg_utils import AsyncEngineArgs
+
+@serve.deployment(num_replicas=2, ray_actor_options={"num_gpus": 4})
+class DistributedLLMDeployment:
+    def __init__(self):
+        engine_args = AsyncEngineArgs(
+            model="meta-llama/Llama-3.3-70B-Instruct",
+            tensor_parallel_size=4
+        )
+        self.engine = AsyncLLMEngine.from_engine_args(engine_args)
+
+    async def __call__(self, request):
+        json_data = await request.json()
+        prompt = json_data["prompt"]
+        # Stream or return generated tokens asynchronously
+        return await self.engine.generate(prompt, json_data.get("params"))</code></pre>
+<h2>Production monitoring and optimization</h2>
+<p>Operating distributed inference clusters requires tracking GPU and engine metrics:</p>
+<ul>
+<li><strong>Time to First Token (TTFT) vs Time Per Output Token (TPOT):</strong> TTFT measures prefill phase latency, while TPOT measures auto-regressive generation speed. High TTFT indicates queuing or heavy prompt lengths; high TPOT indicates GPU compute or memory bandwidth saturation.</li>
+<li><strong>KV cache usage percentage:</strong> Monitor the percentage of allocated PagedAttention memory blocks. If usage approaches 100%, incoming requests will be queued or pre-empted.</li>
+<li><strong>Speculative decoding:</strong> Pair large target models with small draft models (such as an 8B draft for a 70B model) to generate multiple candidate tokens per step, cutting generation latency by up to 40% on standard workloads.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>High-throughput enterprise LLM inference requires eliminating memory waste and orchestrating distributed compute. By combining vLLM's PagedAttention and continuous batching with Ray's scalable multi-GPU actor cluster management, engineering teams can serve massive models reliably under heavy production workloads.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

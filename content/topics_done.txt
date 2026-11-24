@@ -43,3 +43,9 @@ WebRTC for real-time voice AI agents
 Backpressure handling in streaming pipelines
 Multi-agent orchestration patterns
 Synthetic data generation for LLM evaluation
+DSPy and programmatic prompt optimization
+Schema-aware chunking for SQL and tabular data
+Handling cold starts in serverless LLM deployments
+Real-time anomaly detection with Apache Flink and Kafka
+GraphRAG: knowledge graphs meet vector retrieval
+Distributed model inference with vLLM and Ray
