@@ -1,61 +1,351 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://www.dhruvboghani.com/admin-assistant.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/blog.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/contact.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/experience.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/faq.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/</loc></url>
-<url><loc>https://www.dhruvboghani.com/invoice-ai.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/pipeline.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/voice-agent.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/voice-avatar.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/work.html</loc></url>
-<url><loc>https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html</loc><lastmod>2026-11-18</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/multi-agent-orchestration-patterns-and-pitfalls.html</loc><lastmod>2026-11-17</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/backpressure-handling-in-streaming-pipelines.html</loc><lastmod>2026-11-16</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/webrtc-for-real-time-voice-ai-agents.html</loc><lastmod>2026-11-15</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/partitioning-strategies-in-apache-iceberg.html</loc><lastmod>2026-11-14</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/context-window-management-in-llm-applications.html</loc><lastmod>2026-11-13</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/dead-letter-queues-in-event-driven-systems.html</loc><lastmod>2026-11-12</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/pii-masking-in-ai-pipelines.html</loc><lastmod>2026-11-11</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/vector-index-types-hnsw-vs-ivf.html</loc><lastmod>2026-11-10</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/data-contracts-between-producers-and-consumers.html</loc><lastmod>2026-11-09</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/cost-of-running-llms-in-production.html</loc><lastmod>2026-11-08</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/reranking-models-for-better-search-results.html</loc><lastmod>2026-11-07</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/evaluating-voice-ai-agents-what-to-measure.html</loc><lastmod>2026-11-06</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/designing-apis-for-ai-agents.html</loc><lastmod>2026-11-05</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/feature-stores-explained-for-ml-teams.html</loc><lastmod>2026-11-04</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/exactly-once-processing-in-apache-flink-explained.html</loc><lastmod>2026-11-03</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/apache-iceberg-compaction-and-table-maintenance.html</loc><lastmod>2026-11-02</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/fine-tuning-vs-rag-when-to-use-each.html</loc><lastmod>2026-11-01</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/streaming-llm-responses-to-the-browser.html</loc><lastmod>2026-10-31</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/document-parsing-for-rag-pdfs-tables-and-scans.html</loc><lastmod>2026-10-30</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/text-to-sql-with-llms-making-it-reliable.html</loc><lastmod>2026-10-29</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/rate-limiting-and-retries-for-llm-apis.html</loc><lastmod>2026-10-28</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/observability-for-llm-applications-tracing-cost-and-quality.html</loc><lastmod>2026-10-27</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/idempotent-consumers-handling-duplicate-events-safely.html</loc><lastmod>2026-10-26</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html</loc><lastmod>2026-10-25</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/building-an-ai-copilot-inside-a-crm.html</loc><lastmod>2026-10-24</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/real-time-dashboards-with-trino-and-apache-iceberg.html</loc><lastmod>2026-10-23</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/semantic-caching-to-cut-llm-costs-and-latency.html</loc><lastmod>2026-10-22</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/guardrails-for-llm-applications-a-practical-guide.html</loc><lastmod>2026-10-21</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/ai-agents-vs-chatbots-what-is-the-difference.html</loc><lastmod>2026-10-20</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/data-quality-checks-in-streaming-pipelines.html</loc><lastmod>2026-10-19</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/schema-evolution-in-apache-iceberg.html</loc><lastmod>2026-10-18</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/change-data-capture-cdc-explained.html</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/embedding-models-how-to-choose-one.html</loc><lastmod>2026-10-16</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/rag-evaluation-how-to-measure-answer-quality.html</loc><lastmod>2026-10-15</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/multi-tenant-saas-architecture-patterns.html</loc><lastmod>2026-10-14</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/speech-to-text-latency-in-voice-bots.html</loc><lastmod>2026-10-13</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/llm-function-calling-explained.html</loc><lastmod>2026-10-12</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/lakehouse-vs-data-warehouse.html</loc><lastmod>2026-10-11</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/chunking-strategies-for-rag.html</loc><lastmod>2026-10-10</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/prompt-engineering-for-structured-json-output.html</loc><lastmod>2026-10-09</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/apache-flink-stateful-stream-processing-basics.html</loc><lastmod>2026-10-08</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/kafka-vs-redpanda-for-real-time-pipelines.html</loc><lastmod>2026-10-07</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/vector-database-comparison-pgvector-vs-pinecone.html</loc><lastmod>2026-10-06</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/how-voice-ai-agents-work.html</loc><lastmod>2026-10-05</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/iceberg-time-travel.html</loc><lastmod>2026-10-04</lastmod></url>
-<url><loc>https://www.dhruvboghani.com/blog/what-is-rag.html</loc><lastmod>2026-10-03</lastmod></url>
+  <url>
+    <loc>https://www.dhruvboghani.com/admin-assistant.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/contact.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/experience.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/faq.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/invoice-ai.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/pipeline.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/voice-agent.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/voice-avatar.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/work.html</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/multi-agent-orchestration-patterns-and-pitfalls.html</loc>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/backpressure-handling-in-streaming-pipelines.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/webrtc-for-real-time-voice-ai-agents.html</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/partitioning-strategies-in-apache-iceberg.html</loc>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/context-window-management-in-llm-applications.html</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/dead-letter-queues-in-event-driven-systems.html</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/pii-masking-in-ai-pipelines.html</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/vector-index-types-hnsw-vs-ivf.html</loc>
+    <lastmod>2026-11-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/data-contracts-between-producers-and-consumers.html</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/cost-of-running-llms-in-production.html</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/reranking-models-for-better-search-results.html</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/evaluating-voice-ai-agents-what-to-measure.html</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/designing-apis-for-ai-agents.html</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/feature-stores-explained-for-ml-teams.html</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/exactly-once-processing-in-apache-flink-explained.html</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/apache-iceberg-compaction-and-table-maintenance.html</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/fine-tuning-vs-rag-when-to-use-each.html</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/streaming-llm-responses-to-the-browser.html</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/document-parsing-for-rag-pdfs-tables-and-scans.html</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/text-to-sql-with-llms-making-it-reliable.html</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/rate-limiting-and-retries-for-llm-apis.html</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/observability-for-llm-applications-tracing-cost-and-quality.html</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/idempotent-consumers-handling-duplicate-events-safely.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html</loc>
+    <lastmod>2026-10-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/building-an-ai-copilot-inside-a-crm.html</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/real-time-dashboards-with-trino-and-apache-iceberg.html</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/semantic-caching-to-cut-llm-costs-and-latency.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/guardrails-for-llm-applications-a-practical-guide.html</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/ai-agents-vs-chatbots-what-is-the-difference.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/data-quality-checks-in-streaming-pipelines.html</loc>
+    <lastmod>2026-10-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/schema-evolution-in-apache-iceberg.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/change-data-capture-cdc-explained.html</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/embedding-models-how-to-choose-one.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/rag-evaluation-how-to-measure-answer-quality.html</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/multi-tenant-saas-architecture-patterns.html</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/speech-to-text-latency-in-voice-bots.html</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/llm-function-calling-explained.html</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/lakehouse-vs-data-warehouse.html</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/chunking-strategies-for-rag.html</loc>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/prompt-engineering-for-structured-json-output.html</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/apache-flink-stateful-stream-processing-basics.html</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/kafka-vs-redpanda-for-real-time-pipelines.html</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/vector-database-comparison-pgvector-vs-pinecone.html</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/how-voice-ai-agents-work.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/iceberg-time-travel.html</loc>
+    <lastmod>2026-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.dhruvboghani.com/blog/what-is-rag.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

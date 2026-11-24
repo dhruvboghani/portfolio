@@ -1,0 +1,343 @@
+# Dhruv Boghani - Complete Knowledge Base for AI & Answer Engines
+
+## Summary
+Dhruv Boghani is a Senior Full Stack, AI & Data Platform Engineer with 5+ years of production experience delivering generative AI applications, enterprise SaaS platforms, and real-time streaming lakehouses. He is based in Ahmedabad, Gujarat, India.
+
+## Contact & Verified Profiles
+- Official Website: https://www.dhruvboghani.com
+- Email: ramboghani726@gmail.com
+- Phone: +91 84909 81272 / WhatsApp: https://wa.me/918490981272
+- GitHub: https://github.com/dhruvboghani
+- LinkedIn: https://www.linkedin.com/in/dhruv-boghani-21b8781b1
+- Current Employment: Novuscode Softtech Pvt. Ltd. (Senior Full Stack & Data Platform Engineer, GenAI)
+- Education: Bachelor of Engineering (B.E.) in Information Technology from Gujarat Technological University (GTU)
+
+## Architectural Specializations
+### 1. Streaming Data Lakehouses
+- High throughput event ingestion: 10M+ events/day using Redpanda and Apache Kafka.
+- Stateful stream processing: Apache Flink with checkpointing, watermark tracking, and dead-letter queues.
+- Lakehouse storage: Apache Iceberg on MinIO/S3 with versioned catalog (Project Nessie) for atomic commits and time-travel rollback queries.
+- Distributed querying: Trino distributed SQL engine for low-latency ad-hoc and dashboard analytics.
+
+### 2. Conversational Voice AI & 3D Avatars
+- Low-latency telephony: Twilio Media Streams integrated with Pipecat orchestration.
+- Audio streaming: WebRTC and UDP audio pipes maintaining sub-500ms voice round-trip latency.
+- Real-time LLM inference: Azure OpenAI and open weights with conversational barge-in and turn-taking.
+- CRM Integration: Automatic sentiment classification, objection logging, call scoring, and pipeline stage updates.
+- Visual interaction: 3D avatars with synchronized lip-sync and audio visualizers for sales and ERP backoffice navigation.
+
+### 3. Document AI & Financial Intelligence
+- Invoice AI: Complex multi-page PDF document parsing, HSN code validation, and tax variance detection.
+- Vector similarity: pgvector and Pinecone embedding search to reconcile discrepancies between purchase order lines and supplier invoice descriptions.
+
+## Products Shipped
+1. Grahavani (https://grahavani.dhruvboghani.com/): Free multilingual Vedic astrology platform in English, Hindi, Gujarati, Tamil, Telugu, and Kannada. Accurate Janma Kundali calculated via astronomical algorithms verified against the Swiss Ephemeris within one arc-minute precision.
+2. Rankdesk (https://rankdesk.dhruvboghani.com/): Free comprehensive 24-point SEO auditing platform with Google PageSpeed API, Core Web Vitals diagnostics, and instant schema/robots/sitemap generators.
+
+## Frequently Asked Questions (FAQ)
+### Q: What do you build?
+A: I build AI-powered software: LLM and RAG applications, voice AI agents, 3D avatar assistants, real-time data pipelines and full-stack enterprise platforms.
+
+### Q: Which technologies do you work with?
+A: AI and LLM work with OpenAI, Azure OpenAI and Llama; Django, FastAPI, Node.js and Laravel on the backend; Angular, React and Vue on the frontend; Redpanda, Flink, Spark, Iceberg and Trino for data; and Docker with GitHub Actions for delivery.
+
+### Q: Can you build a voice AI agent for sales calls?
+A: Yes. I have built calling bots with Twilio, Pipecat and an LLM that hold natural conversations, detect sentiment, score calls and update the CRM automatically.
+
+### Q: What is a 3D avatar assistant?
+A: It is a talking 3D character that customers or admins speak to. A customer-facing avatar answers product questions, captures leads and books appointments. An admin avatar fetches invoices, purchase orders, inventory, quotations and sales data.
+
+### Q: Can you build a real-time data platform?
+A: Yes. I design streaming pipelines and lakehouses with Redpanda, Flink, Iceberg and Trino, including versioned tables and time-travel queries.
+
+### Q: Do you build multi-tenant SaaS products?
+A: Yes. I have delivered multi-tenant platforms with role-based access, microservices, API gateways and observability.
+
+### Q: How do I start a project with you?
+A: Send an email or WhatsApp message through the Contact page with a short description of what you need. We can then discuss scope, timeline and next steps.
+
+### Q: Where are you based?
+A: I am based in Ahmedabad, Gujarat, India.
+
+## Technical Articles & Guides (47 Published)
+### Synthetic data generation for LLM evaluation
+- URL: https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html
+- Date: 2026-11-18
+- Description: How to create high-quality synthetic datasets to benchmark and fine-tune LLMs: seed curation, perturbation, quality filtering, and LLM-as-a-judge.
+- Keywords: evaluation, synthetic-data, llm
+
+### Multi-agent orchestration patterns
+- URL: https://www.dhruvboghani.com/blog/multi-agent-orchestration-patterns-and-pitfalls.html
+- Date: 2026-11-17
+- Description: Core architectural patterns for multi-agent systems: supervisor routing, peer networks, shared state, error loops, and practical debugging.
+- Keywords: ai-agents, multi-agent, architecture
+
+### Backpressure handling in streaming pipelines
+- URL: https://www.dhruvboghani.com/blog/backpressure-handling-in-streaming-pipelines.html
+- Date: 2026-11-16
+- Description: How to detect and handle backpressure in streaming systems like Kafka and Flink: buffer management, reactive streams, autoscaling, and metrics.
+- Keywords: streaming, apache-flink, kafka
+
+### WebRTC for real-time voice AI agents
+- URL: https://www.dhruvboghani.com/blog/webrtc-for-real-time-voice-ai-agents.html
+- Date: 2026-11-15
+- Description: Why WebRTC is replacing WebSockets for interactive voice AI agents: sub-500ms latency, UDP audio streaming, jitter buffers, and interruption.
+- Keywords: voice-ai, webrtc, real-time
+
+### Partitioning strategies in Apache Iceberg
+- URL: https://www.dhruvboghani.com/blog/partitioning-strategies-in-apache-iceberg.html
+- Date: 2026-11-14
+- Description: How Apache Iceberg hidden partitioning works: partition transforms, partition evolution, avoiding small files, and optimizing query pruning.
+- Keywords: apache-iceberg, data-lakehouse, data-engineering
+
+### Context window management in LLM apps
+- URL: https://www.dhruvboghani.com/blog/context-window-management-in-llm-applications.html
+- Date: 2026-11-13
+- Description: Techniques to fit large inputs into LLM context windows: summarization, rolling buffers, prompt compression, and smart passage selection.
+- Keywords: llm, prompt-engineering, rag
+
+### Dead letter queues in event-driven systems
+- URL: https://www.dhruvboghani.com/blog/dead-letter-queues-in-event-driven-systems.html
+- Date: 2026-11-12
+- Description: How to design resilient dead letter queues for Kafka and event systems: retry backoff, poison pill handling, replay workflows, and monitoring.
+- Keywords: event-driven, kafka, streaming
+
+### PII masking strategies for AI pipelines
+- URL: https://www.dhruvboghani.com/blog/pii-masking-in-ai-pipelines.html
+- Date: 2026-11-11
+- Description: How to detect and mask personally identifiable information in LLM and RAG pipelines using regex, NER models, token preservation, and audits.
+- Keywords: security, llm, data-privacy
+
+### Vector index types: HNSW vs IVF
+- URL: https://www.dhruvboghani.com/blog/vector-index-types-hnsw-vs-ivf.html
+- Date: 2026-11-10
+- Description: A practical comparison of HNSW and IVF vector indexes: query latency, memory footprint, build times, recall tradeoffs, and when to use each.
+- Keywords: vector-search, rag, databases
+
+### Data contracts for reliable data pipelines
+- URL: https://www.dhruvboghani.com/blog/data-contracts-between-producers-and-consumers.html
+- Date: 2026-11-09
+- Description: Why data contracts matter for modern data platforms: schema enforcement, semantic guarantees, change management, and automated CI/CD checks.
+- Keywords: data-engineering, architecture, data-quality
+
+### Cost of running LLMs in production
+- URL: https://www.dhruvboghani.com/blog/cost-of-running-llms-in-production.html
+- Date: 2026-11-08
+- Description: A practical breakdown of LLM production costs: token pricing, self-hosting GPUs, semantic caching, prompt compression, and routing strategies.
+- Keywords: llm, cost-optimization, production
+
+### Reranking models for better search results
+- URL: https://www.dhruvboghani.com/blog/reranking-models-for-better-search-results.html
+- Date: 2026-11-07
+- Description: How reranking models improve search and RAG: bi-encoders vs cross-encoders, retrieve-then-rerank pipelines, choosing a reranker and latency.
+- Keywords: search, rag, machine-learning
+
+### Evaluating voice AI agents: what to measure
+- URL: https://www.dhruvboghani.com/blog/evaluating-voice-ai-agents-what-to-measure.html
+- Date: 2026-11-06
+- Description: How to evaluate voice AI agents: speech recognition accuracy, latency and turn-taking, task success, simulated calls and production monitoring.
+- Keywords: voice-ai, evaluation, llm
+
+### Designing APIs for AI agents
+- URL: https://www.dhruvboghani.com/blog/designing-apis-for-ai-agents.html
+- Date: 2026-11-05
+- Description: How to design APIs AI agents can use reliably: clear tool descriptions, simple inputs, helpful errors, idempotency, permissions and compact responses.
+- Keywords: ai-agents, api-design, llm
+
+### Feature stores explained for ML teams
+- URL: https://www.dhruvboghani.com/blog/feature-stores-explained-for-ml-teams.html
+- Date: 2026-11-04
+- Description: What a feature store is and when ML teams need one: offline and online stores, point-in-time correctness, training-serving skew, and simpler alternatives.
+- Keywords: machine-learning, mlops, data-engineering
+
+### Exactly-once processing in Apache Flink explained
+- URL: https://www.dhruvboghani.com/blog/exactly-once-processing-in-apache-flink-explained.html
+- Date: 2026-11-03
+- Description: How exactly-once processing works in Apache Flink: checkpoints and barriers, state recovery, transactional sinks with two-phase commit, and common pitfalls.
+- Keywords: flink, streaming, data-engineering
+
+### Apache Iceberg compaction and table maintenance
+- URL: https://www.dhruvboghani.com/blog/apache-iceberg-compaction-and-table-maintenance.html
+- Date: 2026-11-02
+- Description: How to keep Apache Iceberg tables fast: compacting small files, expiring snapshots, removing orphan files, rewriting manifests and scheduling maintenance.
+- Keywords: iceberg, lakehouse, data-engineering
+
+### Fine-tuning vs RAG: when to use each
+- URL: https://www.dhruvboghani.com/blog/fine-tuning-vs-rag-when-to-use-each.html
+- Date: 2026-11-01
+- Description: Fine-tuning vs RAG explained: what each one changes, when to use retrieval, when fine-tuning pays off, costs and maintenance, and how to combine them.
+- Keywords: llm, rag, fine-tuning
+
+### Streaming LLM responses to the browser
+- URL: https://www.dhruvboghani.com/blog/streaming-llm-responses-to-the-browser.html
+- Date: 2026-10-31
+- Description: How to stream LLM responses to the browser: server-sent events vs WebSockets, a FastAPI example, reading the stream in JavaScript, proxies and errors.
+- Keywords: llm, streaming, web-development
+
+### Document parsing for RAG: PDFs, tables and scans
+- URL: https://www.dhruvboghani.com/blog/document-parsing-for-rag-pdfs-tables-and-scans.html
+- Date: 2026-10-30
+- Description: How to parse documents for RAG: extracting clean text from PDFs, keeping tables intact, running OCR on scans, preserving structure and checking quality.
+- Keywords: rag, document-parsing, llm
+
+### Text-to-SQL with LLMs: making it reliable
+- URL: https://www.dhruvboghani.com/blog/text-to-sql-with-llms-making-it-reliable.html
+- Date: 2026-10-29
+- Description: How to make text-to-SQL with LLMs reliable: giving the model the right schema, safe read-only execution, validation, few-shot examples and evaluation.
+- Keywords: llm, sql, analytics
+
+### Rate limiting and retries for LLM APIs
+- URL: https://www.dhruvboghani.com/blog/rate-limiting-and-retries-for-llm-apis.html
+- Date: 2026-10-28
+- Description: How to handle LLM API rate limits: request and token limits, exponential backoff with jitter, client-side throttling, queues, fallbacks and timeouts.
+- Keywords: llm, reliability, api
+
+### Observability for LLM applications: tracing, cost and quality
+- URL: https://www.dhruvboghani.com/blog/observability-for-llm-applications-tracing-cost-and-quality.html
+- Date: 2026-10-27
+- Description: How to monitor LLM applications in production: tracing each request, tracking tokens and cost, measuring latency, and evaluating answer quality over time.
+- Keywords: llm, observability, mlops
+
+### Idempotent consumers: handling duplicate events safely
+- URL: https://www.dhruvboghani.com/blog/idempotent-consumers-handling-duplicate-events-safely.html
+- Date: 2026-10-26
+- Description: How to build idempotent consumers in event-driven systems: why duplicates happen, idempotency keys, processed-event tables, upserts and the outbox pattern.
+- Keywords: event-driven, kafka, data-engineering
+
+### Hybrid search for RAG: combining keyword and vector search
+- URL: https://www.dhruvboghani.com/blog/hybrid-search-for-rag-combining-keyword-and-vector-search.html
+- Date: 2026-10-25
+- Description: Why hybrid search improves RAG: combining BM25 keyword search with vector search, merging results with reciprocal rank fusion, and adding a reranker.
+- Keywords: rag, search, vector-search
+
+### Building an AI copilot inside a CRM
+- URL: https://www.dhruvboghani.com/blog/building-an-ai-copilot-inside-a-crm.html
+- Date: 2026-10-24
+- Description: How to build an AI copilot inside a CRM: useful features, grounding on CRM data, permission-aware retrieval, tool actions, review steps and measuring value.
+- Keywords: ai-copilot, crm, llm
+
+### Real-time dashboards with Trino and Apache Iceberg
+- URL: https://www.dhruvboghani.com/blog/real-time-dashboards-with-trino-and-apache-iceberg.html
+- Date: 2026-10-23
+- Description: How to build near real-time dashboards on Trino and Apache Iceberg: streaming ingestion, commit intervals, table layout, compaction and fast queries.
+- Keywords: trino, iceberg, data-engineering
+
+### Semantic caching to cut LLM costs and latency
+- URL: https://www.dhruvboghani.com/blog/semantic-caching-to-cut-llm-costs-and-latency.html
+- Date: 2026-10-22
+- Description: How semantic caching cuts LLM costs and latency: embedding-based lookups, similarity thresholds, cache keys, invalidation and when caching is unsafe.
+- Keywords: llm, caching, cost-optimization
+
+### Guardrails for LLM applications: a practical guide
+- URL: https://www.dhruvboghani.com/blog/guardrails-for-llm-applications-a-practical-guide.html
+- Date: 2026-10-21
+- Description: How to add guardrails to LLM applications: input checks, output validation, tool permissions, grounding and monitoring that keep AI features safe and reliable.
+- Keywords: llm, guardrails, ai-safety
+
+### AI agents vs chatbots: what is the difference
+- URL: https://www.dhruvboghani.com/blog/ai-agents-vs-chatbots-what-is-the-difference.html
+- Date: 2026-10-20
+- Description: AI agents vs chatbots explained: how they differ in goals, tools, memory and control, and how to decide which one your product actually needs.
+- Keywords: ai-agents, llm, chatbots
+
+### Data quality checks in streaming pipelines
+- URL: https://www.dhruvboghani.com/blog/data-quality-checks-in-streaming-pipelines.html
+- Date: 2026-10-19
+- Description: How to add data quality checks to streaming pipelines: schema, validity, freshness, volume and duplicates, plus dead-letter queues and alerts that matter.
+- Keywords: data-quality, streaming, data-engineering
+
+### Schema evolution in Apache Iceberg: change tables safely
+- URL: https://www.dhruvboghani.com/blog/schema-evolution-in-apache-iceberg.html
+- Date: 2026-10-18
+- Description: How Apache Iceberg handles schema evolution with column IDs: adding, renaming, dropping and widening columns without rewriting data or breaking readers.
+- Keywords: iceberg, lakehouse, data-engineering
+
+### Change data capture (CDC) explained for data engineers
+- URL: https://www.dhruvboghani.com/blog/change-data-capture-cdc-explained.html
+- Date: 2026-10-17
+- Description: What change data capture is, how log-based CDC works, how it compares to batch extracts, and the pitfalls to plan for when streaming database changes.
+- Keywords: data-engineering, cdc, streaming
+
+### Embedding models: how to choose one for search and RAG
+- URL: https://www.dhruvboghani.com/blog/embedding-models-how-to-choose-one.html
+- Date: 2026-10-16
+- Description: How to choose an embedding model for semantic search and RAG: quality on your data, dimensions, context length, language, cost, latency and hosting.
+- Keywords: embeddings, rag, vector-search
+
+### RAG evaluation: how to measure answer quality
+- URL: https://www.dhruvboghani.com/blog/rag-evaluation-how-to-measure-answer-quality.html
+- Date: 2026-10-15
+- Description: How to evaluate a RAG system: build a test set, measure retrieval and answer quality separately, use LLM judges carefully and track it in CI.
+- Keywords: rag, llm, evaluation
+
+### Multi-tenant SaaS architecture patterns explained
+- URL: https://www.dhruvboghani.com/blog/multi-tenant-saas-architecture-patterns.html
+- Date: 2026-10-14
+- Description: Multi-tenant SaaS patterns compared: shared schema, schema per tenant and database per tenant, plus isolation, security, scaling and noisy neighbours.
+- Keywords: saas, architecture, databases
+
+### Speech-to-text latency in voice bots: where time goes
+- URL: https://www.dhruvboghani.com/blog/speech-to-text-latency-in-voice-bots.html
+- Date: 2026-10-13
+- Description: Why voice bots feel slow and how to cut speech-to-text latency with streaming ASR, better endpointing, partial results and a tighter voice pipeline.
+- Keywords: voice-ai, speech-to-text, latency
+
+### LLM function calling explained: how tool use works
+- URL: https://www.dhruvboghani.com/blog/llm-function-calling-explained.html
+- Date: 2026-10-12
+- Description: How LLM function calling works: tool schemas, the request loop, argument validation, errors and security, with a practical example in Python.
+- Keywords: llm, function-calling, ai-agents
+
+### Lakehouse vs data warehouse: differences and when to use each
+- URL: https://www.dhruvboghani.com/blog/lakehouse-vs-data-warehouse.html
+- Date: 2026-10-11
+- Description: Lakehouse vs data warehouse compared: storage, table formats, cost, performance, governance and how to choose the right one for your data platform.
+- Keywords: data-engineering, lakehouse, iceberg
+
+### Chunking strategies for RAG: how to split your documents
+- URL: https://www.dhruvboghani.com/blog/chunking-strategies-for-rag.html
+- Date: 2026-10-10
+- Description: How to chunk documents for RAG: fixed-size, recursive, structure-aware and semantic splitting, chunk size, overlap and metadata that matter.
+- Keywords: rag, llm, vector-search
+
+### Prompt engineering for structured JSON output
+- URL: https://www.dhruvboghani.com/blog/prompt-engineering-for-structured-json-output.html
+- Date: 2026-10-09
+- Description: How to make an LLM return valid JSON using a schema, a response format, validation, and a retry when the shape is wrong.
+- Keywords: llm, prompt-engineering, json
+
+### Apache Flink stateful stream processing basics
+- URL: https://www.dhruvboghani.com/blog/apache-flink-stateful-stream-processing-basics.html
+- Date: 2026-10-08
+- Description: How Flink keeps state in a streaming job, including keyed state, checkpoints, watermarks, and what fails in production.
+- Keywords: data-engineering, flink, streaming
+
+### Kafka vs Redpanda for real-time pipelines
+- URL: https://www.dhruvboghani.com/blog/kafka-vs-redpanda-for-real-time-pipelines.html
+- Date: 2026-10-07
+- Description: How Kafka and Redpanda differ for streaming pipelines, covering the API, operations, storage, and when each one fits.
+- Keywords: data-engineering, kafka, streaming
+
+### Vector Database Comparison: pgvector vs Pinecone
+- URL: https://www.dhruvboghani.com/blog/vector-database-comparison-pgvector-vs-pinecone.html
+- Date: 2026-10-06
+- Description: A practical comparison of pgvector and Pinecone for AI and data engineers, focusing on architecture, performance, and use cases.
+- Keywords: vector-databases, ai-engineering, postgresql
+
+### How a voice AI agent works: Twilio, speech, LLM and CRM
+- URL: https://www.dhruvboghani.com/blog/how-voice-ai-agents-work.html
+- Date: 2026-10-05
+- Description: The building blocks of a real-time voice AI agent, from telephony and speech-to-text to the LLM, text-to-speech and CRM updates.
+- Keywords: AI, Voice AI, LLM
+
+### Apache Iceberg time travel: query your data as it was
+- URL: https://www.dhruvboghani.com/blog/iceberg-time-travel.html
+- Date: 2026-10-04
+- Description: How Iceberg snapshots let you query past versions of a table with Trino, debug bad loads and roll back safely.
+- Keywords: Data Engineering, Iceberg, Trino
+
+### What is RAG? A practical guide for developers
+- URL: https://www.dhruvboghani.com/blog/what-is-rag.html
+- Date: 2026-10-03
+- Description: Retrieval-Augmented Generation explained: how it works, when to use it, and the mistakes that make RAG systems give bad answers.
+- Keywords: AI, LLM, RAG

@@ -40,12 +40,17 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL }}
         run: python3 build_blog.py
 
+      - name: Submit to IndexNow
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: python3 submit_indexnow.py || true
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content/posts/ content/topics.txt content/topics_done.txt \
-            blog/ blog.html index.html faq.html sitemap.xml rss.xml robots.txt
+            blog/ blog.html index.html faq.html sitemap.xml rss.xml robots.txt llms.txt llms-full.txt *.txt
           if git diff --staged --quiet; then
             echo "No changes to commit."
             exit 0

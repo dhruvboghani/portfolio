@@ -18,14 +18,16 @@
 - **Real-Time Data Platforms:** Apache Kafka, Redpanda, Apache Flink stateful processing, Apache Iceberg lakehouses, Trino distributed SQL, Nessie catalog, Change Data Capture (CDC).
 - **Full Stack Development:** Python (FastAPI, Django), Node.js, Angular, React, Vue, PostgreSQL, Docker, GitHub Actions CI/CD.
 
-## Interactive Demos & Case Studies
+## Live Products
+- [Grahavani](https://grahavani.dhruvboghani.com/): Free Vedic astrology platform in 6 Indian languages with Janma Kundali, Guna Milan, and Panchang checked against the Swiss Ephemeris.
+- [Rankdesk](https://rankdesk.dhruvboghani.com/): Free 24-point SEO audit toolkit with Google PageSpeed, Core Web Vitals, and JSON-LD schema, robots.txt, and sitemap generators.
+
+## Interactive Engineering Demos
 - [AI Sales Avatar](https://www.dhruvboghani.com/voice-avatar.html): 3D talking avatar capturing leads and booking meetings.
 - [AI Admin Assistant](https://www.dhruvboghani.com/admin-assistant.html): Natural language SQL/API tool-calling assistant for enterprise backoffices.
 - [Real-time Data Pipeline](https://www.dhruvboghani.com/pipeline.html): Redpanda, Flink, Iceberg, and Trino streaming lakehouse processing 10M+ daily events.
 - [Invoice AI Intelligence](https://www.dhruvboghani.com/invoice-ai.html): Document AI parsing, matching, and anomaly detection.
 - [Voice AI Calling Bot](https://www.dhruvboghani.com/voice-agent.html): Sub-500ms conversational phone agent for inbound/outbound calls.
-- [Grahavani](https://grahavani.dhruvboghani.com/): Vedic astrology in 6 Indian languages.
-- [Rankdesk](https://rankdesk.dhruvboghani.com/): Free SEO audit and toolkit.
 
 ## Engineering Blog Directory (47 Guides)
 - [Synthetic data generation for LLM evaluation](https://www.dhruvboghani.com/blog/synthetic-data-generation-for-llm-evaluation.html): How to create high-quality synthetic datasets to benchmark and fine-tune LLMs: seed curation, perturbation, quality filtering, and LLM-as-a-judge. (2026-11-18)

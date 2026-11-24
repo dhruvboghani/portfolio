@@ -10,10 +10,10 @@
           "assets/**",
           "blog/**",
           "*.html",
+          "*.txt",
           "style.css",
           "favicon.ico",
           "inquiry.json",
-          "robots.txt",
           "sitemap.xml",
           "rss.xml",
           "BingSiteAuth.xml"
