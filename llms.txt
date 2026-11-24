@@ -20,8 +20,8 @@
 
 ## Live Products
 - [Grahavani](https://grahavani.dhruvboghani.com/): Free Vedic astrology platform in 6 Indian languages with Janma Kundali, Guna Milan, and Panchang checked against the Swiss Ephemeris.
-- [Rankdesk](https://rankdesk.dhruvboghani.com/): Free 24-point SEO audit toolkit with Google PageSpeed, Core Web Vitals, and JSON-LD schema, robots.txt, and sitemap generators.
 - [PulseWire](https://pulsewire.dhruvboghani.com/): Real-time global newsroom delivering breaking world news, live cricket scores, and financial market intelligence.
+- [Rankdesk](https://rankdesk.dhruvboghani.com/): Free 24-point SEO audit toolkit with Google PageSpeed, Core Web Vitals, and JSON-LD schema, robots.txt, and sitemap generators.
 
 ## Interactive Engineering Demos
 - [AI Sales Avatar](https://www.dhruvboghani.com/voice-avatar.html): 3D talking avatar capturing leads and booking meetings.

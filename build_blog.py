@@ -239,8 +239,8 @@ LD['work.html'] = {
         '@type': 'ItemList',
         'itemListElement': [
             {'@type': 'ListItem', 'position': 1, 'name': 'Grahavani: Vedic Astrology', 'url': 'https://grahavani.dhruvboghani.com/'},
-            {'@type': 'ListItem', 'position': 2, 'name': 'Rankdesk: SEO Toolkit', 'url': 'https://rankdesk.dhruvboghani.com/'},
-            {'@type': 'ListItem', 'position': 3, 'name': 'PulseWire: Live Newsroom', 'url': 'https://pulsewire.dhruvboghani.com/'},
+            {'@type': 'ListItem', 'position': 2, 'name': 'PulseWire: Live Newsroom', 'url': 'https://pulsewire.dhruvboghani.com/'},
+            {'@type': 'ListItem', 'position': 3, 'name': 'Rankdesk: SEO Toolkit', 'url': 'https://rankdesk.dhruvboghani.com/'},
             {'@type': 'ListItem', 'position': 4, 'name': 'Real-Time Data Lakehouse', 'url': SITE_URL + '/pipeline.html'},
             {'@type': 'ListItem', 'position': 5, 'name': 'AI Voice Calling Agent & CRM', 'url': SITE_URL + '/voice-agent.html'},
             {'@type': 'ListItem', 'position': 6, 'name': 'AI Sales Avatar', 'url': SITE_URL + '/voice-avatar.html'},
@@ -327,7 +327,7 @@ for f in sorted(os.listdir(ROOT)):
     h = rd(f); url = SITE_URL + ('/' if f == 'index.html' else '/' + f)
     t = re.search(r'<title>(.*?)</title>', h, re.S).group(1); d = re.search(r'<meta name="description" content="(.*?)">', h).group(1)
     if f == 'index.html':
-        graph = [PERSON, WEBSITE, GRAHAVANI_APP, RANKDESK_APP, PULSEWIRE_APP, {'@type': 'ProfilePage', 'url': url, 'name': html.unescape(t), 'mainEntity': {'@id': SITE_URL + '/#person'}}]
+        graph = [PERSON, WEBSITE, GRAHAVANI_APP, PULSEWIRE_APP, RANKDESK_APP, {'@type': 'ProfilePage', 'url': url, 'name': html.unescape(t), 'mainEntity': {'@id': SITE_URL + '/#person'}}]
     else:
         name = html.unescape(re.sub(r'\s*\|.*$', '', t))
         page = LD.get(f) or {'@type': 'WebPage', 'name': html.unescape(t), 'description': html.unescape(d), 'url': url,
@@ -438,8 +438,8 @@ llms_txt = (
     "- **Full Stack Development:** Python (FastAPI, Django), Node.js, Angular, React, Vue, PostgreSQL, Docker, GitHub Actions CI/CD.\n\n"
     "## Live Products\n"
     "- [Grahavani](https://grahavani.dhruvboghani.com/): Free Vedic astrology platform in 6 Indian languages with Janma Kundali, Guna Milan, and Panchang checked against the Swiss Ephemeris.\n"
-    "- [Rankdesk](https://rankdesk.dhruvboghani.com/): Free 24-point SEO audit toolkit with Google PageSpeed, Core Web Vitals, and JSON-LD schema, robots.txt, and sitemap generators.\n"
-    "- [PulseWire](https://pulsewire.dhruvboghani.com/): Real-time global newsroom delivering breaking world news, live cricket scores, and financial market intelligence.\n\n"
+    "- [PulseWire](https://pulsewire.dhruvboghani.com/): Real-time global newsroom delivering breaking world news, live cricket scores, and financial market intelligence.\n"
+    "- [Rankdesk](https://rankdesk.dhruvboghani.com/): Free 24-point SEO audit toolkit with Google PageSpeed, Core Web Vitals, and JSON-LD schema, robots.txt, and sitemap generators.\n\n"
     "## Interactive Engineering Demos\n"
     "- [AI Sales Avatar](https://www.dhruvboghani.com/voice-avatar.html): 3D talking avatar capturing leads and booking meetings.\n"
     "- [AI Admin Assistant](https://www.dhruvboghani.com/admin-assistant.html): Natural language SQL/API tool-calling assistant for enterprise backoffices.\n"
@@ -481,8 +481,8 @@ llms_full_txt = (
     "- Vector similarity: pgvector and Pinecone embedding search to reconcile discrepancies between purchase order lines and supplier invoice descriptions.\n\n"
     "## Products Shipped\n"
     "1. Grahavani (https://grahavani.dhruvboghani.com/): Free multilingual Vedic astrology platform in English, Hindi, Gujarati, Tamil, Telugu, and Kannada. Accurate Janma Kundali calculated via astronomical algorithms verified against the Swiss Ephemeris within one arc-minute precision.\n"
-    "2. Rankdesk (https://rankdesk.dhruvboghani.com/): Free comprehensive 24-point SEO auditing platform with Google PageSpeed API, Core Web Vitals diagnostics, and instant schema/robots/sitemap generators.\n"
-    "3. PulseWire (https://pulsewire.dhruvboghani.com/): Real-time global newsroom delivering breaking world news, live cricket scores, financial markets (Sensex, Nifty, Crypto), and verified editorial intelligence.\n\n"
+    "2. PulseWire (https://pulsewire.dhruvboghani.com/): Real-time global newsroom delivering breaking world news, live cricket scores, financial markets (Sensex, Nifty, Crypto), and verified editorial intelligence.\n"
+    "3. Rankdesk (https://rankdesk.dhruvboghani.com/): Free comprehensive 24-point SEO auditing platform with Google PageSpeed API, Core Web Vitals diagnostics, and instant schema/robots/sitemap generators.\n\n"
     "## Frequently Asked Questions (FAQ)\n"
     f"{faq_text}\n"
     "## Technical Articles & Guides (%d Published)\n"
