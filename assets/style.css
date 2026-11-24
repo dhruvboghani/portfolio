@@ -177,12 +177,13 @@ html:not(.booted) #nm .c{animation-play-state:paused}
 .sb nav .navprod a:hover{box-shadow:5px 5px 0 var(--ink);transform:translate(-1px,-1px)}
 @media(max-width:900px){.sb nav .navprod{display:grid}}
 /* home: featured products */
-.feat{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
 .fp{display:flex;flex-direction:column;gap:10px;padding:26px;position:relative;transition:transform .2s,box-shadow .2s;box-shadow:7px 7px 0 var(--acc)!important}
 .fp:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--acc)!important}
-.fp h3{font:800 clamp(34px,4vw,52px)/1 Archivo,system-ui,sans-serif;font-stretch:75%;text-transform:uppercase;letter-spacing:-.02em;margin:0}
+.fp h3{font:800 clamp(30px,3.2vw,44px)/1 Archivo,system-ui,sans-serif;font-stretch:75%;text-transform:uppercase;letter-spacing:-.02em;margin:0}
 .fp-tag{color:var(--acc)}
-.fp-line{font-weight:600;font-size:19px}
+.fp-line{font-weight:600;font-size:18px}
 .fp p{margin:0}
 .fp .go{margin-top:auto;padding-top:8px;color:var(--acc)}
-@media(max-width:860px){.feat{grid-template-columns:1fr}}
+@media(max-width:1100px){.feat{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.feat{grid-template-columns:1fr}}

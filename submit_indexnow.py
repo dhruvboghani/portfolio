@@ -60,9 +60,9 @@ def submit(urls):
     except urllib.error.HTTPError as e:
         body = e.read().decode('utf-8', 'replace')
         print(f"IndexNow Error HTTP {e.code} {e.reason}: {body}")
-        if e.code == 422:
-            print("Note: HTTP 422 typically means the key file at keyLocation is not yet live/reachable on the deployed website.")
-            print(f"Ensure '{KEY}.txt' is pushed and live at {KEY_LOCATION}.")
+        if e.code in (403, 422):
+            print("Note: HTTP 403/422 occurs when the key file is not yet deployed or reachable on the live website.")
+            print(f"Once you run 'git push' and Vercel deploys '{KEY}.txt' to {KEY_LOCATION}, IndexNow will verify the key.")
     except Exception as e:
         print(f"Failed to submit to IndexNow: {e}")
 
