@@ -1,4 +1,10 @@
 .env
 .DS_Store
 *.DS_Store
+service_account*.json
+*service-account*.json
+google_credentials*.json
+google-key*.json
+dark-foundry*.json
+*-*-*.json
 

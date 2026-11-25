@@ -45,6 +45,12 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL }}
         run: python3 submit_indexnow.py || true
 
+      - name: Submit to Google Indexing API
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: python3 submit_google_indexing.py || true
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"

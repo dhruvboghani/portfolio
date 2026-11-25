@@ -13,6 +13,21 @@ OG_IMAGE = SITE_URL + '/assets/og-image.png'   # 1200x630 share preview
 # Profiles that are you. Add LinkedIn, Upwork, X etc. here - Google uses these to tie your name to one person.
 SAME_AS = ['https://github.com/dhruvboghani', 'https://www.linkedin.com/in/dhruv-boghani-21b8781b1']
 TODAY = datetime.datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
+GOOGLE_SITE_VERIFICATION = (os.environ.get('GOOGLE_SITE_VERIFICATION') or '').strip()
+if not GOOGLE_SITE_VERIFICATION:
+    g_files = glob.glob(os.path.join(ROOT, 'google*.html'))
+    if g_files:
+        try:
+            content = open(g_files[0], encoding='utf-8').read()
+            m = re.search(r'google-site-verification:\s*([a-zA-Z0-9_-]+)', content)
+            if m: GOOGLE_SITE_VERIFICATION = m.group(1).strip()
+        except Exception:
+            pass
+    elif os.path.exists(os.path.join(ROOT, '.google_verification')):
+        try:
+            GOOGLE_SITE_VERIFICATION = open(os.path.join(ROOT, '.google_verification'), encoding='utf-8').read().strip()
+        except Exception:
+            pass
 rd = lambda p: open(os.path.join(ROOT, p), encoding='utf-8').read()
 def wr(p, t):
     p = os.path.join(ROOT, p); os.makedirs(os.path.dirname(p), exist_ok=True)
@@ -83,6 +98,10 @@ def seo_block(url, title, desc, typ, ld):
         '<link rel="canonical" href="%s">' % E(url),
         '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">',
         '<meta name="author" content="%s">' % E(AUTHOR),
+    ]
+    if GOOGLE_SITE_VERIFICATION:
+        tags.append('<meta name="google-site-verification" content="%s">' % E(GOOGLE_SITE_VERIFICATION))
+    tags += [
         '<link rel="icon" href="/favicon.ico" sizes="48x48">',
         '<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">',
         '<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">',
