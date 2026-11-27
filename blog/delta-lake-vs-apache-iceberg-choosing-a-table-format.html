@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Delta Lake vs Apache Iceberg: choosing a table format</title>
+<meta name="description" content="Practical comparison of Delta Lake and Apache Iceberg for data lakehouses: metadata architecture, engine support, and partition evolution.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=10">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8829216905817441"
+     crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-8829216905817441">
+<script>try{if(sessionStorage.getItem("booted"))document.documentElement.classList.add("seen","booted")}catch(e){}</script>
+<!--seo-->
+<link rel="canonical" href="https://www.dhruvboghani.com/blog/delta-lake-vs-apache-iceberg-choosing-a-table-format.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Dhruv Boghani">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ECEBE6">
+<meta property="og:site_name" content="Dhruv Boghani">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Delta Lake vs Apache Iceberg: choosing a table format">
+<meta property="og:description" content="Practical comparison of Delta Lake and Apache Iceberg for data lakehouses: metadata architecture, engine support, and partition evolution.">
+<meta property="og:url" content="https://www.dhruvboghani.com/blog/delta-lake-vs-apache-iceberg-choosing-a-table-format.html">
+<meta property="og:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dhruv Boghani, AI/ML, data and full-stack engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Delta Lake vs Apache Iceberg: choosing a table format">
+<meta name="twitter:description" content="Practical comparison of Delta Lake and Apache Iceberg for data lakehouses: metadata architecture, engine support, and partition evolution.">
+<meta name="twitter:image" content="https://www.dhruvboghani.com/assets/og-image.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Delta Lake vs Apache Iceberg: choosing a table format", "description": "Practical comparison of Delta Lake and Apache Iceberg for data lakehouses: metadata architecture, engine support, and partition evolution.", "image": "https://www.dhruvboghani.com/assets/og-image.png", "datePublished": "2026-11-26", "dateModified": "2026-11-26", "author": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "publisher": {"@type": "Person", "@id": "https://www.dhruvboghani.com/#person", "name": "Dhruv Boghani", "url": "https://www.dhruvboghani.com/"}, "mainEntityOfPage": "https://www.dhruvboghani.com/blog/delta-lake-vs-apache-iceberg-choosing-a-table-format.html", "inLanguage": "en", "keywords": "lakehouse, iceberg, delta-lake", "articleSection": "lakehouse", "wordCount": 539, "timeRequired": "PT3M", "speakable": {"@type": "SpeakableSpecification", "cssSelector": [".ph1", ".post > p:first-of-type", ".post > h2:first-of-type"]}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.dhruvboghani.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.dhruvboghani.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "Delta Lake vs Apache Iceberg: choosing a table format", "item": "https://www.dhruvboghani.com/blog/delta-lake-vs-apache-iceberg-choosing-a-table-format.html"}]}]}</script>
+<!--/seo-->
+</head><body>
+<div id="boot" role="status" aria-live="polite" aria-label="Loading"><div class="boot-card"><p class="m u"><i class="dot"></i>Systems coming online</p><p class="boot-nm" aria-hidden="true"><span>Dhruv</span> <span>Boghani</span></p><div class="boot-track" aria-hidden="true"><i id="boot-fill"></i></div><p class="m u boot-stat"><span>Load</span><span><span id="boot-n">000</span>%</span></p></div></div>
+<div id="bar"></div>
+<aside class="prodbar" aria-label="My products"><span class="prodbar-l"><i class="dot"></i>My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><b>Grahavani</b><span>Vedic astrology in 6 Indian languages</span><em>&nearr;</em></a><a href="https://pulsewire.dhruvboghani.com/" target="_blank" rel="noopener"><b>PulseWire</b><span>Real-time news &amp; market intelligence</span><em>&nearr;</em></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><b>Rankdesk</b><span>Free SEO audit and toolkit</span><em>&nearr;</em></a></aside>
+<div class="app">
+<aside class="sb"><b><a href="/">Dhruv<br>Boghani</a></b><nav class="m u" id="nav" aria-label="Main"><a href="/"><span>Home</span><span>01</span></a><a href="../voice-avatar.html"><span>Sales avatar</span><span>02</span></a><a href="../admin-assistant.html"><span>Admin assistant</span><span>03</span></a><a href="../pipeline.html"><span>Pipeline</span><span>04</span></a><a href="../invoice-ai.html"><span>Invoice AI</span><span>05</span></a><a href="../voice-agent.html"><span>Voice agent</span><span>06</span></a><a href="../work.html"><span>Work & stack</span><span>07</span></a><a href="../blog.html" class="on" aria-current="page"><span>Blog</span><span>08</span></a><a href="../faq.html"><span>FAQ</span><span>09</span></a><a href="../experience.html"><span>Experience</span><span>10</span></a><a href="../contact.html"><span>Contact</span><span>11</span></a><div class="navprod"><span class="m u">My products</span><a href="https://grahavani.dhruvboghani.com/" target="_blank" rel="noopener"><span>Grahavani</span><span>&nearr;</span></a><a href="https://pulsewire.dhruvboghani.com/" target="_blank" rel="noopener"><span>PulseWire</span><span>&nearr;</span></a><a href="https://rankdesk.dhruvboghani.com/" target="_blank" rel="noopener"><span>Rankdesk</span><span>&nearr;</span></a></div></nav><div class="st m"><span><i class="dot"></i>All systems live</span><span style="color:var(--mute)">uptime <b id="up">00:00</b></span><span style="color:var(--mute)">open to AI / data work</span></div></aside>
+<main>
+<section class="rv in"><p class="m u"><a href="../blog.html">&larr; All posts</a></p><h1 class="ph1">Delta Lake vs Apache Iceberg: choosing a table format</h1><p class="m u meta">2026-11-26 / 3 min read / lakehouse, iceberg, delta-lake</p><article class="post"><p>Modern data lakehouses rely on open table formats to bring ACID transactions, schema evolution, and time travel directly onto object storage like Amazon S3 or Google Cloud Storage. Today, <strong>Apache Iceberg</strong> and <strong>Delta Lake</strong> are the two dominant formats powering analytics and AI data pipelines.</p>
+<p>Both solve the core limitations of legacy Hive tables, yet their metadata designs and ecosystem strengths differ in ways that matter when choosing a standard for your platform.</p>
+<h2>Architectural difference: transaction logs vs metadata trees</h2>
+<p>While both formats store data in Apache Parquet files, they track table state differently:</p>
+<ul>
+<li><strong>Delta Lake (<code>_delta_log</code>):</strong> Uses an ordered JSON transaction log (<code>000000.json</code>, <code>000001.json</code>) periodically compacted into Parquet checkpoints. Readers reconstruct the latest snapshot by replaying logs from the last checkpoint.</li>
+<li><strong>Apache Iceberg (metadata tree):</strong> Uses an immutable hierarchy of <strong>catalog pointer &amp;rarr; metadata file &amp;rarr; manifest list &amp;rarr; manifest files</strong>. Every commit atomically swaps the catalog pointer to a new snapshot without listing directories.</li>
+</ul>
+<p>Iceberg's manifest tree allows query engines like Trino, Spark, and Flink to prune partitions and files using min/max column statistics before opening a single Parquet file.</p>
+<h2>Key feature comparison</h2>
+<p>When evaluating both formats for production workloads, five capabilities usually drive the decision:</p>
+<ul>
+<li><strong>Hidden partitioning &amp; partition evolution:</strong> Iceberg separates physical partition layout from logical SQL queries and lets you change partitioning (e.g., daily to hourly) without rewriting historical data. Delta Lake supports liquid clustering to dynamically reorganize data layouts without rigid partition folders.</li>
+<li><strong>Multi-engine interoperability:</strong> Iceberg has deep native support across Snowflake, BigQuery, Trino, StarRocks, Apache Flink, and Spark. Delta Lake shines in Spark and Databricks environments, though Delta UniForm now generates Iceberg-compatible metadata alongside Delta logs.</li>
+<li><strong>Streaming writes &amp; CDC:</strong> Both support streaming appends and row-level deletes/merges (<code>MERGE INTO</code>), using deletion vectors (Delta) or position/equality delete files (Iceberg v2/v3).</li>
+<li><strong>Catalog management:</strong> Iceberg requires an atomic catalog (REST, Nessie, AWS Glue, Polaris) for safe concurrent commits across engines. Delta Lake works directly on object storage paths, though Unity Catalog or S3 conditional writes handle multi-cluster locking.</li>
+</ul>
+<pre><code>-- Apache Iceberg: evolve partitioning without rewriting old data
+ALTER TABLE analytics.events
+ADD PARTITION FIELD bucket(16, user_id);
+
+-- Time travel query in Iceberg / Trino
+SELECT count(*)
+FROM analytics.events
+FOR TIMESTAMP AS OF TIMESTAMP '2026-11-25 00:00:00 UTC';</code></pre>
+<h2>When to choose Delta Lake</h2>
+<p>Delta Lake is often the pragmatic default if:</p>
+<ul>
+<li>Your stack is centered on <strong>Databricks</strong> or <strong>Apache Spark</strong> pipelines.</li>
+<li>You want <strong>Liquid Clustering</strong> to automatically adapt file clustering as query patterns change without managing partition columns.</li>
+<li>You prefer path-based tables in local development or simple S3 workflows without standing up a separate catalog service.</li>
+</ul>
+<h2>When to choose Apache Iceberg</h2>
+<p>Apache Iceberg is typically the stronger long-term bet if:</p>
+<ul>
+<li>You run <strong>multi-engine architectures</strong> combining Flink streaming ingestion, Spark ETL, and Trino/Snowflake/BigQuery SQL queries.</li>
+<li>You need <strong>partition evolution</strong> on multi-terabyte tables where rewriting historical partitions is too expensive.</li>
+<li>You want <strong>zero-copy branching and tagging</strong> via catalogs like Project Nessie or Apache Polaris for isolated data testing and reproducibility.</li>
+</ul>
+<h2>Takeaway</h2>
+<p>You cannot go wrong technically with either format—both deliver reliable ACID lakehouse storage. Choose <strong>Delta Lake</strong> for Spark-first or Databricks-native velocity, and choose <strong>Apache Iceberg</strong> when engine neutrality, open REST catalogs, and partition evolution across diverse query engines are top priorities.</p></article><p class="m u meta" style="margin-top:30px">Need help with AI, LLM or data engineering? <a href="../contact.html"><b>Get in touch</b></a></p></section><a class="nx pn" href="../blog.html"><span class="m u">More</span><b>All posts &rarr;</b></a>
+<footer class="m u">Designed and engineered by Dhruv Boghani / 2026 / Ahmedabad, Gujarat, India</footer>
+</main></div>
+<script src="../assets/common.js?v=7"></script></body></html>

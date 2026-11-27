@@ -49,3 +49,6 @@ Handling cold starts in serverless LLM deployments
 Real-time anomaly detection with Apache Flink and Kafka
 GraphRAG: knowledge graphs meet vector retrieval
 Distributed model inference with vLLM and Ray
+Dynamic batching for high-throughput LLM serving
+Delta Lake vs Apache Iceberg: choosing a table format
+Voice cloning and neural audio codec architectures

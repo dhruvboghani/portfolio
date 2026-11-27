@@ -30,7 +30,10 @@
 - [Invoice AI Intelligence](https://www.dhruvboghani.com/invoice-ai.html): Document AI parsing, matching, and anomaly detection.
 - [Voice AI Calling Bot](https://www.dhruvboghani.com/voice-agent.html): Sub-500ms conversational phone agent for inbound/outbound calls.
 
-## Engineering Blog Directory (53 Guides)
+## Engineering Blog Directory (56 Guides)
+- [Voice cloning and neural audio codec architectures](https://www.dhruvboghani.com/blog/voice-cloning-and-neural-audio-codec-architectures.html): How modern neural audio codecs and zero-shot voice cloning models work: Residual Vector Quantization (RVQ), discrete audio tokens, and streaming synthesis. (2026-11-27)
+- [Delta Lake vs Apache Iceberg: choosing a table format](https://www.dhruvboghani.com/blog/delta-lake-vs-apache-iceberg-choosing-a-table-format.html): Practical comparison of Delta Lake and Apache Iceberg for data lakehouses: metadata architecture, engine support, and partition evolution. (2026-11-26)
+- [Dynamic batching for high-throughput LLM serving](https://www.dhruvboghani.com/blog/dynamic-batching-for-high-throughput-llm-serving.html): How continuous and dynamic batching boost GPU utilization in LLM inference via iteration-level scheduling and prefill-decode tuning. (2026-11-25)
 - [Distributed model inference with vLLM and Ray](https://www.dhruvboghani.com/blog/distributed-model-inference-with-vllm-and-ray.html): Scaling LLM serving with vLLM and Ray: tensor parallelism, PagedAttention memory optimization, continuous batching, and distributed worker management. (2026-11-24)
 - [GraphRAG: knowledge graphs meet vector retrieval](https://www.dhruvboghani.com/blog/graphrag-knowledge-graphs-meet-vector-retrieval.html): How GraphRAG combines vector search with knowledge graphs to resolve multi-hop queries, preserve relationship topology, and improve answer grounding. (2026-11-23)
 - [Real-time anomaly detection with Flink and Kafka](https://www.dhruvboghani.com/blog/real-time-anomaly-detection-with-apache-flink-and-kafka.html): Building real-time anomaly detection pipelines with Apache Flink and Kafka: tumbling windows, keyed process functions, dynamic thresholding, and alerts. (2026-11-22)
